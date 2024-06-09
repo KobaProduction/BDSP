@@ -1,0 +1,32 @@
+{
+  "name": "BDSP",
+  "description": "The library implements a binary data separation protocol based on COBS encoding. Asynchronous application architecture. No dependencies.",
+  "keywords": "uart, protocol, COBS",
+  "authors": [
+    {
+      "name": "Arthur Koba",
+      "url": "https://github.com/ArthurKoba",
+      "maintainer": true
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ArthurKoba/BDSP.git"
+  },
+  "version": "0.1.0",
+  "license": "MIT",
+  "homepage": "https://github.com/ArthurKoba/BDSP",
+  "frameworks": "arduino",
+  "platforms": "atmelavr, ststm32, espressif8266, espressif32",
+  "headers": "BDSP.h",
+  "export": {
+    "exclude": []
+  },
+  "build": {
+    "srcFilter": [
+      "+<*.c>",
+      "+<*.cpp>",
+      "+<*.h>"
+    ]
+  }
+}
