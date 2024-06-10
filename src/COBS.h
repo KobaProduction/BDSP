@@ -9,8 +9,8 @@
 #define DEFAULT_COBS_DELIMITER '\0'
 
 struct cobs_config_t {
-    uint8_t delimiter; // Maximum value is 254.
-    uint8_t depth;  // The depth and separator parameters must not be equal.
+    uint8_t delimiter;
+    uint8_t depth;
 };
 
 #ifndef BDSP_COBSWRITER_H

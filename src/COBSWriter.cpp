@@ -13,26 +13,27 @@ COBSWriter::~COBSWriter() {
     free(buffer_ptr);
 }
 
-cobs_writer_status_t COBSWriter::reset() {
-    if (buffer_ptr == nullptr) return cobs_writer_status_t::COBS_BUFFER_MISSING;
+cobs_writer_status_t COBSWriter::get_status() {
+    if (not buffer_ptr) return cobs_writer_status_t::COBS_BUFFER_MISSING;
+    return COBS_OK;
+}
+
+void COBSWriter::reset() {
     code = 1;
     dst = buffer_ptr;
     code_ptr = dst++;
-    return cobs_writer_status_t::COBS_OK;
 }
 
 cobs_writer_status_t COBSWriter::finish_sending(bool is_send_with_delimiter) {
-    if (not buffer_ptr) return cobs_writer_status_t::COBS_BUFFER_MISSING;
     uint8_t size = dst - buffer_ptr;
     if (size < 2) return cobs_writer_status_t::COBS_EMPTY_DATA;
     writer_h(buffer_ptr, size);
     if (is_send_with_delimiter) writer_h(&config.delimiter, 1);
-    return reset();;
+    reset();
+    return cobs_writer_status_t::COBS_OK;
 }
 
-cobs_writer_status_t COBSWriter::send_segment(uint8_t *data_ptr, size_t size) {
-    if (not buffer_ptr) return cobs_writer_status_t::COBS_BUFFER_MISSING;
-
+void COBSWriter::send_segment(uint8_t *data_ptr, size_t size) {
     uint8_t *ptr = data_ptr;
     for (uint16_t i = 0; i < size; ++i) {
         uint8_t character = *ptr++;
@@ -48,6 +49,4 @@ cobs_writer_status_t COBSWriter::send_segment(uint8_t *data_ptr, size_t size) {
         }
     }
     *code_ptr = dst - code_ptr;
-    return cobs_writer_status_t::COBS_OK;
 }
-

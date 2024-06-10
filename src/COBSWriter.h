@@ -13,8 +13,9 @@ class COBSWriter {
 public:
     explicit COBSWriter(cobs_config_t config, void (*writer_ptr)(uint8_t *data_ptr, size_t size));
     ~COBSWriter();
-    cobs_writer_status_t reset();
-    cobs_writer_status_t send_segment(uint8_t *data_ptr, size_t size);
+    cobs_writer_status_t get_status();
+    void reset();
+    void send_segment(uint8_t *data_ptr, size_t size);
     cobs_writer_status_t finish_sending(bool is_send_with_delimiter = true);
 private:
     cobs_config_t config = {DEFAULT_COBS_DELIMITER, DEFAULT_COBS_DEPTH};
