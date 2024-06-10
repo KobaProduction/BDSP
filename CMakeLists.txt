@@ -6,6 +6,7 @@ cmake_minimum_required(VERSION 3.5)
 
 set(BDSP_SRCS
         src/BDSP.cpp
+        src/COBSWriter.cpp
 )
 
 idf_component_register(SRCS ${BDSP_SRCS}
