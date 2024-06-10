@@ -5,6 +5,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 set(BDSP_SRCS
+        src/Packet.cpp
         src/BDSP.cpp
         src/COBSWriter.cpp
 )
