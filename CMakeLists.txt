@@ -1,5 +1,5 @@
 # BDSP (Binary Data Separation Protocol)
-# https://github.com/ArthurKoba/BDSP
+# https://github.com/KobaProduction/BDSP
 # MIT License
 
 cmake_minimum_required(VERSION 3.5)
@@ -10,6 +10,7 @@ set(BDSP_SRCS
         src/encoders/cobs/reader.cpp
         src/encoders/cobs/writer.cpp
         src/checksums/crc.cpp
+        src/utils.cpp
 )
 
 idf_component_register(SRCS ${BDSP_SRCS}
