@@ -1,6 +1,6 @@
-#include "crc.h"
+#include <./сhecksums/crc/crc8.h>
 
-uint8_t crc8(uint8_t *data_ptr, size_t len, uint8_t base) {
+uint8_t crc8(const uint8_t *data_ptr, size_t len, uint8_t base) {
     uint8_t crc = base;
     size_t i, j;
     for (i = 0; i < len; i++) {
