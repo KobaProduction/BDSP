@@ -9,6 +9,7 @@ set(BDSP_SRCS
         src/BDSP.cpp
         src/COBSWriter.cpp
         src/COBSReader.cpp
+        src/crc.cpp
 )
 
 idf_component_register(SRCS ${BDSP_SRCS}
