@@ -5,11 +5,11 @@
 cmake_minimum_required(VERSION 3.5)
 
 set(BDSP_SRCS
-        src/Packet.cpp
+        src/packet.cpp
         src/BDSP.cpp
-        src/COBSWriter.cpp
-        src/COBSReader.cpp
-        src/crc.cpp
+        src/encoders/cobs/reader.cpp
+        src/encoders/cobs/writer.cpp
+        src/checksums/crc.cpp
 )
 
 idf_component_register(SRCS ${BDSP_SRCS}

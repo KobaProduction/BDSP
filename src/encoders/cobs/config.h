@@ -1,5 +1,5 @@
-#ifndef BDSP_COBS_H
-#define BDSP_COBS_H
+#ifndef BDSP_ENCODERS_COBS_CONFIG_H
+#define BDSP_ENCODERS_COBS_CONFIG_H
 
 #include <stdint.h>
 #include <stddef.h>
@@ -13,12 +13,4 @@ struct cobs_config_t {
     uint8_t depth;
 };
 
-#ifndef BDSP_COBSWRITER_H
-#include <./COBSWriter.h>
-#endif
-
-#ifndef BDSP_COBSREADER_H
-#include <./COBSReader.h>
-#endif
-
-#endif //BDSP_COBS_H
+#endif //BDSP_ENCODERS_COBS_CONFIG_H

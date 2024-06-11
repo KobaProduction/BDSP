@@ -1,7 +1,8 @@
 #ifndef BDSP_PACKET_H
 #define BDSP_PACKET_H
 
-#include <Arduino.h>
+#include <stdint.h>
+#include <stdlib.h>
 
 class __attribute__((packed)) Packet {
 public:

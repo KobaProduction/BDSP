@@ -1,7 +1,7 @@
-#ifndef BDSP_COBSREADER_H
-#define BDSP_COBSREADER_H
+#ifndef BDSP_READER_H
+#define BDSP_READER_H
 
-#include <./COBS.h>
+#include <./encoders/cobs/config.h>
 
 enum cobs_read_state {PACKED_ID, SIZE_A, SIZE_B, DATA, DELIMITER};
 
@@ -14,4 +14,4 @@ private:
     cobs_read_state state = PACKED_ID;
 };
 
-#endif //BDSP_COBSREADER_H
+#endif //BDSP_READER_H

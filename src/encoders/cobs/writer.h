@@ -1,7 +1,7 @@
-#ifndef BDSP_COBSWRITER_H
-#define BDSP_COBSWRITER_H
+#ifndef BDSP_WRITER_H
+#define BDSP_WRITER_H
 
-#include <./COBS.h>
+#include <./encoders/cobs/config.h>
 
 enum cobs_writer_status_t {
     COBS_OK,
@@ -26,4 +26,4 @@ private:
     uint8_t *code_ptr = nullptr;
 };
 
-#endif //BDSP_COBSWRITER_H
+#endif //BDSP_WRITER_H

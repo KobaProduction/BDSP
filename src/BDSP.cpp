@@ -1,4 +1,4 @@
-#include "BDSP.h"
+#include <./BDSP.h>
 
 BDSP::BDSP(BDSP_MODE mode_) {
     mode = mode_;

@@ -1,4 +1,4 @@
-#include "COBSWriter.h"
+#include <./encoders/cobs/writer.h>
 
 COBSWriter::COBSWriter(cobs_config_t config_, void (*writer_ptr)(uint8_t *, size_t)) {
     config = config_;
