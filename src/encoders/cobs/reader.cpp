@@ -1,4 +1,4 @@
-#include <./encoders/cobs/reader.h>
+#include "./reader.h"
 
 COBSReader::COBSReader(cobs_config_t config) {
 

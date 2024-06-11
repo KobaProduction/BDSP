@@ -1,9 +1,9 @@
 #ifndef BDSP_BDSP_H
 #define BDSP_BDSP_H
 
-#include <./packet.h>
-#include <./encoders/cobs/writer.h>
-#include <./encoders/cobs/reader.h>
+#include "./packet.h"
+#include "./encoders/cobs/writer.h"
+#include "./encoders/cobs/reader.h"
 #include "./сhecksums/crc.h"
 
 #define DEFAULT_MAX_PACKET_SIZE 65535

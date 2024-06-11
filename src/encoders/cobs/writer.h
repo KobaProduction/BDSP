@@ -1,7 +1,7 @@
 #ifndef BDSP_WRITER_H
 #define BDSP_WRITER_H
 
-#include <./encoders/cobs/config.h>
+#include "./config.h"
 
 enum cobs_writer_status_t {
     COBS_OK,
