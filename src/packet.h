@@ -9,7 +9,7 @@ public:
     Packet(uint8_t id, uint16_t size, bool is_need_buffer = false);
     ~Packet();
     uint8_t id;
-    uint8_t size;
+    uint16_t size;
     uint8_t *data;
 private:
     bool need_free;

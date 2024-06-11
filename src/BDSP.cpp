@@ -28,7 +28,7 @@ bdsp_status_t BDSP::set_config(cobs_config_t config) {
             return bdsp_status_t::BDSP_ERROR_STATUS_COBS_WRITER;
         }
     }
-    if (need_reader) reader = new COBSReader(config);
+//    if (need_reader) reader = new COBSReader(config, );
     return bdsp_status_t::BDSP_OK;
 }
 
@@ -54,10 +54,11 @@ bdsp_status_t BDSP::send_packet(Packet &packet) {
     if (not writer) return bdsp_status_t::BDSP_CONFIG_NOT_INSTALLED;
     uint8_t checksum;
     checksum = crc8(&packet.id, 1);
-    checksum = crc8(&packet.size, 2, checksum);
-    checksum = crc8(packet.data, packet.size, checksum);
+    auto *size_p = (uint8_t*)(&packet.size);
+    checksum = crc8(size_p, 1);
+    checksum = crc8(size_p + 1, 1);
     writer->send_segment(&packet.id, 1);
-    writer->send_segment(&packet.size, 2);
+    writer->send_segment(size_p, 2);
     writer->send_segment(packet.data, packet.size);
     writer->send_segment(&checksum, 1);
     writer->finish_sending();
