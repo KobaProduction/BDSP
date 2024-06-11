@@ -1,9 +1,12 @@
-BDSP (Binary Data Separation Protocol) | Alpha Version
+**BDSP** - Binary Data Separation Protocol
 ===========
+[![latest](https://img.shields.io/badge/release-alhpa-blueviolet.svg?color=00aa00)](https://github.com/GyverLibs/GyverMAX6675/releases/latest/download/GyverMAX6675.zip)
 [![arduino-library-badge](https://www.ardu-badge.com/badge/ToDo.svg)]()
+[![latest](https://img.shields.io/badge/PlatformIO-ToDo-blueviolet.svg?color=00aa00)](https://github.com/GyverLibs/GyverMAX6675/releases/latest/download/GyverMAX6675.zip)
+[![Foo](https://img.shields.io/badge/README-RUSSIAN-blueviolet.svg?style=flat-square)](https://github-com.translate.goog/ArthurKoba/BDSP?_x_tr_sl=en&_x_tr_tl=ru)
 
 
-The library implements a protocol for dividing binary data into packets.
+TThe library implements a protocol for dividing a binary data stream into packets based on a modification of the COBS encoder that performs "on-the-fly" encoding (a depth parameter size buffer is used for encoding).
 
 We have multiple goals with this library:
 
@@ -17,23 +20,32 @@ We have multiple goals with this library:
 
 ## Getting Started
 
-ToDo: Install the library using either and.
-
-Here's a simple program (Need to write):
+Here's a simple program for Arduino:
 
 ```cpp
+#include <Arduino.h>
 #include <BDSP.h>
+
+BDSP bdsp(BDSP_SENDER);
+bdsp_status_t status;
+
+#define COUNT 255
+uint8_t data[COUNT] = {0};
 
 void setup() {
     Serial.begin(115200);
+    Serial.println();
+
+    status = bdsp.set_writer([] (uint8_t *d, size_t s) {Serial.write(d, s);});
+    cobs_config_t config = {.delimiter = '\n', .depth = 255};
+    status = bdsp.set_config(config);
 }
 
-void loop() {}
+void loop() {
+    status = bdsp.send_data(1, data, COUNT);
+    delay(5000);
+}
 ```
-
-## Help and Support
-
-Need to write
 
 ## Supported Platforms
 
@@ -41,7 +53,4 @@ Right now the library is supported on a variety of Arduino compatible platforms.
 
 * Arduino & compatibles - straight up Arduino devices, Uno, Duo, Leonardo, Mega, Nano, etc...
 * ESP8266 and ESP32 based boards
-
-## TODO
-
-* Realize alpha version
+* STM32 series.
