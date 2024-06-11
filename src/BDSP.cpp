@@ -52,9 +52,14 @@ bdsp_status_t BDSP::send_data(uint8_t id, uint8_t *data_ptr, size_t size) {
 bdsp_status_t BDSP::send_packet(Packet &packet) {
     if (packet.size > max_packet_size) return bdsp_status_t::BDSP_EXCESS_SIZE_PACKET;
     if (not writer) return bdsp_status_t::BDSP_CONFIG_NOT_INSTALLED;
+    uint8_t checksum;
+    checksum = crc8(&packet.id, 1);
+    checksum = crc8(&packet.size, 2, checksum);
+    checksum = crc8(packet.data, packet.size, checksum);
     writer->send_segment(&packet.id, 1);
     writer->send_segment(&packet.size, 2);
     writer->send_segment(packet.data, packet.size);
+    writer->send_segment(&checksum, 1);
     writer->finish_sending();
     return bdsp_status_t::BDSP_OK;
 }
