@@ -2,8 +2,8 @@
 ===========
 [![latest](https://img.shields.io/badge/release-alhpa-blueviolet.svg?color=00aa00)](https://github.com/GyverLibs/GyverMAX6675/releases/latest/download/GyverMAX6675.zip)
 [![arduino-library-badge](https://www.ardu-badge.com/badge/ToDo.svg)]()
-[![latest](https://img.shields.io/badge/PlatformIO-ToDo-blueviolet.svg?color=00aa00)](https://github.com/GyverLibs/GyverMAX6675/releases/latest/download/GyverMAX6675.zip)
-[![Foo](https://img.shields.io/badge/README-RUSSIAN-blueviolet.svg?style=flat-square)](https://github-com.translate.goog/ArthurKoba/BDSP?_x_tr_sl=en&_x_tr_tl=ru)
+[![latest](https://img.shields.io/badge/PlatformIO-ToDo-blueviolet.svg?color=00aa00)]()
+[![Foo](https://img.shields.io/badge/README-RUSSIAN-blueviolet.svg?style=flat-square)](https://github-com.translate.goog/KobaProduction/BDSP?_x_tr_sl=en&_x_tr_tl=ru)
 
 
 TThe library implements a protocol for dividing a binary data stream into packets based on a modification of the COBS encoder that performs "on-the-fly" encoding (a depth parameter size buffer is used for encoding).
