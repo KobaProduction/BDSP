@@ -4,7 +4,7 @@
 #include "./packet.h"
 #include "./encoders/cobs/writer.h"
 #include "./encoders/cobs/reader.h"
-#include "./сhecksums/crc.h"
+#include "./checksums/crc/crc8.h"
 
 #define DEFAULT_MAX_PACKET_SIZE 65535
 
@@ -24,7 +24,7 @@ class BDSP {
 public:
     explicit BDSP(BDSP_MODE mode);
     ~BDSP();
-    bdsp_status_t set_writer(void (*writer_ptr)(uint8_t *data_ptr, size_t size));
+    bdsp_status_t set_write_handler(void (*writer_ptr)(uint8_t *data_ptr, size_t size));
     bdsp_status_t set_config(cobs_config_t config);
     bdsp_status_t set_max_packet_size(uint16_t max_size);
     void tick();
@@ -34,7 +34,7 @@ public:
 private:
     BDSP_MODE mode = BDSP_DUPLEX;
     uint16_t max_packet_size = DEFAULT_MAX_PACKET_SIZE;
-    void (*writer_h)(uint8_t *data_ptr, size_t size) = nullptr;
+    void (*write_handler)(uint8_t *data_ptr, size_t size) = nullptr;
     COBSWriter *writer;
     COBSReader *reader;
 };

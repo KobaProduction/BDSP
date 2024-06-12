@@ -1,10 +1,10 @@
-#include "./writer.h"
+#include "writer.h"
 
-COBSWriter::COBSWriter(cobs_config_t config_, void (*writer_ptr)(uint8_t *data_ptr, size_t length)) {
-    config = config_;
-    writer_h = writer_ptr;
-    if (not config.depth) config.depth = DEFAULT_COBS_DEPTH;
-    buffer_ptr = reinterpret_cast<uint8_t*>(malloc(config.depth));
+COBSWriter::COBSWriter(cobs_config_t config, void (*write_handler_ptr)(uint8_t *data_ptr, size_t size)) {
+    cfg = config;
+    write_handler = write_handler_ptr;
+    if (not cfg.depth) cfg.depth = DEFAULT_COBS_DEPTH;
+    buffer_ptr = reinterpret_cast<uint8_t*>(malloc(cfg.depth));
     reset();
 }
 
@@ -14,7 +14,7 @@ COBSWriter::~COBSWriter() {
 }
 
 cobs_writer_status_t COBSWriter::get_status() {
-    if (not buffer_ptr) return cobs_writer_status_t::COBS_BUFFER_MISSING;
+    if (not buffer_ptr) return COBS_BUFFER_MISSING;
     return COBS_OK;
 }
 
@@ -26,34 +26,34 @@ void COBSWriter::reset() {
 
 cobs_writer_status_t COBSWriter::finish_sending(bool is_send_with_delimiter) {
     uint8_t size = current_buffer_ptr - buffer_ptr;
-    if (size < 2) return cobs_writer_status_t::COBS_EMPTY_DATA;
-    writer_h(buffer_ptr, size);
-    if (is_send_with_delimiter) writer_h(&config.delimiter, 1);
+    if (size < 2) return COBS_EMPTY_DATA;
+    write_handler(buffer_ptr, size);
+    if (is_send_with_delimiter) write_handler(&cfg.delimiter, 1);
     reset();
-    return cobs_writer_status_t::COBS_OK;
+    return COBS_OK;
 }
 
-void COBSWriter::send_segment(uint8_t *data_ptr, size_t length) {
+void COBSWriter::send_segment(uint8_t *data_ptr, size_t size) {
     uint8_t *current_byte_ptr = data_ptr;
-    for (size_t i = 0; i < length; ++i) {
+    for (size_t i = 0; i < size; ++i) {
         uint8_t character = *current_byte_ptr++;
-        if (character != config.delimiter and current_buffer_ptr - buffer_ptr < config.depth) {
+        if (character != cfg.delimiter and current_buffer_ptr - buffer_ptr < cfg.depth) {
             *current_buffer_ptr++ = character;
             offset++;
         } else {
-            if (current_buffer_ptr - buffer_ptr == config.depth) {
+            if (current_buffer_ptr - buffer_ptr == cfg.depth) {
                 current_byte_ptr--; i--;
             }
-            write_offset(offset);
-            writer_h(buffer_ptr, current_buffer_ptr - buffer_ptr);
+            set_offset(offset);
+            write_handler(buffer_ptr, current_buffer_ptr - buffer_ptr);
             reset();
         }
     }
-    write_offset(current_buffer_ptr - offset_place_ptr);
+    set_offset(current_buffer_ptr - offset_place_ptr);
 }
 
-void COBSWriter::write_offset(uint8_t new_offset) {
+void COBSWriter::set_offset(uint8_t new_offset) {
     // Substituting the offset value if it is equal to the delimiter.
-    if (offset == config.delimiter and config.delimiter != 0) *offset_place_ptr = 0;
+    if (offset == cfg.delimiter and cfg.delimiter != 0) *offset_place_ptr = 0;
     else *offset_place_ptr = new_offset;
 }

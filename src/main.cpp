@@ -11,7 +11,7 @@ void setup() {
     Serial.begin(115200);
     Serial.println();
 
-    status = bdsp.set_writer([] (uint8_t *d, size_t s) {Serial.write(d, s);});
+    status = bdsp.set_write_handler([] (uint8_t *data, size_t size) {Serial.write(d, s);});
     cobs_config_t config = {.delimiter = '\n', .depth = 255};
     status = bdsp.set_config(config);
 }

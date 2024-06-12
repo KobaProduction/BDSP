@@ -11,9 +11,9 @@ BDSP::~BDSP() {
     delete reader;
 }
 
-bdsp_status_t BDSP::set_writer(void (*writer_ptr)(uint8_t *data_ptr, size_t size)) {
+bdsp_status_t BDSP::set_write_handler(void (*writer_ptr)(uint8_t *data_ptr, size_t size)) {
     if (writer or reader) return bdsp_status_t::BDSP_CONFIG_ALREADY_INSTALLED;
-    writer_h = writer_ptr;
+    write_handler = writer_ptr;
     return bdsp_status_t::BDSP_OK;
 }
 
@@ -21,14 +21,14 @@ bdsp_status_t BDSP::set_config(cobs_config_t config) {
     if (writer or reader) return bdsp_status_t::BDSP_CONFIG_ALREADY_INSTALLED;
     bool need_writer = mode == BDSP_DUPLEX or mode == BDSP_SENDER;
     bool need_reader = mode == BDSP_DUPLEX or mode == BDSP_RECEIVER;
-    if (need_writer and not writer_h) return bdsp_status_t::BDSP_WRITER_NOT_INSTALLED;
+    if (need_writer and not write_handler) return bdsp_status_t::BDSP_WRITER_NOT_INSTALLED;
     if (need_writer) {
-        writer = new COBSWriter(config, writer_h);
-        if (writer->get_status() != cobs_writer_status_t::COBS_OK) {
+        writer = new COBSWriter(config, write_handler);
+        if (writer->get_status() not_eq cobs_writer_status_t::COBS_OK) {
             return bdsp_status_t::BDSP_ERROR_STATUS_COBS_WRITER;
         }
     }
-//    if (need_reader) reader = new COBSReader(config, );
+//    if (need_reader) reader = new COBSReader(cfg, );
     return bdsp_status_t::BDSP_OK;
 }
 

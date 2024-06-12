@@ -6,11 +6,11 @@ cmake_minimum_required(VERSION 3.5)
 set(CMAKE_CXX_STANDARD 17)
 
 set(BDSP_SRCS
-        src/packet.cpp
-        src/BDSP.cpp
         src/encoders/cobs/reader.cpp
         src/encoders/cobs/writer.cpp
-        src/checksums/crc.cpp
+        src/checksums/crc/crc8.cpp
+        src/BDSP.cpp
+        src/packet.cpp
         src/utils.cpp
 )
 
