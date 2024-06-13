@@ -15,7 +15,7 @@ public:
     ~BDSPReceiver();
     bdsp_set_config_status set_config(cobs_config_t config, packet_handler_t packet_handler);
     void parse(uint8_t *data_ptr, size_t size);
-private:
+protected:
     void parse_packet_byte(uint8_t character, cobs_read_state read_state);
     void reset();
     COBSDecoder *decoder;
