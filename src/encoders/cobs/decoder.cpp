@@ -7,8 +7,8 @@ COBSDecoder::COBSDecoder(cobs_config_t config, cobs_reader_data_callback_t callb
     reset();
 }
 
-void COBSDecoder::reset() {
-    fsm_state = SERVICE_BYTE;
+void COBSDecoder::reset(bool is_wait_delimiter) {
+    fsm_state = is_wait_delimiter ? WAIT_DELIMITER : SERVICE_BYTE;
     swap_byte_offset = 0;
     service_byte_offset = cfg.depth;
 }

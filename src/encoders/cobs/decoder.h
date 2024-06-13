@@ -5,10 +5,11 @@
 
 using namespace cobs_namespace;
 
+
 class COBSDecoder {
 public:
     explicit COBSDecoder(cobs_config_t config, cobs_reader_data_callback_t callback, void *callback_context = nullptr);
-    void reset();
+    void reset(bool is_wait_delimiter = false);
     void parse(uint8_t character);
     void parse(uint8_t *data_ptr, size_t size);
 private:
