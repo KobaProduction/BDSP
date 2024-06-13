@@ -1,42 +1,41 @@
 #ifndef BDSP_BDSP_H
 #define BDSP_BDSP_H
 
-#include "./packet.h"
-#include "./encoders/cobs/writer.h"
-#include "./encoders/cobs/reader.h"
-#include "./checksums/crc/crc8.h"
+#ifdef ARDUINO
+#include "stdint.h"
+#include "stddef.h"
+#else
+#include <cstdint>
+#include <cstddef>
+#endif
+
+#include "packet.h"
+#include "encoders/cobs/encoder.h"
+#include "encoders/cobs/decoder.h"
+#include "checksums/crc/crc8.h"
 
 #define DEFAULT_MAX_PACKET_SIZE 65535
 
-enum BDSP_MODE {BDSP_DUPLEX, BDSP_SENDER, BDSP_RECEIVER};
 
-enum bdsp_status_t {
-    BDSP_OK,
-    BDSP_WRITER_NOT_INSTALLED,
-    BDSP_CONFIG_NOT_INSTALLED,
-    BDSP_CONFIG_ALREADY_INSTALLED,
-    BDSP_ERROR_STATUS_COBS_WRITER,
-    BDSP_EXCESS_SIZE_PACKET, // Data packet size exceeded.
-    BDSP_INVALID_MAXIMUM_PACKET_SIZE
-};
+namespace BDSP {
+    enum bdsp_set_config_status {
+        CONFIG_INSTALLED,
+        CONFIG_ALREADY_INSTALLED,
+        COBS_BUFFER_NOT_CREATED
+    };
 
-class BDSP {
-public:
-    explicit BDSP(BDSP_MODE mode);
-    ~BDSP();
-    bdsp_status_t set_write_handler(void (*writer_ptr)(uint8_t *data_ptr, size_t size));
-    bdsp_status_t set_config(cobs_config_t config);
-    bdsp_status_t set_max_packet_size(uint16_t max_size);
-    void tick();
+    enum bdsp_set_max_packet_size_status {
+        MAX_PACKET_SIZE_SET,
+        INVALID_MAXIMUM_PACKET_SIZE
+    };
 
-    bdsp_status_t send_data(uint8_t id, uint8_t *data, size_t size);
-    bdsp_status_t send_packet(Packet &packet);
-private:
-    BDSP_MODE mode = BDSP_DUPLEX;
-    uint16_t max_packet_size = DEFAULT_MAX_PACKET_SIZE;
-    void (*write_handler)(uint8_t *data_ptr, size_t size) = nullptr;
-    COBSWriter *writer;
-    COBSReader *reader;
-};
+    enum bdsp_transmit_status {
+        WRITE_OK,
+        BDSP_CONFIG_NOT_INSTALLED,
+        BDSP_EXCESS_SIZE_PACKET, // Data packet size exceeded.
+    };
+
+    typedef void (*packet_handler_t)(Packet &packet);
+}
 
 #endif //BDSP_BDSP_H
