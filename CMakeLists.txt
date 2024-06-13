@@ -5,17 +5,33 @@
 cmake_minimum_required(VERSION 3.5)
 set(CMAKE_CXX_STANDARD 17)
 
-set(BDSP_SRCS
-        src/encoders/cobs/reader.cpp
-        src/encoders/cobs/writer.cpp
-        src/checksums/crc/crc8.cpp
-        src/BDSP.cpp
-        src/packet.cpp
-        src/utils.cpp
+project(BDSP
+        VERSION 0.1.0
+        DESCRIPTION "The library implements a binary data separation protocol."
+        LANGUAGES CXX
 )
 
-idf_component_register(SRCS ${BDSP_SRCS}
+set(BDSP_SRCS
+        src/encoders/cobs/decoder.h
+        src/encoders/cobs/decoder.cpp
+        src/encoders/cobs/encoder.h
+        src/encoders/cobs/encoder.cpp
+        src/checksums/crc/crc8.h
+        src/checksums/crc/crc8.cpp
+        src/bdsp_mixins.h
+        src/bdsp_mixins.cpp
+        src/bdsp_receiver.h
+        src/bdsp_receiver.cpp
+        src/bdsp_transceiver.h
+        src/bdsp_transceiver.cpp
+        src/bdsp_transmitter.h
+        src/bdsp_transmitter.cpp
+        src/packet.h
+        src/packet.cpp
+)
+
+idf_component_register(SRCS BDSP_SRCS
         INCLUDE_DIRS "src"
         REQUIRES arduino)
 
-project(BDSP)
+add_library(BDSP BDSP_SRCS)
