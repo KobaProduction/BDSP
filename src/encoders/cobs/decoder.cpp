@@ -34,11 +34,11 @@ void COBSDecoder::parse(uint8_t character) {
             set_swap_byte_offset(character);
             data_callback(character, OK, data_callback_context);
             break;
-        case WAIT_SEPARATOR:
+        case WAIT_DELIMITER:
             if (character == cfg.delimiter) return reset();
             break;
     }
-    if (fsm_state == WAIT_SEPARATOR) return;
+    if (fsm_state == WAIT_DELIMITER) return;
     service_byte_offset--;
     swap_byte_offset--;
     if (service_byte_offset == 0) {
@@ -72,5 +72,5 @@ void COBSDecoder::set_swap_byte_offset(uint8_t offset) {
 
 void COBSDecoder::set_error_state(uint8_t character) {
     data_callback(character, ERROR, data_callback_context);
-    fsm_state = WAIT_SEPARATOR;
+    fsm_state = character == cfg.delimiter ? SERVICE_BYTE : WAIT_DELIMITER;
 }

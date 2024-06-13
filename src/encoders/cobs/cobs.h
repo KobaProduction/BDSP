@@ -27,7 +27,7 @@ namespace cobs_namespace {
         COBS_EMPTY_DATA,
     };
 
-    enum cobs_fsm_state {SERVICE_BYTE, REGULAR_BYTE, SWAP_BYTE, WAIT_SEPARATOR};
+    enum cobs_fsm_state {SERVICE_BYTE, REGULAR_BYTE, SWAP_BYTE, WAIT_DELIMITER};
     enum cobs_read_state {OK, END, ERROR};
 
     typedef void (*cobs_reader_data_callback_t)(uint8_t character, cobs_read_state read_state, void *callback_context);
