@@ -30,11 +30,10 @@ bdsp_transmit_status BDSPTransmitter::send_packet(Packet &packet) {
     if (packet.size > max_packet_size) return BDSP_EXCESS_SIZE_PACKET;
     uint8_t checksum;
     checksum = crc8(&packet.id, 1);
-    auto *size_p = (uint8_t*)(&packet.size);
-    checksum = crc8(size_p, 1);
-    checksum = crc8(size_p + 1, 1);
+    checksum = crc8( (uint8_t*)(&packet.size), 2, checksum);
+    checksum = crc8(packet.data, packet.size, checksum);
     encoder->send_segment(&packet.id, 1);
-    encoder->send_segment(size_p, 2);
+    encoder->send_segment((uint8_t*)(&packet.size), 2);
     encoder->send_segment(packet.data, packet.size);
     encoder->send_segment(&checksum, 1);
     encoder->finish_sending();
