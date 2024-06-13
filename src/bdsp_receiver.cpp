@@ -28,8 +28,7 @@ void BDSPReceiver::parse(uint8_t *data_ptr, size_t size) {
 
 void BDSPReceiver::parse_packet_byte(uint8_t character, cobs_read_state read_state) {
     if (read_state == ERROR) {
-        reset();
-        parse_state = WAIT_NEW_PACKET;
+        return reset();
     }
 
     if (parse_state not_eq PACKET_CHECKSUM and parse_state not_eq PACKET_ID) {
@@ -43,47 +42,50 @@ void BDSPReceiver::parse_packet_byte(uint8_t character, cobs_read_state read_sta
             parse_state = SIZE_A;
             break;
         case SIZE_A:
-            raw_packet->size = character << 8;
+            raw_packet->size = character;
             parse_state = SIZE_B;
             break;
         case SIZE_B:
-            raw_packet->size += character;
-            if (raw_packet->size > max_packet_size) {
-                parse_state = WAIT_NEW_PACKET;
-                //error
+            raw_packet->size += character << 8;
+            if (raw_packet->size > max_packet_size or raw_packet->size < 2) {
+                // Packet size error.
+                return reset();
             }
             raw_packet->create_buffer();
             if (not raw_packet->data) {
-                parse_state = WAIT_NEW_PACKET;
+                // Error creating packet buffer.
+                return reset();
             }
             parse_state = PACKET_DATA;
             break;
         case PACKET_DATA:
-            if (received_data_byte == raw_packet->size - 1) {
-                parse_state = PACKET_CHECKSUM;
-            }
             raw_packet->data[received_data_byte] = character;
             received_data_byte += 1;
+            if (received_data_byte == raw_packet->size) {
+                parse_state = PACKET_CHECKSUM;
+            }
             break;
         case PACKET_CHECKSUM:
-            if (packet_checksum == character) {
-                packet_handler(*raw_packet);
-                reset();
-            } else {
-                // error
-            }
-            parse_state = WAIT_NEW_PACKET;
+            if (packet_checksum not_eq character) return reset();
+            parse_state = WAIT_END;
             break;
-        case WAIT_NEW_PACKET:
-            if (read_state == END) reset();
+        case WAIT_END:
+            if (read_state == END) {
+                packet_handler(*raw_packet);
+            }
+            reset();
             break;
     }
 }
 
 void BDSPReceiver::reset() {
+    decoder->reset(true);
     parse_state = PACKET_ID;
     received_data_byte = 0;
-    delete raw_packet;
+    if (raw_packet) {
+        delete raw_packet;
+        raw_packet = nullptr;
+    }
 }
 
 

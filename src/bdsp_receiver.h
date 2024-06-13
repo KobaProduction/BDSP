@@ -7,7 +7,7 @@
 #include "encoders/cobs/decoder.h"
 #include "checksums/crc/crc8.h"
 
-enum bdsp_receiver_fsm_state {PACKET_ID, SIZE_A, SIZE_B, PACKET_DATA, PACKET_CHECKSUM, WAIT_NEW_PACKET};
+enum bdsp_receiver_fsm_state {PACKET_ID, SIZE_A, SIZE_B, PACKET_DATA, PACKET_CHECKSUM, WAIT_END};
 
 class BDSPReceiver : public BDSPMaxPacketSizeMixin {
 public:
