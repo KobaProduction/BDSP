@@ -31,7 +31,7 @@ namespace cobs_namespace {
     enum cobs_read_state {OK, END, ERROR};
 
     typedef void (*cobs_reader_data_callback_t)(uint8_t character, cobs_read_state read_state, void *callback_context);
-    typedef void (*write_handler_t)(uint8_t *data_ptr, size_t size);
+    typedef void (*write_handler_t)(uint8_t *data_ptr, size_t size, void *write_handler_context);
 }
 
 #endif //BDSP_COBS_CONFIGURATION_H

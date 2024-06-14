@@ -11,6 +11,7 @@ public:
             cobs_config_t config,
             write_handler_t write_handler,
             packet_handler_t packet_handler,
+            void *write_handler_context = nullptr,
             void *packet_handler_context = nullptr
     );
 };

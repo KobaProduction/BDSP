@@ -1,8 +1,9 @@
 #include "encoder.h"
 
-COBSEncoder::COBSEncoder(cobs_config_t config, write_handler_t handler) {
+COBSEncoder::COBSEncoder(cobs_config_t config, write_handler_t handler, void *handler_context) {
     cfg = config;
     write_handler = handler;
+    write_handler_context = handler_context;
     if (not cfg.depth) cfg.depth = DEFAULT_COBS_DEPTH;
     buffer_ptr = reinterpret_cast<uint8_t*>(malloc(cfg.depth));
     reset();
@@ -27,8 +28,8 @@ void COBSEncoder::reset() {
 cobs_encoder_status COBSEncoder::finish_sending(bool is_send_with_delimiter) {
     uint8_t size = current_buffer_ptr - buffer_ptr;
     if (size < 2) return COBS_EMPTY_DATA;
-    write_handler(buffer_ptr, size);
-    if (is_send_with_delimiter) write_handler(&cfg.delimiter, 1);
+    write_handler(buffer_ptr, size, write_handler_context);
+    if (is_send_with_delimiter) write_handler(&cfg.delimiter, 1, write_handler_context);
     reset();
     return COBS_OK;
 }
@@ -45,7 +46,7 @@ void COBSEncoder::send_segment(uint8_t *data_ptr, size_t size) {
                 current_byte_ptr--; i--;
             }
             set_offset(offset);
-            write_handler(buffer_ptr, current_buffer_ptr - buffer_ptr);
+            write_handler(buffer_ptr, current_buffer_ptr - buffer_ptr, write_handler_context);
             reset();
         }
     }
