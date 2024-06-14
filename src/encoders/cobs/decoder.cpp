@@ -32,7 +32,7 @@ void COBSDecoder::parse(uint8_t character) {
                 return reset();
             }
             set_swap_byte_offset(character);
-            data_callback(character, OK, data_callback_context);
+            data_callback(cfg.delimiter, OK, data_callback_context);
             break;
         case WAIT_DELIMITER:
             if (character == cfg.delimiter) return reset();
