@@ -35,7 +35,7 @@ namespace BDSP {
         BDSP_EXCESS_SIZE_PACKET, // Data packet size exceeded.
     };
 
-    typedef void (*packet_handler_t)(Packet &packet);
+    typedef void (*packet_handler_t)(Packet &packet, void *packet_handler_context);
 }
 
 #endif //BDSP_BDSP_H

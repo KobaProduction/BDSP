@@ -9,9 +9,10 @@ BDSPReceiver::~BDSPReceiver() {
     delete raw_packet;
 }
 
-bdsp_set_config_status BDSPReceiver::set_config(cobs_config_t config, packet_handler_t handler) {
+bdsp_set_config_status BDSPReceiver::set_config(cobs_config_t config, packet_handler_t handler, void *context) {
     if (decoder) return CONFIG_ALREADY_INSTALLED;
     packet_handler = handler;
+    packet_handler_context = context;
 
     cobs_reader_data_callback_t callback = [] (uint8_t character, cobs_read_state read_state, void *context) {
         BDSPReceiver &self = *reinterpret_cast<BDSPReceiver*>(context);
@@ -24,6 +25,10 @@ bdsp_set_config_status BDSPReceiver::set_config(cobs_config_t config, packet_han
 
 void BDSPReceiver::parse(uint8_t *data_ptr, size_t size) {
     decoder->parse(data_ptr, size);
+}
+
+void BDSPReceiver::parse(uint8_t &character) {
+    decoder->parse(&character, 1);
 }
 
 void BDSPReceiver::parse_packet_byte(uint8_t character, cobs_read_state read_state) {
@@ -71,7 +76,7 @@ void BDSPReceiver::parse_packet_byte(uint8_t character, cobs_read_state read_sta
             break;
         case WAIT_END:
             if (read_state == END) {
-                packet_handler(*raw_packet);
+                packet_handler(*raw_packet, packet_handler_context);
             }
             reset();
             break;
@@ -87,5 +92,3 @@ void BDSPReceiver::reset() {
         raw_packet = nullptr;
     }
 }
-
-

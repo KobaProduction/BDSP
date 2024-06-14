@@ -5,6 +5,7 @@
 
 using namespace cobs_namespace;
 
+
 class COBSEncoder {
 public:
     explicit COBSEncoder(cobs_config_t config, write_handler_t write_handler);

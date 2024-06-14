@@ -8,7 +8,10 @@
 class BDSPTransceiver : public BDSPTransmitter, public BDSPReceiver {
 public:
     bdsp_set_config_status set_config(
-            cobs_config_t config, write_handler_t write_handler, packet_handler_t packet_handler
+            cobs_config_t config,
+            write_handler_t write_handler,
+            packet_handler_t packet_handler,
+            void *packet_handler_context = nullptr
     );
 };
 
