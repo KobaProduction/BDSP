@@ -7,6 +7,7 @@ BDSPReceiver::BDSPReceiver() {
 
 BDSPReceiver::~BDSPReceiver() {
     delete _raw_packet;
+    delete _decoder;
 }
 
 bdsp_set_config_status_t BDSPReceiver::set_config(cobs_config_t config, packet_handler_t handler, void *context) {
