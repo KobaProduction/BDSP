@@ -8,11 +8,12 @@ using namespace cobs;
 
 class COBSEncoder {
 public:
-    explicit COBSEncoder(cobs_config_t config, cobs_write_handler_t handler, void *handler_context_ptr = nullptr);
+    explicit COBSEncoder(cobs_config_t config, cobs_write_handler_t write_handler, void *write_handler_context_ptr = nullptr);
     ~COBSEncoder();
     cobs_encoder_status_t get_status();
-    cobs_encoder_status_t finish_sending(bool is_send_with_delimiter = true);
+    cobs_encoder_status_t finish_encoding(bool is_send_with_delimiter = true);
     void send_segment(uint8_t *buffer_ptr, size_t size);
+    void send_byte(uint8_t &byte);
     void reset();
 private:
     cobs_config_t _cfg = {DEFAULT_COBS_DELIMITER, DEFAULT_COBS_DEPTH};

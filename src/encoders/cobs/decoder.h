@@ -8,7 +8,7 @@ using namespace cobs;
 
 class COBSDecoder {
 public:
-    explicit COBSDecoder(cobs_config_t config, cobs_decoder_data_callback_t callback, void *callback_context_ptr = nullptr);
+    explicit COBSDecoder(cobs_config_t config, cobs_decoder_data_callback_t data_callback, void *data_callback_context_ptr = nullptr);
     void reset(bool is_wait_delimiter = false);
     void parse(uint8_t byte);
     void parse(uint8_t *buffer_ptr, size_t size);

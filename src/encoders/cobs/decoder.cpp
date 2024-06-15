@@ -1,9 +1,9 @@
 #include "decoder.h"
 
-COBSDecoder::COBSDecoder(cobs_config_t config, cobs_decoder_data_callback_t callback, void *callback_context_ptr) {
+COBSDecoder::COBSDecoder(cobs_config_t config, cobs_decoder_data_callback_t data_callback, void *data_callback_context_ptr) {
     _cfg = config;
-    _data_callback = callback;
-    _callback_context_ptr = callback_context_ptr;
+    _data_callback = data_callback;
+    _callback_context_ptr = data_callback_context_ptr;
     reset();
 }
 

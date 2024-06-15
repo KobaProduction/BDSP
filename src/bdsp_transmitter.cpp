@@ -32,10 +32,10 @@ bdsp_status_t BDSPTransmitter::send_packet(Packet &packet) {
     checksum = crc8(&packet.id, 1);
     checksum = crc8(reinterpret_cast<uint8_t*>(&packet.size), 2, checksum);
     checksum = crc8(packet.data_ptr, packet.size, checksum);
-    _encoder->send_segment(&packet.id, 1);
+    _encoder->send_byte(packet.id);
     _encoder->send_segment(reinterpret_cast<uint8_t*>(&packet.size), 2);
     _encoder->send_segment(packet.data_ptr, packet.size);
-    _encoder->send_segment(&checksum, 1);
-    _encoder->finish_sending();
+    _encoder->send_byte(checksum);
+    _encoder->finish_encoding();
     return WRITE_OK;
 }
