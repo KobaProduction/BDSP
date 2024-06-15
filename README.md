@@ -6,7 +6,7 @@
 [![Foo](https://img.shields.io/badge/README-RUSSIAN-blueviolet.svg?style=flat-square)](https://github-com.translate.goog/KobaProduction/BDSP?_x_tr_sl=en&_x_tr_tl=ru)
 
 
-TThe library implements a protocol for dividing a binary data stream into packets based on a modification of the COBS encoder that performs "on-the-fly" encoding (a depth parameter size buffer is used for encoding).
+TThe library implements a protocol for dividing a binary data_ptr stream into packets based on a modification of the COBS _encoder that performs "on-the-fly" encoding (a depth parameter size buffer is used for encoding).
 
 We have multiple goals with this library:
 
@@ -15,7 +15,7 @@ We have multiple goals with this library:
 * Minimal dependencies.
 * High performance.
 * Possibility of flexible configuration.
-* COBS encoding. Low data redundancy.
+* COBS encoding. Low data_ptr redundancy.
 
 
 ## Getting Started
@@ -27,6 +27,7 @@ Here's a simple program for Arduino:
 #include <bdsp_transceiver.h>
 
 #define SIZE_DATA 255
+
 
 BDSPTransceiver transceiver;
 
@@ -57,7 +58,7 @@ void loop() {
         auto *buffer = new uint8_t[available];
         Serial.readBytes(buffer, available);
         transceiver.parse(buffer, available);
-        delete [] buffer;
+        delete[] buffer;
     }
     delay(5000);
 }

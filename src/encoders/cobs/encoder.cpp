@@ -1,60 +1,53 @@
 #include "encoder.h"
 
-COBSEncoder::COBSEncoder(cobs_config_t config, write_handler_t handler, void *handler_context) {
-    cfg = config;
-    write_handler = handler;
-    write_handler_context = handler_context;
-    if (not cfg.depth) cfg.depth = DEFAULT_COBS_DEPTH;
-    buffer_ptr = reinterpret_cast<uint8_t*>(malloc(cfg.depth));
+COBSEncoder::COBSEncoder(cobs_config_t config, cobs_write_handler_t handler, void *handler_context_ptr) {
+    _cfg = config;
+    _write_handler = handler;
+    _handler_context_ptr = handler_context_ptr;
+    if (not _cfg.depth) _cfg.depth = DEFAULT_COBS_DEPTH;
+    _buffer_ptr = reinterpret_cast<uint8_t*>(malloc(_cfg.depth));
     reset();
 }
 
 COBSEncoder::~COBSEncoder() {
-    finish_sending();
-    free(buffer_ptr);
+    free(_buffer_ptr);
 }
 
-cobs_encoder_status COBSEncoder::get_status() {
-    if (not buffer_ptr) return COBS_BUFFER_MISSING;
+cobs_encoder_status_t COBSEncoder::get_status() {
+    if (not _buffer_ptr) return COBS_BUFFER_MISSING;
     return COBS_OK;
 }
 
-void COBSEncoder::reset() {
-    offset = 1;
-    current_buffer_ptr = buffer_ptr;
-    offset_place_ptr = current_buffer_ptr++;
-}
-
-cobs_encoder_status COBSEncoder::finish_sending(bool is_send_with_delimiter) {
-    uint8_t size = current_buffer_ptr - buffer_ptr;
+cobs_encoder_status_t COBSEncoder::finish_sending(bool is_send_with_delimiter) {
+    uint8_t size = _current_buffer_ptr - _buffer_ptr;
     if (size < 2) return COBS_EMPTY_DATA;
-    write_handler(buffer_ptr, size, write_handler_context);
-    if (is_send_with_delimiter) write_handler(&cfg.delimiter, 1, write_handler_context);
+    _write_handler(_buffer_ptr, size, _handler_context_ptr);
+    if (is_send_with_delimiter) _write_handler(&_cfg.delimiter, 1, _handler_context_ptr);
     reset();
     return COBS_OK;
 }
 
-void COBSEncoder::send_segment(uint8_t *data_ptr, size_t size) {
-    uint8_t *current_byte_ptr = data_ptr;
+void COBSEncoder::send_segment(uint8_t *buffer_ptr, size_t size) {
+    uint8_t *current_byte_ptr = buffer_ptr;
     for (size_t i = 0; i < size; ++i) {
-        uint8_t character = *current_byte_ptr++;
-        if (character != cfg.delimiter and current_buffer_ptr - buffer_ptr < cfg.depth) {
-            *current_buffer_ptr++ = character;
-            offset++;
-        } else {
-            if (current_buffer_ptr - buffer_ptr == cfg.depth) {
-                current_byte_ptr--; i--;
-            }
-            set_offset(offset);
-            write_handler(buffer_ptr, current_buffer_ptr - buffer_ptr, write_handler_context);
-            reset();
+        uint8_t byte = *current_byte_ptr++;
+        uint8_t bytes_in_buffer = _current_buffer_ptr - _buffer_ptr;
+        if (byte != _cfg.delimiter and bytes_in_buffer < _cfg.depth) {
+            *_current_buffer_ptr++ = byte;
+            _service_byte_offset++;
+            continue;
+        } else if (bytes_in_buffer == _cfg.depth) {
+            current_byte_ptr--; i--;
         }
+        *_service_byte_ptr = _cfg.delimiter and _service_byte_offset == _cfg.delimiter ? 0 : _service_byte_offset;
+        _write_handler(_buffer_ptr, bytes_in_buffer, _handler_context_ptr);
+        reset();
     }
-    set_offset(current_buffer_ptr - offset_place_ptr);
+    *_service_byte_ptr = _cfg.delimiter and _service_byte_offset == _cfg.delimiter ? 0 : _current_buffer_ptr - _service_byte_ptr;
 }
 
-void COBSEncoder::set_offset(uint8_t new_offset) {
-    // Substituting the offset value if it is equal to the delimiter.
-    if (offset == cfg.delimiter and cfg.delimiter != 0) *offset_place_ptr = 0;
-    else *offset_place_ptr = new_offset;
+void COBSEncoder::reset() {
+    _service_byte_offset = 1;
+    _current_buffer_ptr = _buffer_ptr;
+    _service_byte_ptr = _current_buffer_ptr++;
 }

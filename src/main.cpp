@@ -3,6 +3,7 @@
 
 #define SIZE_DATA 255
 
+
 BDSPTransceiver transceiver;
 
 void setup() {
@@ -32,7 +33,7 @@ void loop() {
         auto *buffer = new uint8_t[available];
         Serial.readBytes(buffer, available);
         transceiver.parse(buffer, available);
-        delete [] buffer;
+        delete[] buffer;
     }
     delay(5000);
 }

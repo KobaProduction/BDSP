@@ -3,24 +3,24 @@
 
 #include "cobs.h"
 
-using namespace cobs_namespace;
+using namespace cobs;
 
 
 class COBSDecoder {
 public:
-    explicit COBSDecoder(cobs_config_t config, cobs_reader_data_callback_t callback, void *callback_context = nullptr);
+    explicit COBSDecoder(cobs_config_t config, cobs_decoder_data_callback_t callback, void *callback_context_ptr = nullptr);
     void reset(bool is_wait_delimiter = false);
-    void parse(uint8_t character);
-    void parse(uint8_t *data_ptr, size_t size);
+    void parse(uint8_t byte);
+    void parse(uint8_t *buffer_ptr, size_t size);
 private:
-    cobs_config_t cfg {DEFAULT_COBS_DELIMITER, DEFAULT_COBS_DEPTH};
-    cobs_reader_data_callback_t data_callback = nullptr;
-    void *data_callback_context = nullptr;
-    cobs_fsm_state fsm_state = SERVICE_BYTE;
-    uint8_t swap_byte_offset = 0;
-    uint8_t service_byte_offset = 0;
-    void set_swap_byte_offset(uint8_t offset);
-    void set_error_state(uint8_t character);
+    cobs_config_t _cfg {DEFAULT_COBS_DELIMITER, DEFAULT_COBS_DEPTH};
+    cobs_decoder_data_callback_t _data_callback = nullptr;
+    void *_callback_context_ptr = nullptr;
+    fsm_state_t _fsm_state = SERVICE_BYTE;
+    uint8_t _swap_byte_offset = 0;
+    uint8_t _service_byte_offset = 0;
+    void _set_swap_byte_offset(uint8_t offset);
+    void _set_error_state(uint8_t byte);
 };
 
 #endif //BDSP_COBS_READER_H
