@@ -8,9 +8,9 @@ BDSPTransmitter::~BDSPTransmitter() {
     delete _encoder;
 }
 
-bdsp_set_config_status_t BDSPTransmitter::set_config(cobs_config_t config, cobs_write_handler_t handler, void *context) {
+bdsp_set_config_status_t BDSPTransmitter::set_config(cobs_config_t cobs_config, cobs_write_handler_t handler, void *context) {
     if (_encoder) return CONFIG_ALREADY_INSTALLED;
-    _encoder = new COBSEncoder(config, handler, context);
+    _encoder = new COBSEncoder(cobs_config, handler, context);
     if (_encoder->get_status() not_eq cobs_encoder_status_t::COBS_OK) {
         delete _encoder;
         _encoder = nullptr;

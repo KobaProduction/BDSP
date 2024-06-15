@@ -10,7 +10,7 @@ BDSPReceiver::~BDSPReceiver() {
     delete _decoder;
 }
 
-bdsp_set_config_status_t BDSPReceiver::set_config(cobs_config_t config, packet_handler_t handler, void *context) {
+bdsp_set_config_status_t BDSPReceiver::set_config(cobs_config_t cobs_config, packet_handler_t handler, void *context) {
     if (_decoder) return CONFIG_ALREADY_INSTALLED;
     _packet_handler = handler;
     _packet_handler_context = context;
@@ -20,7 +20,7 @@ bdsp_set_config_status_t BDSPReceiver::set_config(cobs_config_t config, packet_h
         self._parse_packet_byte(byte, read_state);
     };
 
-    _decoder = new COBSDecoder(config, callback, this);
+    _decoder = new COBSDecoder(cobs_config, callback, this);
     return CONFIG_INSTALLED;
 }
 

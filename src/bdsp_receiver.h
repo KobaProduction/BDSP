@@ -14,7 +14,7 @@ class BDSPReceiver : public BDSPMaxPacketSizeMixin {
 public:
     BDSPReceiver();
     ~BDSPReceiver();
-    bdsp_set_config_status_t set_config(cobs_config_t config, packet_handler_t packet_handler, void *packet_handler_context_ptr = nullptr);
+    bdsp_set_config_status_t set_config(cobs_config_t cobs_config, packet_handler_t packet_handler, void *packet_handler_context_ptr = nullptr);
     bdsp_status_t parse(uint8_t *buffer_ptr, size_t size);
     bdsp_status_t parse(uint8_t &byte);
 protected:
