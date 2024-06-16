@@ -29,7 +29,7 @@ namespace cobs {
     };
 
     enum fsm_state_t {SERVICE_BYTE, REGULAR_BYTE, SWAP_BYTE, WAIT_DELIMITER};
-    enum decode_state_t {OK, END, ERROR};
+    enum decode_state_t {DECODE_OK, DECODE_END, DECODE_ERROR};
 
     typedef void (*cobs_decoder_data_callback_t)(uint8_t byte, decode_state_t decode_state, void *callback_context_ptr);
     typedef void (*cobs_write_handler_t)(uint8_t *buffer_ptr, size_t size, void *write_handler_context_ptr);

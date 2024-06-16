@@ -24,15 +24,15 @@ void COBSDecoder::parse(uint8_t byte) {
                 // Decoding error. The separator should not appear in regular data.
                 return _set_error_state(byte);
             }
-            _data_callback(byte, OK, _callback_context_ptr);
+            _data_callback(byte, DECODE_OK, _callback_context_ptr);
             break;
         case SWAP_BYTE:
             if (byte == _cfg.delimiter) {
-                _data_callback(byte, END, _callback_context_ptr);
+                _data_callback(byte, DECODE_END, _callback_context_ptr);
                 return reset();
             }
             _set_swap_byte_offset(byte);
-            _data_callback(_cfg.delimiter, OK, _callback_context_ptr);
+            _data_callback(_cfg.delimiter, DECODE_OK, _callback_context_ptr);
             break;
         case WAIT_DELIMITER:
             if (byte == _cfg.delimiter) return reset();
@@ -66,6 +66,6 @@ void COBSDecoder::_set_swap_byte_offset(uint8_t offset) {
 }
 
 void COBSDecoder::_set_error_state(uint8_t byte) {
-    _data_callback(byte, ERROR, _callback_context_ptr);
+    _data_callback(byte, DECODE_ERROR, _callback_context_ptr);
     _fsm_state = byte == _cfg.delimiter ? SERVICE_BYTE : WAIT_DELIMITER;
 }

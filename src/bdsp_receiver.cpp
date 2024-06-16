@@ -37,7 +37,7 @@ bdsp_status_t BDSPReceiver::parse(uint8_t &byte) {
 }
 
 void BDSPReceiver::_parse_packet_byte(uint8_t byte, decode_state_t decode_state) {
-    if (decode_state == ERROR) return _reset();
+    if (decode_state == DECODE_ERROR) return _reset();
 
     if (_fsm_state not_eq PACKET_CHECKSUM and _fsm_state not_eq PACKET_ID) {
         _packet_checksum = crc8(&byte, 1, _packet_checksum);
@@ -77,7 +77,7 @@ void BDSPReceiver::_parse_packet_byte(uint8_t byte, decode_state_t decode_state)
             _fsm_state = WAIT_END;
             break;
         case WAIT_END:
-            if (decode_state == END) {
+            if (decode_state == DECODE_END) {
                 _packet_handler(*_raw_packet, _packet_handler_context);
             }
             _reset();
