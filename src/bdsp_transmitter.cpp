@@ -27,7 +27,7 @@ bdsp_status_t BDSPTransmitter::send_data(uint8_t packet_id, uint8_t *buffer_ptr,
 
 bdsp_status_t BDSPTransmitter::send_packet(Packet &packet) {
     if (not _encoder) return BDSP_CONFIG_NOT_INSTALLED;
-    if (packet.size > _max_packet_size) return BDSP_EXCESS_SIZE_PACKET;
+    if (packet.size < 1 or packet.size > _max_packet_size) return BDSP_EXCESS_SIZE_PACKET;
     uint8_t checksum;
     checksum = crc8(&packet.id, 1);
     checksum = crc8(reinterpret_cast<uint8_t*>(&packet.size), 2, checksum);
