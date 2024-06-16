@@ -32,8 +32,7 @@ bdsp_status_t BDSPReceiver::parse(uint8_t *buffer_ptr, size_t size) {
 
 bdsp_status_t BDSPReceiver::parse(uint8_t &byte) {
     if (not _decoder) return BDSP_CONFIG_NOT_INSTALLED;
-    _decoder->parse(&byte, 1);
-    return PARSE_OK;
+    return parse(&byte, 1);
 }
 
 void BDSPReceiver::_parse_packet_byte(uint8_t byte, decode_state_t decode_state) {

@@ -11,6 +11,7 @@ Packet::~Packet() {
 }
 
 bool Packet::create_buffer() {
+    if (not size) return false;
     data_ptr = reinterpret_cast<uint8_t*>(malloc(size));
     if (not data_ptr) return false;
     need_free = true;

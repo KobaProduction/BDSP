@@ -28,6 +28,7 @@ cobs_encoder_status_t COBSEncoder::finish_encoding(bool is_send_with_delimiter) 
 }
 
 void COBSEncoder::send_segment(uint8_t *buffer_ptr, size_t size) {
+    if (not _write_handler) return;
     uint8_t *current_byte_ptr = buffer_ptr;
     for (size_t i = 0; i < size; ++i) {
         uint8_t byte = *current_byte_ptr++;

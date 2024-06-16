@@ -14,6 +14,7 @@ void COBSDecoder::reset(bool is_wait_delimiter) {
 }
 
 void COBSDecoder::parse(uint8_t byte) {
+    if (not _data_callback) return;
     switch (_fsm_state) {
         case SERVICE_BYTE:
             if (byte == _cfg.delimiter) return reset();
