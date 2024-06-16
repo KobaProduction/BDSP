@@ -47,7 +47,7 @@ void COBSEncoder::send_segment(uint8_t *buffer_ptr, size_t size) {
 }
 
 void COBSEncoder::send_byte(uint8_t &byte) {
-    send_segment(&byte, 0);
+    send_segment(&byte, 1);
 }
 
 void COBSEncoder::reset() {
