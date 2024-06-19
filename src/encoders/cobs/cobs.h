@@ -13,6 +13,9 @@
 
 #define DEFAULT_COBS_DEPTH 255
 #define DEFAULT_COBS_DELIMITER '\0'
+#ifndef MIN_COBS_DEPTH
+#define MIN_COBS_DEPTH 10
+#endif
 
 
 namespace cobs {

@@ -4,7 +4,7 @@ COBSEncoder::COBSEncoder(cobs_config_t config, cobs_write_handler_t write_handle
     _cfg = config;
     _write_handler = write_handler;
     _handler_context_ptr = write_handler_context_ptr;
-    if (not _cfg.depth) _cfg.depth = DEFAULT_COBS_DEPTH;
+    if (_cfg.depth < MIN_COBS_DEPTH or not _cfg.depth) _cfg.depth = DEFAULT_COBS_DEPTH;
     _buffer_ptr = reinterpret_cast<uint8_t*>(malloc(_cfg.depth));
     reset();
 }
