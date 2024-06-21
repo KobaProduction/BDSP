@@ -49,12 +49,12 @@ void BDSPReceiver::_parse_packet_byte(uint8_t byte, decode_state_t decode_state)
             _fsm_state = SIZE_A;
             break;
         case SIZE_A:
-            _raw_packet->size = byte;
+            _raw_packet->size = byte << 8;
             _fsm_state = SIZE_B;
             break;
         case SIZE_B:
-            _raw_packet->size += byte << 8;
-            if (_raw_packet->size > _max_packet_size or _raw_packet->size < 2) {
+            _raw_packet->size += byte;
+            if (not _raw_packet->size or _raw_packet->size > _max_packet_size) {
                 // Packet size error.
                 return _reset();
             }
@@ -78,6 +78,8 @@ void BDSPReceiver::_parse_packet_byte(uint8_t byte, decode_state_t decode_state)
         case WAIT_END:
             if (decode_state == DECODE_END) {
                 _packet_handler(*_raw_packet, _packet_handler_context);
+                delete _raw_packet;
+                _raw_packet = nullptr;
             }
             _reset();
             break;
