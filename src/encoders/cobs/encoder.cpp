@@ -9,7 +9,7 @@ COBSEncoder::COBSEncoder(cobs_config_t config, cobs_write_handler_t write_handle
     reset();
 }
 
-COBSEncoder::~COBSEncoder() {Limit the minimum boundary of a section byte definition
+COBSEncoder::~COBSEncoder() {
     free(_buffer_ptr);
 }
 
