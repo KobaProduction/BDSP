@@ -26,9 +26,6 @@ Here's a simple program for Arduino:
 #include <Arduino.h>
 #include <bdsp_transceiver.h>
 
-#define SIZE_DATA 255
-
-
 BDSPTransceiver transceiver;
 
 void setup() {
@@ -42,8 +39,11 @@ void setup() {
                 Serial.flush();
             },
             [] (Packet &packet, void *context) {
-                Serial.print("Got packet. ID: ");
-                Serial.println(packet.id);
+//                Serial.print("Got packet. ID: ");
+//                Serial.println(packet.id);
+                packet.id += 1;
+                for (uint16_t i = 0; i < packet.size; ++i) packet.data_ptr[i] = i;
+                transceiver.send_packet(packet);
             },
             nullptr,
             nullptr
@@ -51,8 +51,6 @@ void setup() {
 }
 
 void loop() {
-    uint8_t data[SIZE_DATA] = {0};
-    transceiver.send_data(1, data, SIZE_DATA);
     size_t available = Serial.available();
     if (available) {
         auto *buffer = new uint8_t[available];
@@ -60,7 +58,6 @@ void loop() {
         transceiver.parse(buffer, available);
         delete[] buffer;
     }
-    delay(5000);
 }
 ```
 
