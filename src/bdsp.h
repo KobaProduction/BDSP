@@ -34,6 +34,15 @@ namespace BDSP {
 
     enum bdsp_receiver_fsm_state_t {PACKET_ID, SIZE_A, SIZE_B, PACKET_DATA, PACKET_CHECKSUM, WAIT_END};
 
+    enum bdsp_receiver_error_t {
+        ERROR_DECODING = 1,
+        EXCEEDING_THE_MAXIMUM_PACKET_SIZE,
+        NOT_ENOUGH_RAM_FOR_PACKAGE,
+        PACKET_CHECKSUM_DOES_NOT_MATCH
+    };
+
+    typedef void (*bdsp_receiver_error_handler_t)(bdsp_receiver_error_t error, void *packet_handler_context);
+
     typedef void (*packet_handler_t)(Packet &packet, void *packet_handler_context);
 }
 

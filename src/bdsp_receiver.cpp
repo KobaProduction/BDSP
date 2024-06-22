@@ -3,6 +3,7 @@
 BDSPReceiver::BDSPReceiver() {
     _decoder = nullptr;
     _raw_packet = nullptr;
+    _error_handler = [] (bdsp_receiver_error_t error, void *context) {};
 }
 
 BDSPReceiver::~BDSPReceiver() {
@@ -24,6 +25,11 @@ bdsp_set_config_status_t BDSPReceiver::set_config(cobs_config_t cobs_config, pac
     return CONFIG_INSTALLED;
 }
 
+void BDSPReceiver::set_error_handler(bdsp_receiver_error_handler_t error_handler, void *error_handler_context_ptr) {
+    _error_handler = error_handler;
+    _error_handler_context = error_handler_context_ptr;
+}
+
 bdsp_status_t BDSPReceiver::parse(uint8_t *buffer_ptr, size_t size) {
     if (not _decoder) return BDSP_CONFIG_NOT_INSTALLED;
     _decoder->parse(buffer_ptr, size);
@@ -36,7 +42,10 @@ bdsp_status_t BDSPReceiver::parse(uint8_t &byte) {
 }
 
 void BDSPReceiver::_parse_packet_byte(uint8_t byte, decode_state_t decode_state) {
-    if (decode_state == DECODE_ERROR) return _reset();
+    if (decode_state == DECODE_ERROR) {
+        _error_handler(ERROR_DECODING, _error_handler_context);
+        return _reset();
+    }
 
     if (_fsm_state not_eq PACKET_CHECKSUM and _fsm_state not_eq PACKET_ID) {
         _packet_checksum = crc8(&byte, 1, _packet_checksum);
@@ -55,12 +64,12 @@ void BDSPReceiver::_parse_packet_byte(uint8_t byte, decode_state_t decode_state)
         case SIZE_B:
             _raw_packet->size += byte;
             if (not _raw_packet->size or _raw_packet->size > _max_packet_size) {
-                // Packet size error.
+                _error_handler(EXCEEDING_THE_MAXIMUM_PACKET_SIZE, _error_handler_context);
                 return _reset();
             }
             _raw_packet->create_buffer();
             if (not _raw_packet->data_ptr) {
-                // Error creating packet buffer.
+                _error_handler(NOT_ENOUGH_RAM_FOR_PACKAGE, _error_handler_context);
                 return _reset();
             }
             _fsm_state = PACKET_DATA;
@@ -72,7 +81,10 @@ void BDSPReceiver::_parse_packet_byte(uint8_t byte, decode_state_t decode_state)
             }
             break;
         case PACKET_CHECKSUM:
-            if (_packet_checksum not_eq byte) return _reset();
+            if (_packet_checksum not_eq byte) {
+                _error_handler(PACKET_CHECKSUM_DOES_NOT_MATCH, _error_handler_context);
+                return _reset();
+            }
             _fsm_state = WAIT_END;
             break;
         case WAIT_END:

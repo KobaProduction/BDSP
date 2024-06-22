@@ -15,6 +15,7 @@ public:
     BDSPReceiver();
     ~BDSPReceiver();
     bdsp_set_config_status_t set_config(cobs_config_t cobs_config, packet_handler_t packet_handler, void *packet_handler_context_ptr = nullptr);
+    void set_error_handler(bdsp_receiver_error_handler_t error_handler, void *error_handler_context_ptr = nullptr);
     bdsp_status_t parse(uint8_t *buffer_ptr, size_t size);
     bdsp_status_t parse(uint8_t &byte);
 protected:
@@ -23,6 +24,8 @@ protected:
     COBSDecoder *_decoder;
     packet_handler_t _packet_handler = nullptr;
     void *_packet_handler_context = nullptr;
+    bdsp_receiver_error_handler_t _error_handler = nullptr;
+    void *_error_handler_context = nullptr;
     Packet *_raw_packet = nullptr;
     bdsp_receiver_fsm_state_t _fsm_state = PACKET_ID;
     size_t _byte_received = 0;
