@@ -1,5 +1,9 @@
 #include "bdsp_transmitter.h"
 
+using namespace BDSP;
+using namespace COBS;
+
+
 BDSPTransmitter::BDSPTransmitter() {
     _encoder = nullptr;
 }
@@ -8,10 +12,10 @@ BDSPTransmitter::~BDSPTransmitter() {
     delete _encoder;
 }
 
-bdsp_set_config_status_t BDSPTransmitter::set_config(cobs_config_t cobs_config, cobs_write_handler_t handler, void *context) {
+set_config_status_t BDSPTransmitter::set_config(config_t cobs_config, write_handler_t handler, void *context) {
     if (_encoder) return CONFIG_ALREADY_INSTALLED;
     _encoder = new COBSEncoder(cobs_config, handler, context);
-    if (_encoder->get_status() not_eq cobs_encoder_status_t::COBS_OK) {
+    if (_encoder->get_status() not_eq COBS_OK) {
         delete _encoder;
         _encoder = nullptr;
         return COBS_BUFFER_NOT_CREATED;
@@ -19,13 +23,13 @@ bdsp_set_config_status_t BDSPTransmitter::set_config(cobs_config_t cobs_config, 
     return CONFIG_INSTALLED;
 }
 
-bdsp_status_t BDSPTransmitter::send_data(uint8_t packet_id, uint8_t *buffer_ptr, size_t size) {
+status_t BDSPTransmitter::send_data(uint8_t packet_id, uint8_t *buffer_ptr, size_t size) {
     if (size > _max_packet_size) return BDSP_EXCESS_SIZE_PACKET;
     Packet packet = Packet(packet_id, size, buffer_ptr);
     return send_packet(packet);
 }
 
-bdsp_status_t BDSPTransmitter::send_packet(Packet &packet) {
+status_t BDSPTransmitter::send_packet(Packet &packet) {
     if (not _encoder) return BDSP_CONFIG_NOT_INSTALLED;
     if (packet.size < 1 or packet.size > _max_packet_size) return BDSP_EXCESS_SIZE_PACKET;
     uint8_t checksum;

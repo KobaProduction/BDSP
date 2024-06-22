@@ -1,4 +1,4 @@
-#include "./crc8.h"
+#include "crc8.h"
 
 uint8_t crc8(const uint8_t *data_ptr, size_t size, uint8_t base) {
     uint8_t crc = base;

@@ -26,6 +26,7 @@ set(BDSP_SRCS
         src/bdsp_transceiver.cpp
         src/bdsp_transmitter.h
         src/bdsp_transmitter.cpp
+        src/bdsp_types.h
         src/packet.h
         src/packet.cpp
 )
