@@ -59,11 +59,12 @@ void COBSDecoder::parse(uint8_t *buffer_ptr, size_t size) {
 }
 
 void COBSDecoder::_set_swap_byte_offset(uint8_t offset) {
-    // Decoding error. The size of the new swap_byte_offset cannot exceed the swap_byte_offset from the configuration.
-    if (offset > _cfg.depth) _set_error_state(offset);
-
     // Substitution of swap_byte_offset if the delimiter in the configuration is not equal to 0.
     _swap_byte_offset = not offset and _cfg.delimiter ? _cfg.delimiter : offset;
+    _service_byte_offset = _cfg.depth;
+
+    // Decoding error. The size of the new swap_byte_offset cannot exceed the swap_byte_offset from the configuration.
+    if (_swap_byte_offset > _cfg.depth) _set_error_state(offset);
 }
 
 void COBSDecoder::_set_error_state(uint8_t byte) {
