@@ -9,6 +9,18 @@
 #include "encoders/cobs/decoder.h"
 #include "checksums/crc/crc8.h"
 
+#ifndef BDSP_BDSP_RECEIVER_H
+#include "bdsp_receiver.h"
+#endif
+
+#ifndef BDSP_BDSP_TRANSCEIVER_H
+#include "bdsp_transceiver.h"
+#endif
+
+#ifndef BDSP_BDSP_TRANSMITTER_H
+#include "bdsp_transmitter.h"
+#endif
+
 #define DEFAULT_MAX_PACKET_SIZE 65535
 
 

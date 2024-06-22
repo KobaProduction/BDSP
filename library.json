@@ -11,11 +11,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ArthurKoba/BDSP.git"
+    "url": "https://github.com/KobaProduction/BDSP.git"
   },
   "version": "0.1.0",
   "license": "MIT",
-  "homepage": "https://github.com/ArthurKoba/BDSP",
+  "homepage": "https://github.com/KobaProduction/BDSP",
   "frameworks": "arduino",
   "platforms": "atmelavr, ststm32, espressif8266, espressif32",
   "headers": "BDSP.h",
