@@ -69,7 +69,7 @@ void BDSPReceiver::_parse_packet_byte(uint8_t byte, decode_state_t decode_state)
             }
             _raw_packet->create_buffer();
             if (not _raw_packet->data_ptr) {
-                _error_handler(NOT_ENOUGH_RAM_FOR_PACKAGE, _error_handler_context);
+                _error_handler(NOT_ENOUGH_RAM_FOR_PACKET, _error_handler_context);
                 return _reset();
             }
             _fsm_state = PACKET_DATA;
@@ -92,6 +92,8 @@ void BDSPReceiver::_parse_packet_byte(uint8_t byte, decode_state_t decode_state)
                 _packet_handler(*_raw_packet, _packet_handler_context);
                 delete _raw_packet;
                 _raw_packet = nullptr;
+            } else {
+                _error_handler(ERROR_DECODING, _error_handler_context);
             }
             _reset();
             break;

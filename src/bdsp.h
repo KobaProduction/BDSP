@@ -37,7 +37,7 @@ namespace BDSP {
     enum bdsp_receiver_error_t {
         ERROR_DECODING = 1,
         EXCEEDING_THE_MAXIMUM_PACKET_SIZE,
-        NOT_ENOUGH_RAM_FOR_PACKAGE,
+        NOT_ENOUGH_RAM_FOR_PACKET,
         PACKET_CHECKSUM_DOES_NOT_MATCH
     };
 
