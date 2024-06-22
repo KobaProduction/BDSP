@@ -1,0 +1,4 @@
+- Prohibition on deleting a package after processing.
+- The first byte is a service byte, remove the package identifier.
+- Disable the use of checksums.
+- Eliminating the zero pair.
