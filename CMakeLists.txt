@@ -35,8 +35,12 @@ idf_component_register(
             src
             src/checksums/crc
             src/encoders/cobs
-        INCLUDE_DIRS src
-        REQUIRES arduino
+        INCLUDE_DIRS
+            src
+            src/checksums/crc
+            src/encoders/cobs
+        REQUIRES
+            arduino
 )
 
 target_compile_options(${COMPONENT_LIB} PUBLIC -DEFINE_OPTION=1 )
