@@ -30,8 +30,15 @@ set(BDSP_SRCS
         src/packet.cpp
 )
 
-idf_component_register(SRCS BDSP_SRCS
-        INCLUDE_DIRS "src"
-        REQUIRES arduino)
+idf_component_register(
+        SRC_DIRS
+            src
+            src/checksums/crc
+            src/encoders/cobs
+        INCLUDE_DIRS src
+        REQUIRES arduino
+)
+
+target_compile_options(${COMPONENT_LIB} PUBLIC -DEFINE_OPTION=1 )
 
 add_library(BDSP BDSP_SRCS)
