@@ -16,7 +16,7 @@ We have multiple goals with this library:
 * COBS encoding. Low data redundancy.
 
 ## BDSP Protocol Data Redundancy
-![BDSP Protocol Data Redundancy](docs/attachments/images/BDSP Protocol Data Redundancy.webp)
+![BDSP Protocol Data Redundancy](docs/attachments/images/bdsp-data-redundancy.webp)
 Parameters 16, 32, 64, 128, 255 are the search depth parameter, which is equal to the allocated buffer for the COBS encoder, which is used at the base of the BDSP transmitter and transceiver objects.
 
 Redundancy is formed due to the constant component of the packet: identifier (1 byte), data size (2 bytes), checksum (1 byte), as well as COBS encoding redundancy of at least 1 service byte and a separator byte. 
