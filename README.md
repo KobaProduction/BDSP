@@ -2,7 +2,7 @@
 ===========
 [![arduino-library-badge](https://www.ardu-badge.com/badge/BDSP.svg?)](https://www.ardu-badge.com/BDSP)
 [![PlatformIO Registry](https://badges.registry.platformio.org/packages/kobaproduction/library/BDSP.svg)](https://registry.platformio.org/libraries/kobaproduction/BDSP)
-[![Foo](https://img.shields.io/badge/README-RUSSIAN-blueviolet.svg?style=flat-square)](https://github-com.translate.goog/KobaProduction/BDSP?_x_tr_sl=en&_x_tr_tl=ru)
+[![Russian Translate](https://img.shields.io/badge/README-RUSSIAN_TRANLATE-blueviolet.svg?style=flat-square)](https://github-com.translate.goog/KobaProduction/BDSP?_x_tr_sl=en&_x_tr_tl=ru)
 
 
 The library implements a protocol for dividing a binary data stream into packets based on a modification of the COBS encoder that performs "on-the-fly" encoding (a depth parameter size buffer is used for encoding).
@@ -13,7 +13,7 @@ We have multiple goals with this library:
 * No dependencies;
 * High performance;
 * Possibility of flexible configuration;
-* COBS encoding. Low data redundancy.
+* Low and predictable data redundancy based on the COBS encoder.
 
 ## BDSP Protocol Data Redundancy
 ![BDSP Protocol Data Redundancy](docs/attachments/images/bdsp-data-redundancy.webp)
@@ -78,7 +78,7 @@ If the architecture is ARM or AVR and you are using Arduino or PlatformIO softwa
 
 For complete freedom from platforms and the ability to build in any environment, **help is needed** in redesigning the library structure and editing the cmake configuration. 
 
-The functionality of the BDSP protocol was tested on the following boards (Arduino):
-* Arduino & compatibles - straight up Arduino devices, Uno, Duo, Leonardo, Mega, Nano, etc...
-* ESP8266 and ESP32 based boards
-* STM32F103 series.
+The functionality of the BDSP protocol was tested on the following boards (Framework Arduino):
+* Arduino & compatibles - straight up Arduino devices, Uno, Duo, Leonardo, Mega, Nano, etc...;
+* ESP8266 and ESP32 based boards;
+* STM32 series.
