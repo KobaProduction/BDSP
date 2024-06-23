@@ -1,7 +1,6 @@
 **BDSP** - Binary Data Separation Protocol
 ===========
-[![latest](https://img.shields.io/badge/release-alhpa-blueviolet.svg?color=00aa00)](https://github.com/GyverLibs/GyverMAX6675/releases/latest/download/GyverMAX6675.zip)
-[![arduino-library-badge](https://www.ardu-badge.com/badge/ToDo.svg)]()
+[![arduino-library-badge](https://www.ardu-badge.com/badge/BDSP.svg?)](https://www.ardu-badge.com/BDSP)
 [![PlatformIO Registry](https://badges.registry.platformio.org/packages/kobaproduction/library/BDSP.svg)](https://registry.platformio.org/libraries/kobaproduction/BDSP)
 [![Foo](https://img.shields.io/badge/README-RUSSIAN-blueviolet.svg?style=flat-square)](https://github-com.translate.goog/KobaProduction/BDSP?_x_tr_sl=en&_x_tr_tl=ru)
 
