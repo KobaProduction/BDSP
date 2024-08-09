@@ -11,4 +11,4 @@ set(BDSP_SRCS
         checksums/crc/crc8.h checksums/crc/crc8.cpp
 )
 
-add_library(BDSP SHARED ${BDSP_SRCS})
+add_library(BDSP ${BDSP_SRCS})

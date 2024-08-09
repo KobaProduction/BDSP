@@ -13,7 +13,8 @@ project(BDSP
 
 add_subdirectory(src)
 
-idf_component_register(
+if (idf_component_register)
+    idf_component_register(
         SRC_DIRS
             src
             src/checksums/crc
@@ -24,4 +25,5 @@ idf_component_register(
             src/encoders/cobs
         REQUIRES
             arduino
-)
+    )
+endif()
