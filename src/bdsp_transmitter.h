@@ -12,7 +12,7 @@ class BDSPTransmitter : public BDSPMaxPacketSizeMixin {
 public:
     BDSPTransmitter();
     ~BDSPTransmitter();
-    BDSP::set_config_status_t set_config(COBS::config_t cobs_config, COBS::write_handler_t write_handler, void *write_handler_context);
+    BDSP::set_config_status_t set_config(COBS::config_t cobs_config, COBS::write_handler_t write_handler, void *write_handler_context = nullptr);
     BDSP::status_t   send_data(uint8_t packet_id, uint8_t *buffer_ptr, size_t size);
     BDSP::status_t   send_packet(Packet &packet);
 protected:
