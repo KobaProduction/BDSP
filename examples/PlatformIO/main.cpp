@@ -28,12 +28,18 @@ void setup() {
     }, &transceiver);
 }
 
+#define SAMPLES_SIZE 255
+uint8_t data[SAMPLES_SIZE];
+
 void loop() {
-    size_t available = Serial.available();
-    if (available) {
-        auto *buffer = new uint8_t[available];
-        Serial.readBytes(buffer, available);
-        transceiver.parse(buffer, available);
-        delete[] buffer;
-    }
+    for (unsigned char & i : data) i = analogRead(A2) >> 2;
+    transceiver.send_data(1, data, SAMPLES_SIZE);
+//    delay(500);
+//    size_t available = Serial.available();
+//    if (available) {
+//        auto *buffer = new uint8_t[available];
+//        Serial.readBytes(buffer, available);
+//        transceiver.parse(buffer, available);
+//        delete[] buffer;
+//    }
 }
