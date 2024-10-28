@@ -1,2 +1,16 @@
+# IDEs
+.idea/
+.vs/
+.vscode/
 .pio
-.idea
+
+# Mac
+.DS_Store
+
+# Build folders
+build*/
+_build*/
+cmake-build*/
+
+# CMake
+CMakeUserPresets.json

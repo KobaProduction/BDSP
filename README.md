@@ -82,3 +82,10 @@ The functionality of the BDSP protocol was tested on the following boards (Frame
 * Arduino & compatibles - straight up Arduino devices, Uno, Duo, Leonardo, Mega, Nano, etc...;
 * ESP8266 and ESP32 based boards;
 * STM32 series.
+
+
+# Package Build
+
+Thx `pananton` for https://github.com/pananton/cpp-lib-template
+
+ToDo: Write instruction on install BDSP
