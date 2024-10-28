@@ -8,7 +8,7 @@ if(is_top_level)
     find_package(BDSP REQUIRED)
 endif()
 
-set(sources main.cpp)
+set(sources main.cpp utils.h utils.cpp)
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 
 add_executable(BDSP-Desktop)
