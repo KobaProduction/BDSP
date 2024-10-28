@@ -58,7 +58,23 @@ generate_export_header(BDSP EXPORT_FILE_NAME include/BDSP/${export_file_name})
 set(sources
         include/BDSP/export.h
         include/BDSP/BDSP.h
-        src/BDSP.cpp)
+        include/BDSP/bdsp_types.h
+
+        include/BDSP/packet.h src/packet.cpp
+        include/BDSP/bdsp_mixins.h src/bdsp_mixins.cpp
+        include/BDSP/bdsp_receiver.h src/bdsp_receiver.cpp
+        include/BDSP/bdsp_transceiver.h src/bdsp_transceiver.cpp
+        include/BDSP/bdsp_transmitter.h src/bdsp_transmitter.cpp
+
+        include/BDSP/encoders/abs_encoder.h src/encoders/abs_encoder.cpp
+        include/BDSP/encoders/PPP.h src/encoders/PPP.cpp
+        include/BDSP/decoders/abs_decoder.h src/decoders/abs_decoder.cpp
+        include/BDSP/decoders/PPP.h src/decoders/PPP.cpp
+
+        include/BDSP/encoders/cobs/decoder.h src/encoders/cobs/decoder.cpp
+        include/BDSP/encoders/cobs/encoder.h src/encoders/cobs/encoder.cpp
+        src/checksums/crc/crc8.cpp
+)
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 
 #----------------------------------------------------------------------------------------------------------------------

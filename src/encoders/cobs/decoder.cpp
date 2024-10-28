@@ -1,4 +1,4 @@
-#include "decoder.h"
+#include "BDSP/encoders/cobs/decoder.h"
 
 COBSDecoder::COBSDecoder(COBS::config_t config, COBS::decoder_data_callback_t data_callback, void *data_callback_context_ptr) {
     _cfg = config;

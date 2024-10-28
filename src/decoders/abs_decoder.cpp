@@ -1,4 +1,4 @@
-#include "abs_decoder.h"
+#include "BDSP/decoders/abs_decoder.h"
 
 using namespace BDSP::decoders;
 

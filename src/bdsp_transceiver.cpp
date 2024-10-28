@@ -1,4 +1,4 @@
-#include "bdsp_transceiver.h"
+#include "BDSP/bdsp_transceiver.h"
 
 BDSP::set_config_status_t BDSPTransceiver::set_config(
         COBS::config_t cobs_config,

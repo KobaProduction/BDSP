@@ -1,4 +1,4 @@
-#include "packet.h"
+#include "BDSP/packet.h"
 
 Packet::Packet(uint8_t id_, size_t size_, uint8_t *data_ptr_) {
     id = id_;

@@ -1,4 +1,4 @@
-#include "encoder.h"
+#include "BDSP/encoders/cobs/encoder.h"
 
 COBSEncoder::COBSEncoder(COBS::config_t config, COBS::write_handler_t write_handler, void *write_handler_context_ptr) {
     _cfg = config;
