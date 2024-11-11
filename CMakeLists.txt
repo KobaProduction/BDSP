@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.14)
+set(CMAKE_CXX_STANDARD 17)
 project(BDSP
-    VERSION 1.0.0
-    DESCRIPTION "Template for C++ library built with CMake"
-    LANGUAGES CXX)
+        VERSION 0.1.2
+        DESCRIPTION "The library implements a binary data separation protocol."
+        LANGUAGES CXX
+)
 
 #----------------------------------------------------------------------------------------------------------------------
 # general settings and options
