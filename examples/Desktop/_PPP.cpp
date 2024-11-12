@@ -34,7 +34,15 @@ int main() {
         auto &context = *reinterpret_cast<Context *>(ctx_ptr);
         context.encoded_buffer.push_back(byte);
     }, &context);
-    ppp_encoder.encode(data, size);
+    auto encode_status = ppp_encoder.encode(data, size);
+    if (encode_status != ENCODE_OK) {
+        std::cout << "Encode Status: ";
+        show_state(encode_status);
+    }
+
+    if (context.encoded_buffer.empty()) return 0;
+    std::cout << "Encoded Buffer (" << context.encoded_buffer.size() << ") ";
+    show_data(context.encoded_buffer.data(), context.encoded_buffer.size(), HEX);
 
     auto ppp_decoder = PPPDecoder();
     ppp_decoder.set_data_handler([](uint8_t byte, decode_status_t state, void *ctx_ptr) {
@@ -46,16 +54,14 @@ int main() {
         context.decoded_buffer.push_back(byte);
     }, &context);
 
-    if (context.encoded_buffer.empty()) return 0;
-//    std::cout << "(" << wrote_bytes << ") ";
-    std::cout << "Encoded Buffer (" << context.encoded_buffer.size() << ") ";
-    show_data(context.encoded_buffer.data(), context.encoded_buffer.size(), HEX);
+    auto decode_status = ppp_decoder.decode(context.encoded_buffer.data(), context.encoded_buffer.size());
+    if (decode_status not_eq DECODE_OK) {
+        std::cout << "Decode Status: ";
+        show_state(encode_status);
+    }
 
-    auto state = ppp_decoder.decode(context.encoded_buffer.data(), context.encoded_buffer.size());
     if (context.decoded_buffer.empty()) return 0;
-    show_state(state);
     std::cout << "Decoded Buffer (" << context.decoded_buffer.size() << ") ";
     show_data(context.decoded_buffer.data(), context.decoded_buffer.size(), HEX);
-
     return 0;
 }

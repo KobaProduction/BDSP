@@ -12,7 +12,7 @@ endif()
 set(sources utils.h utils.cpp)
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 
-add_executable(BDSP-Desktop-PPP ppp.cpp)
+add_executable(BDSP-Desktop-PPP _PPP.cpp)
 target_sources(BDSP-Desktop-PPP PRIVATE ${sources})
 target_link_libraries(BDSP-Desktop-PPP PRIVATE BDSP::BDSP)
 

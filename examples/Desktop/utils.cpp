@@ -1,5 +1,12 @@
 #include "utils.h"
 
+#include <BDSP/encoders/types.h>
+#include <BDSP/decoders/types.h>
+
+using namespace BDSP::encoders;
+using namespace BDSP::decoders;
+
+
 void show_byte(uint8_t byte, show_t type) {
     switch (type) {
         case DEC:
@@ -21,7 +28,7 @@ void show_data(uint8_t *buf, size_t size, show_t type) {
         show_byte(buf[i], type);
 
     }
-    std::cout << std::endl;
+    std::cout << std::dec << std::endl;
 }
 
 void show_packet(Packet &packet, show_t type) {
@@ -33,8 +40,8 @@ void show_packet(Packet &packet, show_t type) {
     show_data(packet.data_ptr, packet.size, type);
 }
 
-void show_state(decode_state_t state) {
-    switch (state) {
+void show_state(decode_status_t status) {
+    switch (status) {
         case DECODE_OK:
             std::cout << "DECODE_OK";
             break;
@@ -44,11 +51,26 @@ void show_state(decode_state_t state) {
         case DECODE_ERROR:
             std::cout << "DECODE_ERROR";
             break;
-        case WAITING_FOR_DELIMITER:
-            std::cout << "WAITING_FOR_DELIMITER";
-            break;
         case DATA_HANDLER_NOT_INSTALLED:
             std::cout << "DATA_HANDLER_NOT_INSTALLED";
+            break;
+    }
+    std::cout << std::endl;
+}
+
+void show_state(encode_status_t status) {
+    switch (status) {
+        case ENCODE_OK:
+            std::cout << "ENCODE_OK";
+            break;
+        case ENCODE_FINISH:
+            std::cout << "ENCODE_FINISH";
+            break;
+        case WRITER_NOT_INSTALLED_ERROR:
+            std::cout << "WRITER_NOT_INSTALLED_ERROR";
+            break;
+        case UNKNOWN_ENCODER_ERROR:
+            std::cout << "UNKNOWN_ENCODER_ERROR";
             break;
     }
     std::cout << std::endl;
