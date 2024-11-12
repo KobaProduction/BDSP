@@ -2,18 +2,19 @@
 
 using namespace BDSP::encoders::PPP;
 
-void PPPEncoder::_write_delimiter() {
-    _writer(0x7E, _writer_context);
-}
-
 void PPPEncoder::_encode(uint8_t byte) {
     if (byte == 0x7E) {
-        _writer(0x7D, _writer_context);
-        _writer(0x5E, _writer_context);
+        _write(0x7D);
+        _write(0x5E);
     } else if (byte == 0x7D) {
-        _writer(0x7D, _writer_context);
-        _writer(0x5D, _writer_context);
+        _write(0x7D);
+        _write(0x5D);
     } else {
-        _writer(byte, _writer_context);
+        _write(byte);
     }
+}
+
+encode_status_t PPPEncoder::finish_encode() {
+    _write(0x7E);
+    return ENCODE_FINISH;
 }

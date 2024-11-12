@@ -37,7 +37,7 @@ int main() {
     ppp_encoder.encode(data, size);
 
     auto ppp_decoder = PPPDecoder();
-    ppp_decoder.set_data_handler([](uint8_t byte, decode_state_t state, void *ctx_ptr) {
+    ppp_decoder.set_data_handler([](uint8_t byte, decode_status_t state, void *ctx_ptr) {
         if (not ctx_ptr) {
             std::cout << "decode data handler ctx_ptr is null!" << std::endl;
             return;

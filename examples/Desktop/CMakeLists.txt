@@ -9,13 +9,13 @@ if(is_top_level)
     find_package(BDSP REQUIRED)
 endif()
 
-set(sources main.cpp utils.h utils.cpp)
+set(sources utils.h utils.cpp)
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 
-add_executable(BDSP-Desktop)
-target_sources(BDSP-Desktop PRIVATE ${sources})
-target_link_libraries(BDSP-Desktop PRIVATE BDSP::BDSP)
+add_executable(BDSP-Desktop-PPP ppp.cpp)
+target_sources(BDSP-Desktop-PPP PRIVATE ${sources})
+target_link_libraries(BDSP-Desktop-PPP PRIVATE BDSP::BDSP)
 
 if(NOT is_top_level)
-    win_copy_deps_to_target_dir(BDSP-Desktop BDSP::BDSP)
+    win_copy_deps_to_target_dir(BDSP-Desktop-PPP BDSP::BDSP)
 endif()

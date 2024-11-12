@@ -8,9 +8,10 @@ namespace BDSP::encoders::PPP {
     using namespace BDSP::encoders;
 
     class PPPEncoder final : public ABS::AbstractEncoder {
-        void _write_delimiter() override;
-
         void _encode(uint8_t byte) override;
+
+    public:
+        encode_status_t finish_encode() override;
     };
 }
 
