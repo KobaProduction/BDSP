@@ -12,7 +12,7 @@ namespace BDSP::decoders::PPP {
     protected:
         bool is_last_7D = false;
 
-        decode_state_t _decode(uint8_t byte) override;
+        decode_status_t _decode(uint8_t byte) override;
     };
 }
 #endif //BDSP_DECODERS_PPP_H
