@@ -7,7 +7,7 @@ namespace BDSP::encoders {
     typedef void (*write_handler_t)(uint8_t byte, void *write_handler_context_ptr);
 
     enum encode_status_t {
-        ENCODE_OK, ENCODE_FINISH, WRITER_NOT_INSTALLED_ERROR, ENCODER_ERROR
+        ENCODE_OK, ENCODE_FINISH, WRITER_NOT_INSTALLED_ERROR, UNKNOWN_ENCODER_ERROR
     };
 }
 
