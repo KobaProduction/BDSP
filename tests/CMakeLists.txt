@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
-project(BDSP-tests)
 set(CMAKE_CXX_STANDARD 17)
+project(BDSP-tests)
 
 #----------------------------------------------------------------------------------------------------------------------
 # general settings and options
@@ -24,7 +24,7 @@ FetchContent_Declare(
         DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE) # do not override parent project's runtime settings on Windows
-set(INSTALL_GTEST OFF)
+option(INSTALL_GTEST "Build BDSP tests" OFF)
 
 # For simplicity, always build googletest as static library. This prevents BDSP-tests executable from
 # complaining about missing googletest DLLs on Windows.
@@ -45,7 +45,8 @@ endif()
 #----------------------------------------------------------------------------------------------------------------------
 
 set(sources
-        crc8_test.cpp)
+        crc8_test.cpp
+)
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 
 #----------------------------------------------------------------------------------------------------------------------

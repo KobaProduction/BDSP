@@ -160,6 +160,7 @@ endif()
 #----------------------------------------------------------------------------------------------------------------------
 
 if(BDSP_BUILD_TESTS)
+    message(STATUS "Install Google tests: ${INSTALL_GTEST}")
     enable_testing()
     add_subdirectory(tests)
 endif()
