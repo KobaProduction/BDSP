@@ -3,7 +3,7 @@
 
 #include "BDSP/decoders/PPP.h"
 #include "BDSP/encoders/PPP.h"
-#include "utils.h"
+#include "../../tests/utils/show.h"
 
 using namespace BDSP::decoders::PPP;
 using namespace BDSP::encoders::PPP;

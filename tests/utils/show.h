@@ -1,13 +1,18 @@
-#include "utils.h"
+#ifndef BDSP_TESTS_UTILS_SHOW_H
+#define BDSP_TESTS_UTILS_SHOW_H
 
-#include <BDSP/encoders/types.h>
+#include <cstdint>
+#include <iostream>
+#include <BDSP/packet.h>
 #include <BDSP/decoders/types.h>
+#include <BDSP/encoders/types.h>
 
-using namespace BDSP::encoders;
 using namespace BDSP::decoders;
+using namespace BDSP::encoders;
 
+enum show_t {DEC, HEX};
 
-void show_byte(uint8_t byte, show_t type) {
+void show_byte(uint8_t byte, show_t type = DEC) {
     switch (type) {
         case DEC:
             std::cout << static_cast<uint32_t>(byte);
@@ -16,29 +21,22 @@ void show_byte(uint8_t byte, show_t type) {
             std::cout << std::hex << std::uppercase << static_cast<uint32_t>(byte);
             break;
     }
-}
+};
 
-void show_data(uint8_t *buf, size_t size, show_t type) {
+void show_data(uint8_t *buf, size_t size, show_t type = DEC) {
     std::cout << "Data: ";
     show_byte(buf[0], type);
     for (int i = 1; i < size; ++i) {
-        if (1) {
-            std::cout << " ";
-        }
+        std::cout << " ";
         show_byte(buf[i], type);
-
     }
     std::cout << std::dec << std::endl;
-}
+};
 
-void show_packet(Packet &packet, show_t type) {
+void show_packet(Packet &packet, show_t type = DEC) {
     std::cout << "[id=" << uint32_t(packet.id) << "] Packet(size=" << packet.size << "): ";
-//    std::cout << uint32_t(packet.id) << " ";
-//    auto *size_p = (uint8_t*)(&packet.size);
-//    std::cout << static_cast<uint32_t>(size_p[0]) << " ";
-//    std::cout << static_cast<uint32_t>(size_p[1]) << " ";
     show_data(packet.data_ptr, packet.size, type);
-}
+};
 
 void show_state(decode_status_t status) {
     switch (status) {
@@ -56,8 +54,7 @@ void show_state(decode_status_t status) {
             break;
     }
     std::cout << std::endl;
-}
-
+};
 void show_state(encode_status_t status) {
     switch (status) {
         case ENCODE_OK:
@@ -74,4 +71,6 @@ void show_state(encode_status_t status) {
             break;
     }
     std::cout << std::endl;
-}
+};
+
+#endif //BDSP_TESTS_UTILS_SHOW_H
