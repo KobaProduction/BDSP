@@ -70,11 +70,12 @@ set(sources
 
         include/BDSP/encoders/abs_encoder.h src/encoders/abs_encoder.cpp
         include/BDSP/encoders/PPP.h src/encoders/PPP.cpp
+        include/BDSP/encoders/COBS.h src/encoders/COBS.cpp
         include/BDSP/decoders/abs_decoder.h src/decoders/abs_decoder.cpp
         include/BDSP/decoders/PPP.h src/decoders/PPP.cpp
 
         include/BDSP/encoders/cobs/decoder.h src/encoders/cobs/decoder.cpp
-        include/BDSP/encoders/cobs/encoder.h src/encoders/cobs/encoder.cpp
+        include/BDSP/encoders/cobs/encoder.h
         src/checksums/crc/crc8.cpp
 )
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
