@@ -73,6 +73,7 @@ set(sources
         include/BDSP/encoders/COBS.h src/encoders/COBS.cpp
         include/BDSP/decoders/abs_decoder.h src/decoders/abs_decoder.cpp
         include/BDSP/decoders/PPP.h src/decoders/PPP.cpp
+        include/BDSP/decoders/COBS.h src/decoders/COBS.cpp
 
         src/checksums/crc/crc8.cpp
 
