@@ -89,3 +89,8 @@ The functionality of the BDSP protocol was tested on the following boards (Frame
 Thx `pananton` for https://github.com/pananton/cpp-lib-template
 
 ToDo: Write instruction on install BDSP
+
+get coverage from python package `gcovr`
+```
+gcovr --filter src --html-details tests/coverage/coverage.html
+```
