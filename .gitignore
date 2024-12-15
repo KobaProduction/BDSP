@@ -4,6 +4,8 @@
 .vscode/
 .pio
 
+tests/coverage
+
 # Mac
 .DS_Store
 

@@ -28,7 +28,7 @@ option(INSTALL_GTEST "Build BDSP tests" OFF)
 
 # For simplicity, always build googletest as static library. This prevents BDSP-tests executable from
 # complaining about missing googletest DLLs on Windows.
-set(BUILD_SHARED_LIBS OFF)
+option(BUILD_SHARED_LIBS "Build Shared BDSP" OFF)
 
 FetchContent_MakeAvailable(googletest)
 
@@ -58,10 +58,13 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 add_executable(BDSP-tests)
 target_sources(BDSP-tests PRIVATE ${sources})
 
-target_link_libraries(BDSP-tests
-    PRIVATE
-        BDSP::BDSP
-        gtest_main)
+
+if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
+    target_compile_options(BDSP PUBLIC -fprofile-arcs -ftest-coverage)
+    target_link_libraries(BDSP PRIVATE gcov)
+endif()
+
+target_link_libraries(BDSP-tests PRIVATE BDSP::BDSP gtest_main)
 
 if(NOT is_top_level)
     win_copy_deps_to_target_dir(BDSP-tests BDSP::BDSP)
