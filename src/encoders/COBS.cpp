@@ -6,7 +6,6 @@ using namespace BDSP::encoders::COBS;
 COBSEncoder::COBSEncoder(cobs_config_t config) {
     _cfg = config;
     if (_cfg.depth < MIN_BDSP_COBS_DEPTH) _cfg.depth = MIN_BDSP_COBS_DEPTH;
-    free(_buffer_ptr);
     _buffer_ptr = reinterpret_cast<uint8_t *>(malloc(_cfg.depth));
     if (not _buffer_ptr) _is_ready = false;
 }
