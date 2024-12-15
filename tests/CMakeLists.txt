@@ -45,7 +45,8 @@ endif()
 #----------------------------------------------------------------------------------------------------------------------
 
 set(sources
-        utils/show.h utils/cobs.h
+        utils/show.h utils/show.cpp
+        utils/cobs.h utils/cobs.cpp
         crc8_test.cpp
         cobs_tests.cpp
 )
