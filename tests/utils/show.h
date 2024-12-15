@@ -25,6 +25,10 @@ void show_byte(uint8_t byte, show_t type = DEC) {
 
 void show_data(uint8_t *buf, size_t size, show_t type = DEC) {
     std::cout << "Data: ";
+    if (not size) {
+        std::cout << "EMPTY" << std::endl;
+        return;
+    }
     show_byte(buf[0], type);
     for (int i = 1; i < size; ++i) {
         std::cout << " ";
