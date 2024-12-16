@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <string>
 #include "utils/show.h"
 #include "utils/cobs.h"
 #include "BDSP/encoders/COBS.h"
@@ -9,7 +8,7 @@
 using namespace BDSP::encoders::COBS;
 using namespace BDSP::decoders::COBS;
 
-struct Context {
+struct ContextCOBS {
     std::vector<uint8_t> encoded_buffer;
     std::vector<uint8_t> decoded_buffer;
     uint8_t *cobs_buffer = nullptr;
@@ -18,9 +17,7 @@ struct Context {
     COBSDecoder cobs_decoder = COBSDecoder();
 };
 
-Context context;
-
-void start_test_encoder(uint8_t *data, size_t size, Context &ctx) {
+void start_test_encoder(uint8_t *data, size_t size, ContextCOBS &ctx) {
     if (not size) return;
     ctx.encoded_buffer.clear();
     free(ctx.cobs_buffer);
@@ -60,8 +57,9 @@ void start_test_encoder(uint8_t *data, size_t size, Context &ctx) {
 
 
 TEST(cobs_encoding_test, encoding_test) {
+    ContextCOBS context;
     context.cobs_encoder.set_writer([](uint8_t byte, void *ctx_ptr) {
-        auto &context = *reinterpret_cast<Context *>(ctx_ptr);
+        auto &context = *reinterpret_cast<ContextCOBS *>(ctx_ptr);
         context.encoded_buffer.push_back(byte);
     }, &context);
 
@@ -84,7 +82,7 @@ TEST(cobs_encoding_test, encoding_test) {
     free(context.cobs_buffer);
 }
 
-void start_test_decoder(uint8_t *data, size_t size, Context &ctx) {
+void start_test_decoder(uint8_t *data, size_t size, ContextCOBS &ctx) {
     if (not size) return;
     ctx.encoded_buffer.clear();
     ctx.decoded_buffer.clear();
@@ -120,8 +118,9 @@ void start_test_decoder(uint8_t *data, size_t size, Context &ctx) {
 }
 
 TEST(cobs_encoding_test, decoding_test) {
+    ContextCOBS context;
     context.cobs_encoder.set_writer([](uint8_t byte, void *ctx_ptr) {
-        auto &context = *reinterpret_cast<Context *>(ctx_ptr);
+        auto &context = *reinterpret_cast<ContextCOBS *>(ctx_ptr);
         context.encoded_buffer.push_back(byte);
     }, &context);
 
@@ -132,7 +131,7 @@ TEST(cobs_encoding_test, decoding_test) {
         }
         switch (status) {
             case DECODE_OK:
-                reinterpret_cast<Context *>(ctx_ptr)->decoded_buffer.push_back(byte);
+                reinterpret_cast<ContextCOBS *>(ctx_ptr)->decoded_buffer.push_back(byte);
                 break;
             case DECODE_END:
 //                std::cout << "end" << std::endl;
@@ -141,6 +140,7 @@ TEST(cobs_encoding_test, decoding_test) {
             case DATA_HANDLER_NOT_INSTALLED:
                 std::cout << "Symbol: " << uint32_t(byte) << " - ";
                 show_state(status);
+                EXPECT_EQ(false, true);
                 break;
         }
     }, &context);
