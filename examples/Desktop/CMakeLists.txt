@@ -10,7 +10,9 @@ if(is_top_level)
 endif()
 
 set(sources
-        ${CMAKE_SOURCE_DIR}/tests/utils/show.h)
+        ${CMAKE_SOURCE_DIR}/tests/utils/show.h
+        ${CMAKE_SOURCE_DIR}/tests/utils/show.cpp
+)
 #source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 foreach (item PPP COBS)
     add_executable(BDSP-Desktop-${item} _${item}.cpp)
