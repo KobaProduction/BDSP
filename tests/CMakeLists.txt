@@ -47,7 +47,7 @@ endif()
 set(sources
         utils/show.h utils/show.cpp
         utils/cobs.h utils/cobs.cpp
-        crc8_test.cpp
+        checksums.cpp
         cobs_tests.cpp
         ppp_tests.cpp
 )
