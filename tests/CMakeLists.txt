@@ -49,6 +49,7 @@ set(sources
         utils/cobs.h utils/cobs.cpp
         crc8_test.cpp
         cobs_tests.cpp
+        ppp_tests.cpp
 )
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 
