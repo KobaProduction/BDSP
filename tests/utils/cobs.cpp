@@ -4,11 +4,12 @@
 uint8_t *cobs_decode(const uint8_t *ptr, size_t length, uint8_t *dst) {
     const uint8_t *end = ptr + length;
     while (ptr < end) {
+        if (*ptr == 0x00) break;
         int i, code = *ptr++;
         for (i = 1; i < code; i++) *dst++ = *ptr++;
         if (code < 0xFF) *dst++ = 0;
     }
-    return ++dst;
+    return --dst;
 }
 
 void cobs_decode(std::vector<uint8_t> &encoded_buffer, std::vector<uint8_t> &output_buffer) {
