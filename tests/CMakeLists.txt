@@ -45,6 +45,7 @@ endif()
 #----------------------------------------------------------------------------------------------------------------------
 
 set(sources
+        utils/testing.h utils/testing.cpp
         utils/show.h utils/show.cpp
         utils/cobs.h utils/cobs.cpp
         checksums.cpp
