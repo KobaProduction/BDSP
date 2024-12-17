@@ -28,13 +28,13 @@ TEST(cobs_encoding_test, decoding_test) {
     BDSP::decoders::COBS::COBSDecoder decoder;
 
     std::vector<uint8_t> data;
-    std::vector<uint8_t> correct_encoded;
+    std::vector<uint8_t> encoded;
 
     for (int size = 1; size < 1000; ++size) {
         data.clear();
-        correct_encoded.clear();
+        encoded.clear();
         for (int i = 0; i < size; ++i) data.push_back(i);
-        cobs_encode(data, correct_encoded);
-        start_test_decoder(decoder, correct_encoded, data);
+        cobs_encode(data, encoded);
+        start_test_decoder(decoder, encoded, data);
     }
 }
