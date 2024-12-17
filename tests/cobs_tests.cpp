@@ -6,10 +6,29 @@
 
 #include "utils/cobs.h"
 #include "utils/testing.h"
+#include "utils/show.h"
 
+TEST(cobs_encoding_test, cobs_utils_test) {
+    std::vector<uint8_t> data;
+    std::vector<uint8_t> encoded;
+    std::vector<uint8_t> decoded;
+
+    for (int i = 0; i < 512; ++i) data.push_back(i);
+    cobs_encode(data, encoded);
+    cobs_decode(encoded, decoded);
+    if (is_equals(data, decoded)) return;
+
+    std::cout << "Correct ";
+    show_data(data);
+    std::cout << "Encoded ";
+    show_data(encoded);
+    std::cout << "Decoded ";
+    show_data(decoded);
+    FAIL() << "the correct and encoded array is not equal";
+}
 
 TEST(cobs_encoding_test, encoding_test) {
-    BDSP::encoders::COBS::COBSEncoder cobs_encoder;
+    BDSP::encoders::COBS::COBSEncoder encoder;
 
     std::vector<uint8_t> data;
     std::vector<uint8_t> correct_encoded;
@@ -20,7 +39,7 @@ TEST(cobs_encoding_test, encoding_test) {
 
         for (int i = 0; i < size; ++i) data.push_back(i);
         cobs_encode(data, correct_encoded);
-        start_test_encoder(cobs_encoder, data, correct_encoded);
+        start_test_encoder(encoder, data, correct_encoded);
     }
 }
 
