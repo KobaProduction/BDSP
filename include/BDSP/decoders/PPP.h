@@ -10,7 +10,10 @@ namespace BDSP::decoders::PPP {
 
     class PPPDecoder final : public ABS::AbstractDecoder {
     protected:
-        bool is_last_7D = false;
+        uint8_t _escape_byte = 0x7D;
+        uint8_t _end_byte = 0x7E;
+        uint8_t _escape_mask = 0x20;
+        bool _is_escape_state = false;
 
         decode_status_t _decode(uint8_t byte) override;
     };
