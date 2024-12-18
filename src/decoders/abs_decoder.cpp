@@ -13,7 +13,7 @@ void AbstractDecoder::_handler(uint8_t byte, decode_status_t state) {
 }
 
 decode_status_t AbstractDecoder::decode(uint8_t byte) {
-    if (not _data_handler) return DATA_HANDLER_NOT_INSTALLED;
+    if (not _data_handler) return UNKNOWN_DECODER_ERROR;
     decode_status_t state = _decode(byte);
     if (state == DECODE_ERROR) _is_waiting_delemiter = true;
     return state;
@@ -23,11 +23,10 @@ decode_status_t AbstractDecoder::decode(uint8_t *buffer_ptr, size_t size) {
     decode_status_t status = decode_status_t::DECODE_OK;
     for (size_t i = 0; i < size; ++i) {
         switch (decode(buffer_ptr[i])) {
+            case UNKNOWN_DECODER_ERROR:
+                return UNKNOWN_DECODER_ERROR;
             case DECODE_ERROR:
                 status = DECODE_ERROR;
-                break;
-            case DATA_HANDLER_NOT_INSTALLED:
-                return DATA_HANDLER_NOT_INSTALLED;
             default:
                 break;
         }

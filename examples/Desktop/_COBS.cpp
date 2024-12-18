@@ -43,7 +43,7 @@ int main() {
 //                std::cout << "end" << std::endl;
                 break;
             case DECODE_ERROR:
-            case DATA_HANDLER_NOT_INSTALLED:
+            case UNKNOWN_DECODER_ERROR:
                 std::cout << "Symbol: " << uint32_t(byte) << " - ";
                 show_state(status);
                 break;

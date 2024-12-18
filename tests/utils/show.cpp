@@ -45,8 +45,8 @@ void show_state(decode_status_t status) {
         case DECODE_ERROR:
             std::cout << "DECODE_ERROR";
             break;
-        case DATA_HANDLER_NOT_INSTALLED:
-            std::cout << "DATA_HANDLER_NOT_INSTALLED";
+        case UNKNOWN_DECODER_ERROR:
+            std::cout << "UNKNOWN_DECODER_ERROR";
             break;
     }
     std::cout << std::endl;
