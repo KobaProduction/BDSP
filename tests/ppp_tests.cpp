@@ -1,74 +1,54 @@
+#include <cstdint>
+#include <vector>
 #include <gtest/gtest.h>
 
+#include <BDSP/encoders/PPP.h>
+#include <BDSP/decoders/PPP.h>
+
 #include "utils/show.h"
-#include "BDSP/encoders/PPP.h"
-#include "BDSP/decoders/PPP.h"
+#include "utils/testing.h"
 
 using namespace BDSP::encoders::PPP;
 using namespace BDSP::decoders::PPP;
 
-struct ContextPPP {
-    std::vector<uint8_t> encoded_buffer;
-    std::vector<uint8_t> decoded_buffer;
-    PPPEncoder encoder;
-    PPPDecoder decoder;
-};
 
-TEST(ppp_encoding_test, encoding_and_decoding_test) {
-    ContextPPP context;
+TEST(ppp_encoding_test, encoding_test) {
+    BDSP::encoders::PPP::PPPEncoder encoder;
 
-    context.encoder.set_writer([](uint8_t byte, void *ctx_ptr) {
-        auto &context = *reinterpret_cast<ContextPPP *>(ctx_ptr);
-        context.encoded_buffer.push_back(byte);
-    }, &context);
+    std::vector<uint8_t> data = {0x7E, 0x7D, 0x00};
+    std::vector<uint8_t> correct_encoded = {0x7D, 0x5E, 0x7D, 0x5D, 0x00, 0x7E};
 
-    context.decoder.set_data_handler([](uint8_t byte, decode_status_t status, void *context) {
-        if (status not_eq DECODE_OK) return;
-        reinterpret_cast<ContextPPP *>(context)->decoded_buffer.push_back(byte);
-    }, &context);
+    start_test_encoder(encoder, data, correct_encoded, HEX);
+}
 
-    uint8_t data[3] = {0x7E, 0x7D, 0x00};
-    context.encoder.encode(data, 3);
-    context.encoder.finish_encode();
+TEST(ppp_encoding_test, decoding_test) {
+    BDSP::decoders::PPP::PPPDecoder decoder;
 
-    context.decoder.decode(context.encoded_buffer.data(), context.encoded_buffer.size());
+    std::vector<uint8_t> data = {0x7E, 0x7D, 0x00};
+    std::vector<uint8_t> encoded = {0x7D, 0x5E, 0x7D, 0x5D, 0x00, 0x7E};
 
-    bool equals = 3 == context.decoded_buffer.size();
-
-    if (equals) {
-        for (int i = 0; i < 3; ++i) {
-            if (data[i] == context.decoded_buffer[i]) continue;
-            equals = false;
-            break;
-        }
-    }
-    if (equals) return;
-    std::cout << "Data        ";
-    show_data(data, 3);
-    std::cout << "PPP encoded ";
-    show_data(context.encoded_buffer.data(), context.encoded_buffer.size());
-    std::cout << "PPP decoded ";
-    show_data(context.decoded_buffer.data(), context.decoded_buffer.size(), DEC);
-    EXPECT_EQ(equals, true);
+    start_test_decoder(decoder, encoded, data, HEX);
 }
 
 TEST(ppp_encoding_test, decoding_error_test) {
-    ContextPPP context;
+    BDSP::decoders::PPP::PPPDecoder decoder;
 
-    context.encoder.set_writer([](uint8_t byte, void *ctx_ptr) {
-        auto &context = *reinterpret_cast<ContextPPP *>(ctx_ptr);
-        context.encoded_buffer.push_back(byte);
-    }, &context);
+    decoder.set_data_handler([](uint8_t byte, decode_status_t status, void *ctx_ptr) {});
 
-    context.decoder.set_data_handler([](uint8_t byte, decode_status_t status, void *context) {
-        if (status not_eq DECODE_OK) return;
-        reinterpret_cast<ContextPPP *>(context)->decoded_buffer.push_back(byte);
-    }, &context);
+    std::vector<uint8_t> correct_encoded = {0x7E};
+    auto status = decoder.decode(correct_encoded[0]);
+    EXPECT_EQ(status, DECODE_END);
 
-    uint8_t data[3] = {0x7E, 0x7D, 0x00};
-    context.encoder.encode(data, 3);
-    context.encoder.finish_encode();
-    context.encoded_buffer[1] = 0x7D;
-    auto status = context.decoder.decode(context.encoded_buffer.data(), context.encoded_buffer.size());
+    correct_encoded = {0x7D, 0x7D};
+    status = decoder.decode(correct_encoded.data(), correct_encoded.size());
     EXPECT_EQ(status, DECODE_ERROR);
+
+    correct_encoded = {0x7D, 0x5D};
+    status = decoder.decode(correct_encoded.data(), correct_encoded.size());
+    EXPECT_EQ(status, DECODE_OK);
+
+    correct_encoded = {0x7D, 0x5E};
+    status = decoder.decode(correct_encoded.data(), correct_encoded.size());
+    EXPECT_EQ(status, DECODE_OK);
+
 }
