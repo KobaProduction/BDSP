@@ -23,14 +23,13 @@ decode_status_t AbstractDecoder::decode(uint8_t *buffer_ptr, size_t size) {
     decode_status_t status = decode_status_t::DECODE_OK;
     for (size_t i = 0; i < size; ++i) {
         switch (decode(buffer_ptr[i])) {
-            case DECODE_OK:
-            case DECODE_END:
-                break;
             case DECODE_ERROR:
                 status = DECODE_ERROR;
                 break;
             case DATA_HANDLER_NOT_INSTALLED:
                 return DATA_HANDLER_NOT_INSTALLED;
+            default:
+                break;
         }
     }
     return status;
