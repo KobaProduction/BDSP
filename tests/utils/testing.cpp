@@ -25,7 +25,8 @@ bool is_equals(std::vector<uint8_t> data1, std::vector<uint8_t> data2) {
 void start_test_encoder(
         BDSP::encoders::ABS::AbstractEncoder &encoder,
         std::vector<uint8_t> &data,
-        std::vector<uint8_t> &correct_encoded
+        std::vector<uint8_t> &correct_encoded,
+        show_t type
 ) {
     std::vector<uint8_t> encoded_buffer;
 
@@ -42,16 +43,17 @@ void start_test_encoder(
     if (is_equals(correct_encoded, encoded_buffer)) return;
 
     std::cout << "Correct ";
-    show_data(correct_encoded);
+    show_data(correct_encoded, type);
     std::cout << "Encoded ";
-    show_data(encoded_buffer);
+    show_data(encoded_buffer, type);
     FAIL() << "the correct and encoded array is not equal";
 }
 
 void start_test_decoder(
         BDSP::decoders::ABS::AbstractDecoder &decoder,
         std::vector<uint8_t> &encoded,
-        std::vector<uint8_t> &correct_decoded
+        std::vector<uint8_t> &correct_decoded,
+        show_t type
 ) {
     struct Context {
         std::vector<uint8_t> decoded;
@@ -79,8 +81,8 @@ void start_test_decoder(
     decoder.decode(encoded.data(), encoded.size());
     if (is_equals(correct_decoded, ctx.decoded)) return;
     std::cout << "Correct ";
-    show_data(correct_decoded);
+    show_data(correct_decoded, type);
     std::cout << "Decoded ";
-    show_data(ctx.decoded);
+    show_data(ctx.decoded, type);
     FAIL() << "the correct and decoded array is not equal";
 }
