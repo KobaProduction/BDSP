@@ -7,16 +7,19 @@ void AbstractDecoder::set_data_handler(data_handler_t handler, void *context_ptr
     _data_handler_context = context_ptr;
 }
 
-void AbstractDecoder::_handler(uint8_t byte, decode_status_t state) {
-    if (_is_waiting_delemiter) return;
-    _data_handler(byte, state, _data_handler_context);
+void AbstractDecoder::_handler(uint8_t byte, decode_status_t status) {
+    if (_is_waiting_for_the_delemiter) return;
+    _data_handler(byte, status, _data_handler_context);
 }
 
 decode_status_t AbstractDecoder::decode(uint8_t byte) {
     if (not _data_handler) return UNKNOWN_DECODER_ERROR;
-    decode_status_t state = _decode(byte);
-    if (state == DECODE_ERROR) _is_waiting_delemiter = true;
-    return state;
+    decode_status_t status = _decode(byte);
+    if (status not_eq DECODE_OK) {
+        _handler(byte, status);
+        reset_decode_state(status == DECODE_ERROR);
+    }
+    return status;
 }
 
 decode_status_t AbstractDecoder::decode(uint8_t *buffer_ptr, size_t size) {
@@ -32,4 +35,9 @@ decode_status_t AbstractDecoder::decode(uint8_t *buffer_ptr, size_t size) {
         }
     }
     return status;
+}
+
+void AbstractDecoder::reset_decode_state(bool is_need_wait_delemiter) {
+    _is_waiting_for_the_delemiter |= is_need_wait_delemiter;
+    _reset();
 }
