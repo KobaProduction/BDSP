@@ -10,11 +10,6 @@ void AbstractEncoder::_write(uint8_t *buffer_ptr, size_t size) {
     for (int i = 0; i < size; ++i) _write(buffer_ptr[i]);
 }
 
-void AbstractEncoder::set_writer(write_handler_t writer, void *context_ptr) {
-    _writer = writer;
-    _writer_context = context_ptr;
-}
-
 encode_status_t AbstractEncoder::encode(uint8_t byte) {
     if (not _writer or not _is_ready) return UNKNOWN_ENCODER_ERROR;
     _encode(byte);
@@ -28,4 +23,15 @@ encode_status_t AbstractEncoder::encode(uint8_t *buffer_ptr, size_t size) {
         if (status not_eq ENCODE_OK) break;
     }
     return status;
+}
+
+encode_status_t AbstractEncoder::finish_encode() {
+    if (not _writer or not _is_ready) return UNKNOWN_ENCODER_ERROR;
+    _finish_encode();
+    return ENCODE_FINISH;
+}
+
+void AbstractEncoder::set_writer(write_handler_t writer, void *context_ptr) {
+    _writer = writer;
+    _writer_context = context_ptr;
 }

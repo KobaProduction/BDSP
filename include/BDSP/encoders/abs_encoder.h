@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-#include "BDSP/encoders//types.h"
+#include <BDSP/encoders/types.h>
 
 namespace BDSP::encoders::ABS {
     using namespace BDSP::encoders;
@@ -14,20 +14,22 @@ namespace BDSP::encoders::ABS {
     protected:
         bool _is_ready = true;
 
+        virtual void _encode(uint8_t byte) = 0;
+
+        virtual void _finish_encode() = 0;
+
         void _write(uint8_t byte);
 
         void _write(uint8_t *buffer_ptr, size_t size);
 
-        virtual void _encode(uint8_t byte) = 0;
-
     public:
-        void set_writer(write_handler_t writer, void *context_ptr = nullptr);
-
         encode_status_t encode(uint8_t byte);
 
         encode_status_t encode(uint8_t *buffer_ptr, size_t size);
 
-        virtual encode_status_t finish_encode() = 0;
+        encode_status_t finish_encode();
+
+        void set_writer(write_handler_t writer, void *context_ptr = nullptr);
     };
 }
 
