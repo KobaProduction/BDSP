@@ -2,7 +2,7 @@
 #define BDSP_ENCODERS_PPP_H
 
 #include <cstdint>
-#include "BDSP/encoders/abs_encoder.h"
+#include <BDSP/encoders/abs_encoder.h>
 
 namespace BDSP::encoders::PPP {
     using namespace BDSP::encoders;
@@ -15,8 +15,7 @@ namespace BDSP::encoders::PPP {
 
         void _encode(uint8_t byte) override;
 
-    public:
-        encode_status_t finish_encode() override;
+        void _finish_encode() override;
     };
 }
 
