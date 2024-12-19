@@ -60,9 +60,6 @@ void show_state(encode_status_t status) {
         case ENCODE_FINISH:
             std::cout << "ENCODE_FINISH";
             break;
-        case WRITER_NOT_INSTALLED_ERROR:
-            std::cout << "WRITER_NOT_INSTALLED_ERROR";
-            break;
         case UNKNOWN_ENCODER_ERROR:
             std::cout << "UNKNOWN_ENCODER_ERROR";
             break;

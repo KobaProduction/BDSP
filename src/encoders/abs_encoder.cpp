@@ -16,8 +16,7 @@ void AbstractEncoder::set_writer(write_handler_t writer, void *context_ptr) {
 }
 
 encode_status_t AbstractEncoder::encode(uint8_t byte) {
-    if (not _writer) return WRITER_NOT_INSTALLED_ERROR;
-    if (not _is_ready) return UNKNOWN_ENCODER_ERROR;
+    if (not _writer or not _is_ready) return UNKNOWN_ENCODER_ERROR;
     _encode(byte);
     return ENCODE_OK;
 }

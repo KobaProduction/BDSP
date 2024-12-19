@@ -20,9 +20,9 @@ TEST(abstract_encoding_tests, abstract_encoder_full_test) {
 
     uint8_t data[2];
     auto status = encoder.encode(data, 2);
-    EXPECT_EQ(status, WRITER_NOT_INSTALLED_ERROR);
+    EXPECT_EQ(status, UNKNOWN_ENCODER_ERROR);
     status = encoder.encode(data[0]);
-    EXPECT_EQ(status, WRITER_NOT_INSTALLED_ERROR);
+    EXPECT_EQ(status, UNKNOWN_ENCODER_ERROR);
 
     encoder.set_writer([](uint8_t byte, void *ctx) {});
     status = encoder.encode(data, 2);
@@ -57,7 +57,7 @@ TEST(abstract_encoding_tests, abstract_decoder_full_test) {
 
     uint8_t data[2] = {0x00, 0x00};
     auto status = decoder.decode(data, 2);
-    EXPECT_EQ(status, DATA_HANDLER_NOT_INSTALLED);
+    EXPECT_EQ(status, UNKNOWN_DECODER_ERROR);
 
     decoder.set_data_handler([](uint8_t byte, decode_status_t status, void *ctx) {});
 
