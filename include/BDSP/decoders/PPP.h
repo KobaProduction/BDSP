@@ -2,13 +2,15 @@
 #define BDSP_DECODERS_PPP_H
 
 #include <cstdint>
-#include "BDSP/decoders/abs_decoder.h"
+#include <BDSP/decoders/abs_decoder.h>
 
 namespace BDSP::decoders::PPP {
     using namespace BDSP::decoders;
 
 
     class PPPDecoder final : public ABS::AbstractDecoder {
+    private:
+        void _reset() override;
     protected:
         uint8_t _escape_byte = 0x7D;
         uint8_t _end_byte = 0x7E;
