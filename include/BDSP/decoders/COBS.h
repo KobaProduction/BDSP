@@ -2,7 +2,7 @@
 #define BDSP_DECODERS_COBS_H
 
 #include <cstdint>
-#include "BDSP/decoders/abs_decoder.h"
+#include <BDSP/decoders/abs_decoder.h>
 
 #ifndef MIN_BDSP_COBS_DEPTH
 #define MIN_BDSP_COBS_DEPTH 16
@@ -23,20 +23,18 @@ namespace BDSP::decoders::COBS {
     class COBSDecoder final : public ABS::AbstractDecoder {
         cobs_config_t _cfg{};
         fsm_state_t _fsm_state{};
-        uint8_t _swap_byte_offset{};
         uint8_t _service_byte_offset{};
+        uint8_t _swap_byte_offset{};
 
         decode_status_t _decode(uint8_t byte) override;
+
+        void _reset() override;
 
         decode_status_t _set_swap_byte_offset(uint8_t offset);
 
     public:
         explicit COBSDecoder(cobs_config_t config = {'\0', 255});
-
-
-        void reset();
     };
-
-
 }
+
 #endif //BDSP_DECODERS_COBS_H
