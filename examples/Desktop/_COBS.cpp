@@ -45,7 +45,7 @@ int main() {
             case DECODE_ERROR:
             case UNKNOWN_DECODER_ERROR:
                 std::cout << "Symbol: " << uint32_t(byte) << " - ";
-                show_state(status);
+                show_status(status);
                 break;
         }
     }, &context);

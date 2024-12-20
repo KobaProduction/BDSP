@@ -21,8 +21,8 @@ void show_data(std::vector<uint8_t> &data, show_t type = DEC);
 
 void show_packet(Packet &packet, show_t type = DEC);
 
-void show_state(decode_status_t status);
+void show_status(decode_status_t status);
 
-void show_state(encode_status_t status);
+void show_status(encode_status_t status);
 
 #endif //BDSP_TESTS_UTILS_SHOW_H

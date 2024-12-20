@@ -37,7 +37,7 @@ int main() {
     auto encode_status = ppp_encoder.encode(data, size);
     if (encode_status != ENCODE_OK) {
         std::cout << "Encode Status: ";
-        show_state(encode_status);
+        show_status(encode_status);
     }
 
     if (context.encoded_buffer.empty()) return 0;
@@ -57,7 +57,7 @@ int main() {
     auto decode_status = ppp_decoder.decode(context.encoded_buffer.data(), context.encoded_buffer.size());
     if (decode_status not_eq DECODE_OK) {
         std::cout << "Decode Status: ";
-        show_state(encode_status);
+        show_status(encode_status);
     }
 
     if (context.decoded_buffer.empty()) return 0;

@@ -37,7 +37,7 @@ void start_test_encoder(
     auto status = encoder.encode(data.data(), data.size());
     encoder.finish_encode();
     if (status not_eq BDSP::encoders::ENCODE_OK) {
-        show_state(status);
+        show_status(status);
         FAIL() << "Incorrect state";
     }
     if (is_equals(correct_encoded, encoded_buffer)) return;
@@ -72,7 +72,7 @@ void start_test_decoder(
                 break;
             default:
                 std::cout << "Symbol: " << uint32_t(byte) << " - ";
-                show_state(status);
+                show_status(status);
                 FAIL() << "Incorrect state";
         }
 

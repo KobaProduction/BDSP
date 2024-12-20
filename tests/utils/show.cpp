@@ -34,7 +34,7 @@ void show_packet(Packet &packet, show_t type) {
     show_data(packet.data_ptr, packet.size, type);
 }
 
-void show_state(decode_status_t status) {
+void show_status(decode_status_t status) {
     switch (status) {
         case DECODE_OK:
             std::cout << "DECODE_OK";
@@ -52,7 +52,7 @@ void show_state(decode_status_t status) {
     std::cout << std::endl;
 }
 
-void show_state(encode_status_t status) {
+void show_status(encode_status_t status) {
     switch (status) {
         case ENCODE_OK:
             std::cout << "ENCODE_OK";
