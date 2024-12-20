@@ -49,6 +49,7 @@ set(sources
         utils/show.h utils/show.cpp
         utils/cobs.h utils/cobs.cpp
         checksums.cpp
+        abs_decoder_tests.cpp
         abs_encoder_tests.cpp
         cobs_tests.cpp
         ppp_tests.cpp
