@@ -13,12 +13,5 @@ set(sources
         ${CMAKE_SOURCE_DIR}/tests/utils/show.h
         ${CMAKE_SOURCE_DIR}/tests/utils/show.cpp
 )
-#source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
-foreach (item PPP COBS)
-    add_executable(BDSP-Desktop-${item} _${item}.cpp)
-    target_sources(BDSP-Desktop-${item} PRIVATE ${sources})
-    target_link_libraries(BDSP-Desktop-${item} PRIVATE BDSP::BDSP)
-    if(NOT is_top_level)
-        win_copy_deps_to_target_dir(BDSP-Desktop-${item} BDSP::BDSP)
-    endif()
-endforeach ()
+
+add_subdirectory(src)
