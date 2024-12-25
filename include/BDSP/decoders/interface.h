@@ -1,7 +1,7 @@
-#ifndef BDSP_INTERFACE_H
-#define BDSP_INTERFACE_H
+#ifndef BDSP_DECODERS_DECODER_INTERFACE_H
+#define BDSP_DECODERS_DECODER_INTERFACE_H
 
-#include "abs_decoder.h"
+#include <BDSP/decoders/types.h>
 
 namespace BDSP::decoders {
 
@@ -18,4 +18,4 @@ namespace BDSP::decoders {
     };
 }
 
-#endif //BDSP_INTERFACE_H
+#endif //BDSP_DECODERS_DECODER_INTERFACE_H
