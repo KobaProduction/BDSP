@@ -34,7 +34,7 @@ TEST(abstract_encoder_tests, abstract_encoder_errors_test) {
     status = encoder.encode(data.data(), data.size());
     EXPECT_EQ(status, UNKNOWN_ENCODER_ERROR);
 
-    encoder.set_writer([](uint8_t byte, void *ctx) {});
+    encoder.set_writer([](uint8_t byte, void *ctx) {}, nullptr);
 
     encoder.toggle_ready();
 
@@ -50,7 +50,7 @@ TEST(abstract_encoder_tests, abstract_encoder_normal_using_test) {
 
     std::vector<uint8_t> data = {0};
 
-    encoder.set_writer([](uint8_t byte, void *ctx) {});
+    encoder.set_writer([](uint8_t byte, void *ctx) {}, nullptr);
 
     auto status = encoder.encode(data.data(), data.size());
     EXPECT_EQ(status, DECODE_OK);
@@ -64,7 +64,7 @@ TEST(abstract_encoder_tests, abstract_encoder_write_test) {
 
     std::vector<uint8_t> data = {0x00};
 
-    encoder.set_writer([](uint8_t byte, void *ctx) { EXPECT_EQ(byte, 0x00); });
+    encoder.set_writer([](uint8_t byte, void *ctx) { EXPECT_EQ(byte, 0x00); }, nullptr);
     auto status = encoder.encode(data[0]);
     EXPECT_EQ(status, DECODE_OK);
 

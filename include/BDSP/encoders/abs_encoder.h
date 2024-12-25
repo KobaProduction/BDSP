@@ -4,11 +4,12 @@
 #include <cstdint>
 
 #include <BDSP/encoders/types.h>
+#include <BDSP/encoders/interface.h>
 
 namespace BDSP::encoders::ABS {
     using namespace BDSP::encoders;
 
-    class AbstractEncoder {
+    class AbstractEncoder : public IEncoder {
         write_handler_t _writer = nullptr;
         void *_writer_context = nullptr;
     protected:
@@ -23,13 +24,13 @@ namespace BDSP::encoders::ABS {
         void _write(uint8_t *buffer_ptr, size_t size);
 
     public:
-        encode_status_t encode(uint8_t byte);
+        encode_status_t encode(uint8_t byte) final;
 
-        encode_status_t encode(uint8_t *buffer_ptr, size_t size);
+        encode_status_t encode(uint8_t *buffer_ptr, size_t size) final;
 
-        encode_status_t finish_encode();
+        encode_status_t finish_encode() final;
 
-        void set_writer(write_handler_t writer, void *context_ptr = nullptr);
+        void set_writer(write_handler_t writer, void *context_ptr) final;
     };
 }
 
