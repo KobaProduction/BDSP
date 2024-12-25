@@ -36,7 +36,7 @@ TEST(abstract_decoder_tests, abstract_decoder_errors_test) {
 
     decoder.set_data_handler([](uint8_t byte, decode_status_t status, void *ctx) {
         EXPECT_EQ(status, DECODE_ERROR);
-    });
+    }, nullptr);
 
     status = decoder.decode(decoder.error_byte);
     EXPECT_EQ(status, DECODE_ERROR);
