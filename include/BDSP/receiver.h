@@ -2,20 +2,21 @@
 #define BDSP_RECEIVER_H
 
 #include <BDSP/types.h>
-#include "mixins.h"
+#include <BDSP/mixins.h>
 #include <BDSP/packet.h>
-#include <BDSP/encoders/cobs/decoder.h>
+#include <BDSP/decoders/interface.h>
+#include <BDSP/decoders/types.h>
 #include <BDSP/checksums/crc/crc8.h>
 
 namespace BDSP {
-    class BDSPReceiver : public BDSP::core::MaxPacketSizeMixin {
+    class BDSPReceiver : public core::MaxPacketSizeMixin {
     public:
         BDSPReceiver();
 
         ~BDSPReceiver();
 
-        set_config_status_t
-        set_config(COBS::config_t cobs_config, packet_handler_t packet_handler, void *context = nullptr);
+        void set_decoder(BDSP::decoders::IDecoder *decoder_ptr);
+        void set_packet_handler(packet_handler_t packet_handler, void *context = nullptr);
 
         void set_error_handler(receiver_error_handler_t error_handler, void *error_handler_context_ptr = nullptr);
 
@@ -24,11 +25,11 @@ namespace BDSP {
         status_t parse(uint8_t &byte);
 
     protected:
-        void _parse_packet_byte(uint8_t byte, COBS::decode_state_t decode_state);
+        void _parse_packet_byte(uint8_t byte, BDSP::decoders::decode_status_t decode_status);
 
         void _reset();
 
-        COBSDecoder *_decoder;
+        BDSP::decoders::IDecoder *_decoder = nullptr;
         packet_handler_t _packet_handler = nullptr;
         void *_packet_handler_context = nullptr;
         receiver_error_handler_t _error_handler = nullptr;

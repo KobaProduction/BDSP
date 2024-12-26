@@ -5,12 +5,6 @@
 
 namespace BDSP {
 
-    enum set_config_status_t {
-        CONFIG_INSTALLED,
-        CONFIG_ALREADY_INSTALLED,
-        COBS_BUFFER_NOT_CREATED
-    };
-
     enum status_t {
         WRITE_OK,
         PARSE_OK,

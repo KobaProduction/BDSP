@@ -2,31 +2,23 @@
 #define BDSP_TRANSMITTER_H
 
 #include <BDSP/types.h>
-#include "mixins.h"
+#include <BDSP/mixins.h>
 #include <BDSP/packet.h>
-#include <BDSP/encoders/cobs/encoder.h>
+#include <BDSP/encoders/interface.h>
 #include <BDSP/checksums/crc/crc8.h>
 
 namespace BDSP {
 
-    class BDSPTransmitter : public BDSP::core::MaxPacketSizeMixin {
+    class BDSPTransmitter : public core::MaxPacketSizeMixin {
     public:
-        BDSPTransmitter();
-
-        ~BDSPTransmitter();
-
-        set_config_status_t set_config(
-            COBS::config_t cobs_config,
-            COBS::write_handler_t write_handler,
-            void *write_handler_context = nullptr
-        );
+        void set_encoder(BDSP::encoders::IEncoder *encoder_ptr);
 
         status_t send_data(uint8_t packet_id, uint8_t *buffer_ptr, size_t size);
 
         status_t send_packet(Packet &packet);
 
     protected:
-        COBSEncoder *_encoder;
+        BDSP::encoders::IEncoder *_encoder = nullptr;
     };
 }
 

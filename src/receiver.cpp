@@ -1,40 +1,41 @@
 #include <BDSP/receiver.h>
 
 using namespace BDSP;
+using namespace BDSP::decoders;
 
 BDSPReceiver::BDSPReceiver() {
-    _decoder = nullptr;
-    _raw_packet = nullptr;
-    _error_handler = [] (receiver_error_t error, void *context) {};
+    _error_handler = [](receiver_error_t error, void *context) {};
 }
 
 BDSPReceiver::~BDSPReceiver() {
     delete _raw_packet;
-    delete _decoder;
 }
 
-set_config_status_t BDSPReceiver::set_config(COBS::config_t cobs_config, packet_handler_t handler, void *context) {
-    if (_decoder) return CONFIG_ALREADY_INSTALLED;
-    _packet_handler = handler;
-    _packet_handler_context = context;
-
-    COBS::decoder_data_callback_t callback = [] (uint8_t byte, COBS::decode_state_t read_state, void *context) {
-        BDSPReceiver &self = *reinterpret_cast<BDSPReceiver*>(context);
-        self._parse_packet_byte(byte, read_state);
+void BDSPReceiver::set_decoder(BDSP::decoders::IDecoder *decoder_ptr) {
+    _decoder = decoder_ptr;
+    // #todo error nullptr
+    if (not decoder_ptr) return;
+    data_handler_t callback = [](uint8_t byte, decode_status_t read_state, void *context) {
+        reinterpret_cast<BDSPReceiver *>(context)->_parse_packet_byte(byte, read_state);
     };
+    _decoder->set_data_handler(callback, this);
+}
 
-    _decoder = new COBSDecoder(cobs_config, callback, this);
-    return CONFIG_INSTALLED;
+void BDSPReceiver::set_packet_handler(packet_handler_t packet_handler, void *context) {
+    // #todo error nullptr
+    _packet_handler = packet_handler;
+    _packet_handler_context = context;
 }
 
 void BDSPReceiver::set_error_handler(receiver_error_handler_t error_handler, void *error_handler_context_ptr) {
+    // #todo error nullptr
     _error_handler = error_handler;
     _error_handler_context = error_handler_context_ptr;
 }
 
 status_t BDSPReceiver::parse(uint8_t *buffer_ptr, size_t size) {
     if (not _decoder) return BDSP_CONFIG_NOT_INSTALLED;
-    _decoder->parse(buffer_ptr, size);
+    _decoder->decode(buffer_ptr, size);
     return PARSE_OK;
 }
 
@@ -43,8 +44,8 @@ status_t BDSPReceiver::parse(uint8_t &byte) {
     return parse(&byte, 1);
 }
 
-void BDSPReceiver::_parse_packet_byte(uint8_t byte, COBS::decode_state_t decode_state) {
-    if (decode_state == COBS::DECODE_ERROR) {
+void BDSPReceiver::_parse_packet_byte(uint8_t byte, decode_status_t decode_status) {
+    if (decode_status == DECODE_ERROR) {
         _error_handler(ERROR_DECODING, _error_handler_context);
         return _reset();
     }
@@ -90,7 +91,7 @@ void BDSPReceiver::_parse_packet_byte(uint8_t byte, COBS::decode_state_t decode_
             _fsm_state = WAIT_END;
             break;
         case WAIT_END:
-            if (decode_state == COBS::DECODE_END) {
+            if (decode_status == DECODE_END) {
                 _packet_handler(*_raw_packet, _packet_handler_context);
                 delete _raw_packet;
                 _raw_packet = nullptr;
@@ -103,7 +104,7 @@ void BDSPReceiver::_parse_packet_byte(uint8_t byte, COBS::decode_state_t decode_
 }
 
 void BDSPReceiver::_reset() {
-    _decoder->reset(true);
+    _decoder->reset_decode_state(true);
     _fsm_state = PACKET_ID;
     _byte_received = 0;
     if (_raw_packet) {
@@ -111,3 +112,4 @@ void BDSPReceiver::_reset() {
         _raw_packet = nullptr;
     }
 }
+

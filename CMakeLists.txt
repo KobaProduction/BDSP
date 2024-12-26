@@ -81,7 +81,6 @@ set(sources
         src/packet.cpp
         src/mixins.cpp
         src/receiver.cpp
-        src/transceiver.cpp
         src/transmitter.cpp
 
         src/encoders/abs_encoder.cpp
