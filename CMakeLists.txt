@@ -91,9 +91,6 @@ set(sources
         src/decoders/COBS.cpp
 
         src/checksums/crc/crc8.cpp
-
-        include/BDSP/encoders/cobs/decoder.h src/encoders/cobs/decoder.cpp
-        include/BDSP/encoders/cobs/encoder.h src/encoders/cobs/encoder.cpp
 )
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 
