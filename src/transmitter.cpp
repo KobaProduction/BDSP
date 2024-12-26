@@ -1,4 +1,4 @@
-#include "BDSP/bdsp_transmitter.h"
+#include <BDSP/transmitter.h>
 
 using namespace BDSP;
 using namespace COBS;

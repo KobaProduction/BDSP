@@ -57,27 +57,42 @@ endif()
 
 generate_export_header(BDSP EXPORT_FILE_NAME include/BDSP/${export_file_name})
 
-set(sources
+set(headers
         include/BDSP/export.h
         include/BDSP/BDSP.h
-        include/BDSP/bdsp_types.h
+        include/BDSP/types.h
 
-        include/BDSP/packet.h src/packet.cpp
-        include/BDSP/bdsp_mixins.h src/bdsp_mixins.cpp
-        include/BDSP/bdsp_receiver.h src/bdsp_receiver.cpp
-        include/BDSP/bdsp_transceiver.h src/bdsp_transceiver.cpp
-        include/BDSP/bdsp_transmitter.h src/bdsp_transmitter.cpp
+        include/BDSP/packet.h
+        include/BDSP/mixins.h
+        include/BDSP/receiver.h
+        include/BDSP/transceiver.h
+        include/BDSP/transmitter.h
 
-        include/BDSP/encoders/abs_encoder.h src/encoders/abs_encoder.cpp
-        include/BDSP/encoders/PPP.h src/encoders/PPP.cpp
-        include/BDSP/encoders/COBS.h src/encoders/COBS.cpp
-        include/BDSP/decoders/abs_decoder.h src/decoders/abs_decoder.cpp
-        include/BDSP/decoders/PPP.h src/decoders/PPP.cpp
-        include/BDSP/decoders/COBS.h src/decoders/COBS.cpp
+        include/BDSP/encoders/abs_encoder.h
+        include/BDSP/encoders/PPP.h
+        include/BDSP/encoders/COBS.h
+        include/BDSP/decoders/abs_decoder.h
+        include/BDSP/decoders/PPP.h
+        include/BDSP/decoders/COBS.h
+)
+
+set(sources
+
+        src/packet.cpp
+        src/mixins.cpp
+        src/receiver.cpp
+        src/transceiver.cpp
+        src/transmitter.cpp
+
+        src/encoders/abs_encoder.cpp
+        src/encoders/PPP.cpp
+        src/encoders/COBS.cpp
+        src/decoders/abs_decoder.cpp
+        src/decoders/PPP.cpp
+        src/decoders/COBS.cpp
 
         src/checksums/crc/crc8.cpp
 
-        include/BDSP/encoders/COBS.h
         include/BDSP/encoders/cobs/decoder.h src/encoders/cobs/decoder.cpp
         include/BDSP/encoders/cobs/encoder.h src/encoders/cobs/encoder.cpp
 )

@@ -1,14 +1,9 @@
 #ifndef BDSP_TYPES_H
 #define BDSP_TYPES_H
 
-#include "BDSP/packet.h"
+#include <BDSP/packet.h>
 
 namespace BDSP {
-
-    enum set_max_packet_size_status_t {
-        MAX_PACKET_SIZE_SET,
-        INVALID_MAXIMUM_PACKET_SIZE
-    };
 
     enum set_config_status_t {
         CONFIG_INSTALLED,

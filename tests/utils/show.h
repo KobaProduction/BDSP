@@ -19,7 +19,7 @@ void show_data(uint8_t *buf, size_t size, show_t type = DEC);
 
 void show_data(std::vector<uint8_t> &data, show_t type = DEC);
 
-void show_packet(Packet &packet, show_t type = DEC);
+void show_packet(BDSP::Packet &packet, show_t type = DEC);
 
 void show_status(decode_status_t status);
 

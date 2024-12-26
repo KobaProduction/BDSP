@@ -29,7 +29,7 @@ void show_data(std::vector<uint8_t> &data, show_t type) {
     show_data(data.data(), data.size(), type);
 }
 
-void show_packet(Packet &packet, show_t type) {
+void show_packet(BDSP::Packet &packet, show_t type) {
     std::cout << "[id=" << uint32_t(packet.id) << "] Packet(size=" << packet.size << "): ";
     show_data(packet.data_ptr, packet.size, type);
 }
