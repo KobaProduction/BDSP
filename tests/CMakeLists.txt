@@ -9,9 +9,9 @@ project(BDSP-tests)
 include("../cmake/utils.cmake")
 string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" is_top_level)
 
-if(is_top_level)
+if (is_top_level)
     enable_testing()
-endif()
+endif ()
 
 #----------------------------------------------------------------------------------------------------------------------
 # testing framework
@@ -36,18 +36,21 @@ FetchContent_MakeAvailable(googletest)
 # tests dependencies
 #----------------------------------------------------------------------------------------------------------------------
 
-if(is_top_level)
+if (is_top_level)
     find_package(BDSP REQUIRED)
-endif()
+endif ()
 
 #----------------------------------------------------------------------------------------------------------------------
 # tests sources
 #----------------------------------------------------------------------------------------------------------------------
 
-set(sources
+set(utils_sources
         utils/testing.h utils/testing.cpp
         utils/show.h utils/show.cpp
         utils/cobs.h utils/cobs.cpp
+)
+
+set(sources ${utils_sources}
         checksums.cpp
         abs_decoder_tests.cpp
         abs_encoder_tests.cpp
@@ -67,13 +70,13 @@ target_sources(BDSP-tests PRIVATE ${sources})
 if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
     target_compile_options(BDSP PUBLIC -fprofile-arcs -ftest-coverage)
     target_link_libraries(BDSP PRIVATE gcov)
-endif()
+endif ()
 
 target_link_libraries(BDSP-tests PRIVATE BDSP::BDSP gtest_main)
 
-if(NOT is_top_level)
+if (NOT is_top_level)
     win_copy_deps_to_target_dir(BDSP-tests BDSP::BDSP)
-endif()
+endif ()
 
 include(GoogleTest)
 gtest_discover_tests(BDSP-tests)
