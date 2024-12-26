@@ -1,7 +1,7 @@
 #ifndef BDSP_MIXINS_H
 #define BDSP_MIXINS_H
 
-#include "BDSP/types.h"
+#include <BDSP/types.h>
 
 #define DEFAULT_BDSP_MAX_PACKET_SIZE 65535
 
