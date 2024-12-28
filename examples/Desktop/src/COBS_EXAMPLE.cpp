@@ -17,7 +17,7 @@ int main() {
     Context context;
 
     std::vector<uint8_t> data = {1, 0x7E, 3, 0x7D, 0};
-    std::cout << "Default ";
+    std::cout << "Default        ";
     show_data(data, true);
 
     auto encoder = COBSEncoder({'\0', 255});
@@ -50,17 +50,8 @@ int main() {
         }
     }, &context);
 
-
-    std::cout << "Default ";
-    show_data(data, true);
-
-    context.encoded_buffer.push_back(0);
-    context.encoded_buffer.push_back(0);
-    context.encoded_buffer.push_back(0);
-    context.encoded_buffer.push_back(0);
     encoder.encode(data.data(), data.size());
     encoder.finish_encode();
-    context.encoded_buffer.push_back(0);
 
     std::cout << "Encoded Buffer ";
     show_data(context.encoded_buffer, true);
