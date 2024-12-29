@@ -14,10 +14,12 @@ namespace BDSP::decoders::COBS {
     struct cobs_config_t {
         uint8_t delimiter;
         uint8_t depth;
+        uint8_t size_of_the_sequence_to_be_replaced;
+        uint8_t byte_of_the_sequence_to_be_replaced;
     };
 
     enum fsm_state_t {
-        SERVICE_BYTE, REGULAR_BYTE, SWAP_BYTE
+        SERVICE_BYTE, REGULAR_BYTE, SWAP_BYTE, REPLACEMENT_SEQUENCE
     };
 
     class COBSDecoder final : public ABS::AbstractDecoder {
@@ -25,6 +27,8 @@ namespace BDSP::decoders::COBS {
         fsm_state_t _fsm_state{};
         uint8_t _service_byte_offset{};
         uint8_t _swap_byte_offset{};
+
+        bool next_swap_byte_is_place_of_the_replaced_sequence = false;
 
         decode_status_t _decode(uint8_t byte) override;
 
