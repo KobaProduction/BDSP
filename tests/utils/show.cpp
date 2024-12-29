@@ -1,14 +1,12 @@
 #include "show.h"
 
 void show_byte(uint8_t byte, show_t type) {
-    switch (type) {
-        case DEC:
-            std::cout << static_cast<uint32_t>(byte);
-            break;
-        case HEX:
-            std::cout << std::hex << std::uppercase << static_cast<uint32_t>(byte);
-            break;
+    if (type == HEX) {
+        if (byte <= 0xF) std::cout << 0;
+        std::cout << std::hex << std::uppercase;
     }
+    std::cout << static_cast<uint32_t>(byte);
+    std::cout << std::dec;
 }
 
 void show_data(uint8_t *buf, size_t size, show_t type) {
