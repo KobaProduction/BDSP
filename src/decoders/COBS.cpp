@@ -48,9 +48,7 @@ decode_status_t COBSDecoder::_set_swap_byte_offset(uint8_t offset) {
         next_swap_byte_is_place_of_the_replaced_sequence = false;
     }
     _service_byte_offset = _cfg.depth;
-
-    // Decoding error. The size of the new swap_byte_offset cannot exceed the swap_byte_offset from the configuration.
-    return _swap_byte_offset > _cfg.depth ? DECODE_ERROR : DECODE_OK;
+    return _swap_byte_offset == 0 or _swap_byte_offset > _cfg.depth ? DECODE_ERROR : DECODE_OK;
 }
 
 void COBSDecoder::_reset() {
