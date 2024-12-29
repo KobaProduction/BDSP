@@ -1,4 +1,4 @@
-foreach (item PPP COBS)
+foreach (item PPP COBS COBS_RS BDSP)
     add_executable(BDSP-Desktop-${item} ${item}_EXAMPLE.cpp utils.cpp)
     target_sources(BDSP-Desktop-${item} PRIVATE ${sources})
     target_link_libraries(BDSP-Desktop-${item} PRIVATE BDSP::BDSP)
