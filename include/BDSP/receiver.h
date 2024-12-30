@@ -14,7 +14,7 @@ namespace BDSP {
 
         ~BDSPReceiver();
 
-        void set_decoder(streams::IDecoder *decoder_ptr);
+        void set_reader(streams::IReader *reader_ptr);
         void set_packet_handler(packet_handler_t packet_handler, void *context = nullptr);
 
         void set_error_handler(receiver_error_handler_t error_handler, void *error_handler_context_ptr = nullptr);
@@ -24,11 +24,11 @@ namespace BDSP {
         status_t parse(uint8_t &byte);
 
     protected:
-        void _parse_packet_byte(uint8_t byte, streams::decode_status_t decode_status);
+        void _parse_packet_byte(uint8_t byte, streams::read_status_t decode_status);
 
         void _reset();
 
-        streams::IDecoder *_decoder = nullptr;
+        streams::IReader *_reader = nullptr;
         packet_handler_t _packet_handler = nullptr;
         void *_packet_handler_context = nullptr;
         receiver_error_handler_t _error_handler = nullptr;
@@ -39,6 +39,5 @@ namespace BDSP {
         uint8_t _packet_checksum = 0;
     };
 }
-
 
 #endif //BDSP_RECEIVER_H

@@ -12,14 +12,14 @@ BDSPReceiver::~BDSPReceiver() {
     delete _raw_packet;
 }
 
-void BDSPReceiver::set_decoder(IDecoder *decoder_ptr) {
-    _decoder = decoder_ptr;
+void BDSPReceiver::set_reader(streams::IReader *reader_ptr) {
+    _reader = reader_ptr;
     // #todo error nullptr
-    if (not decoder_ptr) return;
-    data_handler_t callback = [](uint8_t byte, decode_status_t read_state, void *context) {
+    if (not reader_ptr) return;
+    data_handler_t callback = [](uint8_t byte, read_status_t read_state, void *context) {
         reinterpret_cast<BDSPReceiver *>(context)->_parse_packet_byte(byte, read_state);
     };
-    _decoder->set_data_handler(callback, this);
+    _reader->set_data_handler(callback, this);
 }
 
 void BDSPReceiver::set_packet_handler(packet_handler_t packet_handler, void *context) {
@@ -35,18 +35,18 @@ void BDSPReceiver::set_error_handler(receiver_error_handler_t error_handler, voi
 }
 
 status_t BDSPReceiver::parse(uint8_t *buffer_ptr, size_t size) {
-    if (not _decoder) return BDSP_CONFIG_NOT_INSTALLED;
-    _decoder->decode(buffer_ptr, size);
+    if (not _reader) return BDSP_CONFIG_NOT_INSTALLED;
+    _reader->read(buffer_ptr, size);
     return PARSE_OK;
 }
 
 status_t BDSPReceiver::parse(uint8_t &byte) {
-    if (not _decoder) return BDSP_CONFIG_NOT_INSTALLED;
+    if (not _reader) return BDSP_CONFIG_NOT_INSTALLED;
     return parse(&byte, 1);
 }
 
-void BDSPReceiver::_parse_packet_byte(uint8_t byte, decode_status_t decode_status) {
-    if (decode_status == DECODE_ERROR) {
+void BDSPReceiver::_parse_packet_byte(uint8_t byte, read_status_t decode_status) {
+    if (decode_status == READ_ERROR) {
         _error_handler(ERROR_DECODING, _error_handler_context);
         return _reset();
     }
@@ -92,7 +92,7 @@ void BDSPReceiver::_parse_packet_byte(uint8_t byte, decode_status_t decode_statu
             _fsm_state = WAIT_END;
             break;
         case WAIT_END:
-            if (decode_status == DECODE_END) {
+            if (decode_status == READ_END) {
                 _packet_handler(*_raw_packet, _packet_handler_context);
                 delete _raw_packet;
                 _raw_packet = nullptr;
@@ -105,7 +105,7 @@ void BDSPReceiver::_parse_packet_byte(uint8_t byte, decode_status_t decode_statu
 }
 
 void BDSPReceiver::_reset() {
-    _decoder->reset_decode_state(true);
+    _reader->reset_read_state(true);
     _fsm_state = PACKET_ID;
     _byte_received = 0;
     if (_raw_packet) {

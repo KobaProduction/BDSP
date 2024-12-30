@@ -24,21 +24,21 @@ namespace BDSP::streams {
     };
 
 
-    enum decode_status_t {
-        DECODE_OK, DECODE_END, DECODE_ERROR, UNKNOWN_DECODER_ERROR
+    enum read_status_t {
+        READ_OK, READ_END, READ_ERROR, UNKNOWN_READER_ERROR
     };
 
-    typedef void (*data_handler_t)(uint8_t byte, decode_status_t status, void *data_handler_context_ptr);
+    typedef void (*data_handler_t)(uint8_t byte, read_status_t status, void *data_handler_context_ptr);
 
-    class IDecoder {
+    class IReader {
     public:
         virtual void set_data_handler(data_handler_t handler, void *context_ptr) = 0;
 
-        virtual void reset_decode_state(bool need_wait_delemiter) = 0;
+        virtual void reset_read_state(bool need_wait_delemiter) = 0;
 
-        virtual decode_status_t decode(uint8_t byte) = 0;
+        virtual read_status_t read(uint8_t byte) = 0;
 
-        virtual decode_status_t decode(uint8_t *buffer_ptr, size_t size) = 0;
+        virtual read_status_t read(uint8_t *buffer_ptr, size_t size) = 0;
 
     };
 
