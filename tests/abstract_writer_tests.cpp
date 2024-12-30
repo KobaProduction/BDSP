@@ -1,17 +1,17 @@
 #include <cstdint>
 #include <gtest/gtest.h>
 
-#include <BDSP/encoders/abs_encoder.h>
+#include <BDSP/streams/abstract/writer.h>
 #include "utils/testing.h"
 
-using namespace BDSP::encoders::ABS;
+using namespace BDSP::streams;
 
-class SimpleEncoder : public AbstractEncoder {
-    void _encode(uint8_t byte) override {
+class SimpleEncoder : public ABS::AbstractWriter {
+    void _process_byte(uint8_t byte) override {
         _write(byte);
     };
 
-    void _finish_encode() override {
+    void _finish() override {
         _write(end_header.data(), end_header.size());
     };
 public:
@@ -24,25 +24,25 @@ public:
 
 TEST(abstract_encoder_tests, abstract_encoder_errors_test) {
     auto encoder = SimpleEncoder();
-    auto status = encoder.encode(0x00);
-    EXPECT_EQ(status, UNKNOWN_ENCODER_ERROR);
+    auto status = encoder.write(0x00);
+    EXPECT_EQ(status, UNKNOWN_WRITER_ERROR);
 
-    status = encoder.finish_encode();
-    EXPECT_EQ(status, UNKNOWN_ENCODER_ERROR);
+    status = encoder.finish();
+    EXPECT_EQ(status, UNKNOWN_WRITER_ERROR);
 
     std::vector<uint8_t> data = {0};
-    status = encoder.encode(data.data(), data.size());
-    EXPECT_EQ(status, UNKNOWN_ENCODER_ERROR);
+    status = encoder.write(data.data(), data.size());
+    EXPECT_EQ(status, UNKNOWN_WRITER_ERROR);
 
     encoder.set_writer([](uint8_t byte, void *ctx) {}, nullptr);
 
     encoder.toggle_ready();
 
-    status = encoder.encode(0x00);
-    EXPECT_EQ(status, UNKNOWN_ENCODER_ERROR);
+    status = encoder.write(0x00);
+    EXPECT_EQ(status, UNKNOWN_WRITER_ERROR);
 
-    status = encoder.finish_encode();
-    EXPECT_EQ(status, UNKNOWN_ENCODER_ERROR);
+    status = encoder.finish();
+    EXPECT_EQ(status, UNKNOWN_WRITER_ERROR);
 }
 
 TEST(abstract_encoder_tests, abstract_encoder_normal_using_test) {
@@ -52,11 +52,11 @@ TEST(abstract_encoder_tests, abstract_encoder_normal_using_test) {
 
     encoder.set_writer([](uint8_t byte, void *ctx) {}, nullptr);
 
-    auto status = encoder.encode(data.data(), data.size());
-    EXPECT_EQ(status, DECODE_OK);
+    auto status = encoder.write(data.data(), data.size());
+    EXPECT_EQ(status, READ_OK);
 
-    status = encoder.finish_encode();
-    EXPECT_EQ(status, DECODE_END);
+    status = encoder.finish();
+    EXPECT_EQ(status, READ_END);
 }
 
 TEST(abstract_encoder_tests, abstract_encoder_write_test) {
@@ -65,18 +65,18 @@ TEST(abstract_encoder_tests, abstract_encoder_write_test) {
     std::vector<uint8_t> data = {0x00};
 
     encoder.set_writer([](uint8_t byte, void *ctx) { EXPECT_EQ(byte, 0x00); }, nullptr);
-    auto status = encoder.encode(data[0]);
-    EXPECT_EQ(status, DECODE_OK);
+    auto status = encoder.write(data[0]);
+    EXPECT_EQ(status, READ_OK);
 
     std::vector<uint8_t> output;
     encoder.set_writer([](uint8_t byte, void *ctx) {
         reinterpret_cast<std::vector<uint8_t> *>(ctx)->push_back(byte);
     }, &output);
 
-    status = encoder.finish_encode();
-    EXPECT_EQ(status, DECODE_END);
+    status = encoder.finish();
+    EXPECT_EQ(status, READ_END);
 
     std::vector<uint8_t> correct_encoded = data;
     correct_encoded.insert(correct_encoded.end(), encoder.end_header.begin(), encoder.end_header.end());
-    start_test_encoder(encoder, data, correct_encoded);
+    start_test_writer(encoder, data, correct_encoded);
 }
