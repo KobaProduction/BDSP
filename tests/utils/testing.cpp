@@ -3,6 +3,8 @@
 #include "testing.h"
 #include "show.h"
 
+using namespace BDSP::streams;
+
 bool is_equals(const uint8_t *data1, size_t size1, const uint8_t *data2, size_t size2) {
     if (size1 not_eq size2) return false;
     bool equals = true;
@@ -22,52 +24,52 @@ bool is_equals(std::vector<uint8_t> data1, std::vector<uint8_t> data2) {
     return is_equals(data1.data(), data1.size(), data2.data(), data2.size());
 }
 
-void start_test_encoder(
-        BDSP::encoders::ABS::AbstractEncoder &encoder,
-        std::vector<uint8_t> &data,
-        std::vector<uint8_t> &correct_encoded,
-        show_t type
+void start_test_writer(
+        BDSP::streams::ABS::AbstractWriter &writer,
+        std::vector<uint8_t> &current,
+        std::vector<uint8_t> &correct,
+        bool use_hex_when_show
 ) {
-    std::vector<uint8_t> encoded_buffer;
+    std::vector<uint8_t> write_buffer;
 
-    encoder.set_writer([](uint8_t byte, void *ctx_ptr) {
+    writer.set_writer([](uint8_t byte, void *ctx_ptr) {
         reinterpret_cast<std::vector<uint8_t> *>(ctx_ptr)->push_back(byte);
-    }, &encoded_buffer);
+    }, &write_buffer);
 
-    auto status = encoder.encode(data.data(), data.size());
-    encoder.finish_encode();
-    if (status not_eq BDSP::encoders::ENCODE_OK) {
+    auto status = writer.write(current.data(), current.size());
+    writer.finish();
+    if (status not_eq BDSP::streams::WRITE_OK) {
         show_status(status);
         FAIL() << "Incorrect state";
     }
-    if (is_equals(correct_encoded, encoded_buffer)) return;
+    if (is_equals(correct, write_buffer)) return;
 
     std::cout << "Correct ";
-    show_data(correct_encoded, type);
-    std::cout << "Encoded ";
-    show_data(encoded_buffer, type);
-    FAIL() << "the correct and encoded array is not equal";
+    show_data(correct, use_hex_when_show);
+    std::cout << "Current ";
+    show_data(write_buffer, use_hex_when_show);
+    FAIL() << "the current and correct array is not equal";
 }
 
-void start_test_decoder(
-        BDSP::decoders::ABS::AbstractDecoder &decoder,
-        std::vector<uint8_t> &encoded,
-        std::vector<uint8_t> &correct_decoded,
-        show_t type
+void start_test_reader(
+        BDSP::streams::ABS::AbstractReader &reader,
+        std::vector<uint8_t> &current,
+        std::vector<uint8_t> &correct,
+        bool use_hex_when_show
 ) {
     struct Context {
-        std::vector<uint8_t> decoded;
+        std::vector<uint8_t> read_buffer;
         bool is_ended = false;
     } ctx;
 
-    decoder.set_data_handler([](uint8_t byte, decode_status_t status, void *ctx_ptr) {
+    reader.set_data_handler([](uint8_t byte, read_status_t status, void *ctx_ptr) {
         auto context = reinterpret_cast<Context *>(ctx_ptr);
         ASSERT_FALSE(context->is_ended);
         switch (status) {
-            case DECODE_OK:
-                context->decoded.push_back(byte);
+            case READ_OK:
+                context->read_buffer.push_back(byte);
                 break;
-            case DECODE_END:
+            case READ_END:
                 context->is_ended = true;
                 break;
             default:
@@ -78,11 +80,11 @@ void start_test_decoder(
 
     }, &ctx);
 
-    decoder.decode(encoded.data(), encoded.size());
-    if (is_equals(correct_decoded, ctx.decoded)) return;
+    reader.read(current.data(), current.size());
+    if (is_equals(correct, ctx.read_buffer)) return;
     std::cout << "Correct ";
-    show_data(correct_decoded, type);
-    std::cout << "Decoded ";
-    show_data(ctx.decoded, type);
-    FAIL() << "the correct and decoded array is not equal";
+    show_data(correct, use_hex_when_show);
+    std::cout << "Current ";
+    show_data(ctx.read_buffer, use_hex_when_show);
+    FAIL() << "the current and correct array is not equal";
 }
