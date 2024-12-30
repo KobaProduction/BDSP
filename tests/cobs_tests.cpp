@@ -46,7 +46,22 @@ TEST(cobs_encoding_test, encoding_default_test) {
     }
 }
 
-TEST(cobs_encoding_test, encoding_custom_config_test) {
+TEST(cobs_encoding_test, decoding_test) {
+    COBSDecoder decoder;
+
+    std::vector<uint8_t> data;
+    std::vector<uint8_t> encoded;
+
+    for (int size = 1; size < 1000; ++size) {
+        data.clear();
+        encoded.clear();
+        for (int i = 0; i < size; ++i) data.push_back(i);
+        cobs_encode(data, encoded);
+        start_test_decoder(decoder, encoded, data);
+    }
+}
+
+TEST(cobs_encoding_test, encoding_custom_delimiter_test) {
     COBSEncoder encoder({.delimiter = '\n'});
     COBSDecoder decoder({.delimiter = '\n'});
 
@@ -83,17 +98,34 @@ TEST(cobs_encoding_test, encoding_custom_config_test) {
     }
 }
 
-TEST(cobs_encoding_test, decoding_test) {
-    COBSDecoder decoder;
+TEST(cobs_encoding_test, cobs_with_sequence_replacement_test) {
+    COBSEncoder encoder({.delimiter = 0, .size_of_the_sequence_to_be_replaced = 2});
+    COBSDecoder decoder({.delimiter = 0, .size_of_the_sequence_to_be_replaced = 2});
 
-    std::vector<uint8_t> data;
-    std::vector<uint8_t> encoded;
+    struct Context {
+        std::vector<uint8_t> data;
+        std::vector<uint8_t> encoded;
+        std::vector<uint8_t> decoded;
+        bool is_ended = false;
+    } ctx;
 
-    for (int size = 1; size < 1000; ++size) {
-        data.clear();
-        encoded.clear();
-        for (int i = 0; i < size; ++i) data.push_back(i);
-        cobs_encode(data, encoded);
-        start_test_decoder(decoder, encoded, data);
-    }
+    encoder.set_writer([] (uint8_t byte, void *ctx) {
+        reinterpret_cast<Context*>(ctx)->encoded.push_back(byte);
+    }, &ctx);
+
+    decoder.set_data_handler([] (uint8_t byte, decode_status_t status, void *ctx) {
+        auto &context = *reinterpret_cast<Context*>(ctx);
+        ASSERT_FALSE(context.is_ended);
+        if (status == DECODE_OK) context.decoded.push_back(byte);
+        if (status == DECODE_END) context.is_ended = true;
+    }, &ctx);
+
+    ctx.data = {0x00, 0x00, 0x00, 0x01};
+    encoder.encode(ctx.data.data(), ctx.data.size());
+    encoder.finish_encode();
+    std::vector<uint8_t> correct_encoded = {127 + 1, 0x00, 0x00, 0x01};
+    decoder.decode(ctx.encoded.data(), ctx.encoded.size());
+    ASSERT_TRUE(is_equals(ctx.data, ctx.decoded));
+    ASSERT_TRUE(ctx.is_ended);
+    ctx.is_ended = false;
 }
