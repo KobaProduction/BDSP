@@ -1,11 +1,10 @@
-#ifndef BDSP_ENCODERS_PPP_H
-#define BDSP_ENCODERS_PPP_H
+#ifndef BDSP_STREAMS_PPP_ENCODER_H
+#define BDSP_STREAMS_PPP_ENCODER_H
 
 #include <cstdint>
-#include <BDSP/encoders/abs_encoder.h>
+#include "BDSP/streams/abstract/encoder.h"
 
-namespace BDSP::encoders::PPP {
-    using namespace BDSP::encoders;
+namespace BDSP::streams::PPP {
 
     class PPPEncoder final : public ABS::AbstractEncoder {
     protected:
@@ -19,4 +18,4 @@ namespace BDSP::encoders::PPP {
     };
 }
 
-#endif //BDSP_ENCODERS_PPP_H
+#endif //BDSP_STREAMS_PPP_ENCODER_H

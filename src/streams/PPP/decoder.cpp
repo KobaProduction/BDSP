@@ -1,6 +1,7 @@
-#include "BDSP/decoders/PPP.h"
+#include "BDSP/streams/PPP/decoder.h"
 
-using namespace BDSP::decoders::PPP;
+using namespace BDSP::streams;
+using namespace BDSP::streams::PPP;
 
 void PPPDecoder::_reset() {
     _is_escape_state = false;

@@ -1,9 +1,9 @@
 #include <BDSP/transmitter.h>
 
 using namespace BDSP;
-using namespace BDSP::encoders;
+using namespace streams;
 
-void BDSPTransmitter::set_encoder(BDSP::encoders::IEncoder *encoder_ptr) {
+void BDSPTransmitter::set_encoder(streams::IEncoder *encoder_ptr) {
     _encoder = encoder_ptr;
 }
 

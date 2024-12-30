@@ -1,16 +1,12 @@
-#ifndef BDSP_DECODERS_ABS_H
-#define BDSP_DECODERS_ABS_H
+#ifndef BDSP_STREAMS_ABSTRACT_DECODER_H
+#define BDSP_STREAMS_ABSTRACT_DECODER_H
 
 #include <cstdint>
+#include "BDSP/streams/types.h"
 
-#include <BDSP/decoders/types.h>
-#include <BDSP/decoders/interface.h>
-
-namespace BDSP::decoders::ABS {
-    using namespace BDSP::decoders;
+namespace BDSP::streams::ABS {
 
     class AbstractDecoder : public IDecoder {
-    private:
         data_handler_t _data_handler = nullptr;
         void *_data_handler_context = nullptr;
         bool _is_waiting_for_the_delemiter = false;
@@ -34,4 +30,4 @@ namespace BDSP::decoders::ABS {
     };
 }
 
-#endif //BDSP_DECODERS_ABS_H
+#endif //BDSP_STREAMS_ABSTRACT_DECODER_H

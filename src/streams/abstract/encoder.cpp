@@ -1,6 +1,7 @@
-#include "BDSP/encoders/abs_encoder.h"
+#include "BDSP/streams/abstract/encoder.h"
 
-using namespace BDSP::encoders::ABS;
+using namespace BDSP::streams;
+using namespace BDSP::streams::ABS;
 
 void AbstractEncoder::_write(uint8_t byte) {
     _writer(byte, _writer_context);

@@ -1,13 +1,10 @@
-#ifndef BDSP_ENCODERS_ABS_H
-#define BDSP_ENCODERS_ABS_H
+#ifndef BDSP_STREAMS_ABSTRACT_ENCODER_H
+#define BDSP_STREAMS_ABSTRACT_ENCODER_H
 
 #include <cstdint>
+#include "BDSP/streams/types.h"
 
-#include <BDSP/encoders/types.h>
-#include <BDSP/encoders/interface.h>
-
-namespace BDSP::encoders::ABS {
-    using namespace BDSP::encoders;
+namespace BDSP::streams::ABS {
 
     class AbstractEncoder : public IEncoder {
         write_handler_t _writer = nullptr;
@@ -34,4 +31,4 @@ namespace BDSP::encoders::ABS {
     };
 }
 
-#endif //BDSP_ENCODERS_ABS_H
+#endif //BDSP_STREAMS_ABSTRACT_ENCODER_H

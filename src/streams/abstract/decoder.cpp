@@ -1,6 +1,7 @@
-#include "BDSP/decoders/abs_decoder.h"
+#include "BDSP/streams/abstract/decoder.h"
 
-using namespace BDSP::decoders::ABS;
+using namespace BDSP::streams;
+using namespace BDSP::streams::ABS;
 
 void AbstractDecoder::set_data_handler(data_handler_t handler, void *context_ptr) {
     _data_handler = handler;

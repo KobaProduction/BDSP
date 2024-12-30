@@ -1,7 +1,8 @@
 #include <BDSP/receiver.h>
 
 using namespace BDSP;
-using namespace BDSP::decoders;
+using namespace BDSP::core;
+using namespace BDSP::streams;
 
 BDSPReceiver::BDSPReceiver() {
     _error_handler = [](receiver_error_t error, void *context) {};
@@ -11,7 +12,7 @@ BDSPReceiver::~BDSPReceiver() {
     delete _raw_packet;
 }
 
-void BDSPReceiver::set_decoder(BDSP::decoders::IDecoder *decoder_ptr) {
+void BDSPReceiver::set_decoder(IDecoder *decoder_ptr) {
     _decoder = decoder_ptr;
     // #todo error nullptr
     if (not decoder_ptr) return;

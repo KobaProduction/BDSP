@@ -4,21 +4,21 @@
 #include <BDSP/types.h>
 #include <BDSP/mixins.h>
 #include <BDSP/packet.h>
-#include <BDSP/encoders/interface.h>
+#include <BDSP/streams/types.h>
 #include <BDSP/checksums/crc/crc8.h>
 
 namespace BDSP {
 
     class BDSPTransmitter : public core::MaxPacketSizeMixin {
     public:
-        void set_encoder(BDSP::encoders::IEncoder *encoder_ptr);
+        void set_encoder(streams::IEncoder *encoder_ptr);
 
         status_t send_data(uint8_t packet_id, uint8_t *buffer_ptr, size_t size);
 
         status_t send_packet(Packet &packet);
 
     protected:
-        BDSP::encoders::IEncoder *_encoder = nullptr;
+        streams::IEncoder *_encoder = nullptr;
     };
 }
 

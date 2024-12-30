@@ -1,7 +1,8 @@
-#include "stdlib.h"
-#include "BDSP/encoders/COBS.h"
+#include <cstdlib>
+#include <BDSP/streams/COBS/encoder.h>
 
-using namespace BDSP::encoders::COBS;
+using namespace BDSP::streams;
+using namespace BDSP::streams::COBS;
 
 
 void COBSEncoder::_encode_default(uint8_t byte) {

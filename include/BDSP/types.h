@@ -12,7 +12,9 @@ namespace BDSP {
         BDSP_EXCESS_SIZE_PACKET, // Data packet size exceeded.
     };
 
-    enum receiver_fsm_state_t {PACKET_ID, SIZE_A, SIZE_B, PACKET_DATA, PACKET_CHECKSUM, WAIT_END};
+    namespace core {
+        enum receiver_fsm_state_t {PACKET_ID, SIZE_A, SIZE_B, PACKET_DATA, PACKET_CHECKSUM, WAIT_END};
+    }
 
     enum receiver_error_t {
         ERROR_DECODING = 1,

@@ -1,6 +1,6 @@
-#include "BDSP/encoders/PPP.h"
+#include <BDSP/streams/PPP/encoder.h>
 
-using namespace BDSP::encoders::PPP;
+using namespace BDSP::streams::PPP;
 
 void PPPEncoder::_encode(uint8_t byte) {
     if (byte not_eq _end_byte and byte not_eq _escape_byte) return _write(byte);

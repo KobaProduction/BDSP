@@ -68,12 +68,17 @@ set(headers
         include/BDSP/transceiver.h
         include/BDSP/transmitter.h
 
-        include/BDSP/encoders/abs_encoder.h
-        include/BDSP/encoders/PPP.h
-        include/BDSP/encoders/COBS.h
-        include/BDSP/decoders/abs_decoder.h
-        include/BDSP/decoders/PPP.h
-        include/BDSP/decoders/COBS.h
+
+        include/BDSP/streams/abstract/decoder.h
+        include/BDSP/streams/abstract/encoder.h
+        include/BDSP/streams/types.h
+
+        include/BDSP/streams/COBS/decoder.h
+        include/BDSP/streams/COBS/decoder.h
+        include/BDSP/streams/COBS/types.h
+
+        include/BDSP/streams/PPP/decoder.h
+        include/BDSP/streams/PPP/encoder.h
 )
 
 set(sources
@@ -83,12 +88,16 @@ set(sources
         src/receiver.cpp
         src/transmitter.cpp
 
-        src/encoders/abs_encoder.cpp
-        src/encoders/PPP.cpp
-        src/encoders/COBS.cpp
-        src/decoders/abs_decoder.cpp
-        src/decoders/PPP.cpp
-        src/decoders/COBS.cpp
+
+        src/streams/abstract/decoder.cpp
+        src/streams/abstract/encoder.cpp
+
+        src/streams/COBS/decoder.cpp
+        src/streams/COBS/encoder.cpp
+
+        src/streams/PPP/decoder.cpp
+        src/streams/PPP/encoder.cpp
+
 
         src/checksums/crc/crc8.cpp
 )

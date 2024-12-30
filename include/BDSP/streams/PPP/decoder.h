@@ -1,12 +1,10 @@
-#ifndef BDSP_DECODERS_PPP_H
-#define BDSP_DECODERS_PPP_H
+#ifndef BDSP_STREAMS_PPP_DECODER_H
+#define BDSP_STREAMS_PPP_DECODER_H
 
 #include <cstdint>
-#include <BDSP/decoders/abs_decoder.h>
+#include "BDSP/streams/abstract/decoder.h"
 
-namespace BDSP::decoders::PPP {
-    using namespace BDSP::decoders;
-
+namespace BDSP::streams::PPP {
 
     class PPPDecoder final : public ABS::AbstractDecoder {
     private:
@@ -17,7 +15,7 @@ namespace BDSP::decoders::PPP {
         uint8_t _escape_mask = 0x20;
         bool _is_escape_state = false;
 
-        decode_status_t _decode(uint8_t byte) override;
+        streams::decode_status_t _decode(uint8_t byte) override;
     };
 }
-#endif //BDSP_DECODERS_PPP_H
+#endif //BDSP_STREAMS_PPP_DECODER_H

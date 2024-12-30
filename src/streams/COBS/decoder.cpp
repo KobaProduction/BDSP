@@ -1,6 +1,8 @@
-#include "BDSP/decoders/COBS.h"
+#include "BDSP/streams/COBS/decoder.h"
 
-using namespace BDSP::decoders::COBS;
+using namespace BDSP::streams;
+using namespace BDSP::streams::COBS;
+using namespace BDSP::streams::COBS::core;
 
 decode_status_t COBSDecoder::_decode(uint8_t byte) {
     decode_status_t status = DECODE_OK;

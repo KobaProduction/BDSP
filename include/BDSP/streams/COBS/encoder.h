@@ -1,22 +1,10 @@
-#ifndef BDSP_DECODERS_PPP_H
-#define BDSP_DECODERS_PPP_H
+#ifndef BDSP_STREAMS_COBS_ENCODER_H
+#define BDSP_STREAMS_COBS_ENCODER_H
 
-#include <BDSP/encoders/abs_encoder.h>
+#include "BDSP/streams/abstract/encoder.h"
+#include "BDSP/streams/COBS/types.h"
 
-#ifndef MIN_BDSP_COBS_DEPTH
-#define MIN_BDSP_COBS_DEPTH 16
-#endif
-
-namespace BDSP::encoders::COBS {
-    using namespace BDSP::encoders;
-
-    struct cobs_config_t {
-        uint8_t delimiter;
-        uint8_t depth;
-        uint8_t size_of_the_sequence_to_be_replaced;
-        uint8_t byte_of_the_sequence_to_be_replaced;
-    };
-
+namespace BDSP::streams::COBS {
 
     class COBSEncoder final : public ABS::AbstractEncoder {
         COBS::cobs_config_t _cfg{};
@@ -41,4 +29,4 @@ namespace BDSP::encoders::COBS {
     };
 }
 
-#endif //BDSP_DECODERS_PPP_H
+#endif //BDSP_STREAMS_COBS_ENCODER_H
