@@ -21,16 +21,16 @@ option(BDSP_BUILD_EXAMPLES "Build BDSP examples" OFF)
 option(BDSP_BUILD_DOCS "Build BDSP documentation" OFF)
 option(BDSP_INSTALL "Generate target for installing BDSP" ${is_top_level})
 set_if_undefined(BDSP_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/BDSP" CACHE STRING
-    "Install path for BDSP package-related CMake files")
+        "Install path for BDSP package-related CMake files")
 
-if(DEFINED BDSP_SHARED_LIBS)
+if (DEFINED BDSP_SHARED_LIBS)
     set(BUILD_SHARED_LIBS ${BDSP_SHARED_LIBS})
-endif()
+endif ()
 
-if(NOT DEFINED CMAKE_BUILD_TYPE AND NOT DEFINED CMAKE_CONFIGURATION_TYPES)
+if (NOT DEFINED CMAKE_BUILD_TYPE AND NOT DEFINED CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
-endif()
+endif ()
 
 set_if_undefined(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set_if_undefined(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
@@ -51,9 +51,9 @@ add_library(BDSP::BDSP ALIAS BDSP)
 include(GenerateExportHeader)
 set(export_file_name "export_shared.h")
 
-if(NOT BUILD_SHARED_LIBS)
+if (NOT BUILD_SHARED_LIBS)
     set(export_file_name "export_static.h")
-endif()
+endif ()
 
 generate_export_header(BDSP EXPORT_FILE_NAME include/BDSP/${export_file_name})
 
@@ -69,16 +69,17 @@ set(headers
         include/BDSP/transmitter.h
 
 
-        include/BDSP/streams/abstract/decoder.h
-        include/BDSP/streams/abstract/encoder.h
+        include/BDSP/streams/abstract/reader.h
         include/BDSP/streams/types.h
+        include/BDSP/streams/abstract/writer.h
 
-        include/BDSP/streams/COBS/decoder.h
-        include/BDSP/streams/COBS/decoder.h
+        include/BDSP/streams/COBS/reader.h
         include/BDSP/streams/COBS/types.h
+        include/BDSP/streams/COBS/writer.h
 
-        include/BDSP/streams/PPP/decoder.h
-        include/BDSP/streams/PPP/encoder.h
+
+        include/BDSP/streams/PPP/reader.h
+        include/BDSP/streams/PPP/writer.h
 )
 
 set(sources
@@ -89,14 +90,14 @@ set(sources
         src/transmitter.cpp
 
 
-        src/streams/abstract/decoder.cpp
-        src/streams/abstract/encoder.cpp
+        src/streams/abstract/reader.cpp
+        src/streams/abstract/writer.cpp
 
-        src/streams/COBS/decoder.cpp
-        src/streams/COBS/encoder.cpp
+        src/streams/COBS/reader.cpp
+        src/streams/COBS/writer.cpp
 
-        src/streams/PPP/decoder.cpp
-        src/streams/PPP/encoder.cpp
+        src/streams/PPP/reader.cpp
+        src/streams/PPP/writer.cpp
 
 
         src/checksums/crc/crc8.cpp
@@ -113,87 +114,87 @@ target_sources(BDSP PRIVATE ${sources})
 target_compile_definitions(BDSP PUBLIC "$<$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>:BDSP_STATIC_DEFINE>")
 
 target_include_directories(BDSP
-    PUBLIC
+        PUBLIC
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>")
 
 set_target_properties(BDSP PROPERTIES
-    SOVERSION ${PROJECT_VERSION_MAJOR}
-    VERSION ${PROJECT_VERSION})
+        SOVERSION ${PROJECT_VERSION_MAJOR}
+        VERSION ${PROJECT_VERSION})
 
-if(BDSP_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
+if (BDSP_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
     configure_package_config_file(cmake/BDSP-config.cmake.in BDSP-config.cmake
-        INSTALL_DESTINATION "${BDSP_INSTALL_CMAKEDIR}")
+            INSTALL_DESTINATION "${BDSP_INSTALL_CMAKEDIR}")
 
     write_basic_package_version_file(BDSP-config-version.cmake
-        COMPATIBILITY SameMajorVersion)
+            COMPATIBILITY SameMajorVersion)
 
     install(TARGETS BDSP EXPORT BDSP_export
-        RUNTIME COMPONENT BDSP
-        LIBRARY COMPONENT BDSP NAMELINK_COMPONENT BDSP-dev
-        ARCHIVE COMPONENT BDSP-dev
-        INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+            RUNTIME COMPONENT BDSP
+            LIBRARY COMPONENT BDSP NAMELINK_COMPONENT BDSP-dev
+            ARCHIVE COMPONENT BDSP-dev
+            INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
     install(DIRECTORY include/
-        TYPE INCLUDE
-        COMPONENT BDSP-dev)
+            TYPE INCLUDE
+            COMPONENT BDSP-dev)
     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/include/BDSP/${export_file_name}"
-        COMPONENT BDSP-dev
-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/BDSP")
+            COMPONENT BDSP-dev
+            DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/BDSP")
 
     set(targets_file "BDSP-shared-targets.cmake")
 
-    if(NOT BUILD_SHARED_LIBS)
+    if (NOT BUILD_SHARED_LIBS)
         set(targets_file "BDSP-static-targets.cmake")
-    endif()
+    endif ()
 
     install(EXPORT BDSP_export
-        COMPONENT BDSP-dev
-        FILE "${targets_file}"
-        DESTINATION "${BDSP_INSTALL_CMAKEDIR}"
-        NAMESPACE BDSP::)
+            COMPONENT BDSP-dev
+            FILE "${targets_file}"
+            DESTINATION "${BDSP_INSTALL_CMAKEDIR}"
+            NAMESPACE BDSP::)
 
     install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/BDSP-config.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/BDSP-config-version.cmake"
-        COMPONENT BDSP-dev
-        DESTINATION "${BDSP_INSTALL_CMAKEDIR}")
+            "${CMAKE_CURRENT_BINARY_DIR}/BDSP-config.cmake"
+            "${CMAKE_CURRENT_BINARY_DIR}/BDSP-config-version.cmake"
+            COMPONENT BDSP-dev
+            DESTINATION "${BDSP_INSTALL_CMAKEDIR}")
 
-    if(MSVC)
+    if (MSVC)
         set(pdb_file "")
         set(pdb_file_destination "")
 
-        if(BUILD_SHARED_LIBS)
+        if (BUILD_SHARED_LIBS)
             set(pdb_file "$<TARGET_PDB_FILE:BDSP>")
             set(pdb_file_destination "${CMAKE_INSTALL_BINDIR}")
-        else()
+        else ()
             # TARGET_PDB_FILE does not work for pdb file generated for static library build, determining it manually
             set(pdb_file "$<TARGET_FILE_DIR:BDSP>/$<TARGET_FILE_PREFIX:BDSP>$<TARGET_FILE_BASE_NAME:BDSP>.pdb")
             set(pdb_file_destination "${CMAKE_INSTALL_LIBDIR}")
-        endif()
+        endif ()
 
         install(FILES "${pdb_file}"
-            COMPONENT BDSP-dev
-            CONFIGURATIONS Debug RelWithDebInfo
-            DESTINATION "${pdb_file_destination}"
-            OPTIONAL)
-    endif()
-endif()
+                COMPONENT BDSP-dev
+                CONFIGURATIONS Debug RelWithDebInfo
+                DESTINATION "${pdb_file_destination}"
+                OPTIONAL)
+    endif ()
+endif ()
 
 #----------------------------------------------------------------------------------------------------------------------
 # other targets
 #----------------------------------------------------------------------------------------------------------------------
 
-if(BDSP_BUILD_TESTS)
+if (BDSP_BUILD_TESTS)
     message(STATUS "Install Google tests: ${INSTALL_GTEST}")
     enable_testing()
     add_subdirectory(tests)
-endif()
+endif ()
 
-if(BDSP_BUILD_EXAMPLES)
+if (BDSP_BUILD_EXAMPLES)
     add_subdirectory(examples)
-endif()
+endif ()
 
-if(BDSP_BUILD_DOCS)
+if (BDSP_BUILD_DOCS)
     find_package(Doxygen REQUIRED)
     doxygen_add_docs(docs include)
-endif()
+endif ()
