@@ -4,7 +4,7 @@ using namespace BDSP::streams;
 using namespace BDSP::streams::COBS;
 using namespace BDSP::streams::COBS::core;
 
-read_status_t COBSDecoder::_process_byte(uint8_t byte) {
+read_status_t COBSReader::_process_byte(uint8_t byte) {
     read_status_t status = READ_OK;
 
     if (byte == _cfg.delimiter) {
@@ -40,7 +40,7 @@ read_status_t COBSDecoder::_process_byte(uint8_t byte) {
     return status;
 }
 
-read_status_t COBSDecoder::_set_swap_byte_offset(uint8_t offset) {
+read_status_t COBSReader::_set_swap_byte_offset(uint8_t offset) {
     // Substitution of swap_byte_offset if the delimiter in the configuration is not equal to 0.
     _swap_byte_offset = _cfg.delimiter not_eq 0x00 and offset == 0x00 ? _cfg.delimiter : offset;
     if (_cfg.size_of_the_sequence_to_be_replaced and _swap_byte_offset > 127) {
@@ -53,12 +53,12 @@ read_status_t COBSDecoder::_set_swap_byte_offset(uint8_t offset) {
     return _swap_byte_offset == 0 or _swap_byte_offset > _cfg.depth ? READ_ERROR : READ_OK;
 }
 
-void COBSDecoder::_reset() {
+void COBSReader::_reset() {
     _fsm_state = SERVICE_BYTE;
     _service_byte_offset = _cfg.depth;
 }
 
-COBSDecoder::COBSDecoder(cobs_config_t config) {
+COBSReader::COBSReader(cobs_config_t config) {
     _cfg = config;
 
     if (_cfg.size_of_the_sequence_to_be_replaced < 2) {
