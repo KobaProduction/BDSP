@@ -11,14 +11,14 @@ namespace BDSP {
 
     class BDSPTransmitter : public core::MaxPacketSizeMixin {
     public:
-        void set_encoder(streams::IEncoder *encoder_ptr);
+        void set_writer(streams::IWriter *writer_ptr);
 
         status_t send_data(uint8_t packet_id, uint8_t *buffer_ptr, size_t size);
 
         status_t send_packet(Packet &packet);
 
     protected:
-        streams::IEncoder *_encoder = nullptr;
+        streams::IWriter *_writer = nullptr;
     };
 }
 

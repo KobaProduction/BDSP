@@ -7,17 +7,17 @@ namespace BDSP::streams {
 
     typedef void (*write_handler_t)(uint8_t byte, void *write_handler_context_ptr);
 
-    enum encode_status_t {
-        ENCODE_OK, ENCODE_FINISH, UNKNOWN_ENCODER_ERROR
+    enum write_status_t {
+        WRITE_OK, WRITE_FINISH, UNKNOWN_WRITER_ERROR
     };
 
-    class IEncoder {
+    class IWriter {
     public:
-        virtual encode_status_t encode(uint8_t byte) = 0;
+        virtual write_status_t write(uint8_t byte) = 0;
 
-        virtual encode_status_t encode(uint8_t *buffer_ptr, size_t size) = 0;
+        virtual write_status_t write(uint8_t *buffer_ptr, size_t size) = 0;
 
-        virtual encode_status_t finish_encode() = 0;
+        virtual write_status_t finish() = 0;
 
         virtual void set_writer(write_handler_t writer, void *context_ptr) = 0;
 

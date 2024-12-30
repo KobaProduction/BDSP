@@ -1,18 +1,18 @@
 #include <cstdlib>
-#include <BDSP/streams/COBS/encoder.h>
+#include <BDSP/streams/COBS/writer.h>
 
 using namespace BDSP::streams;
 using namespace BDSP::streams::COBS;
 
 
-void COBSEncoder::_encode_default(uint8_t byte) {
+void COBSWriter::_encode_default(uint8_t byte) {
     if (_buffer_position == _cfg.depth) _write_buffer();
 
     if (byte not_eq _cfg.delimiter) _buffer_ptr[_buffer_position++] = byte;
     else _write_buffer();
 }
 
-void COBSEncoder::_encode(uint8_t byte) {
+void COBSWriter::_process_byte(uint8_t byte) {
     if (_cfg.size_of_the_sequence_to_be_replaced and byte == _cfg.byte_of_the_sequence_to_be_replaced) {
         _current_size_of_the_sequence_to_be_replaced++;
         if (_current_size_of_the_sequence_to_be_replaced == _cfg.size_of_the_sequence_to_be_replaced) {
@@ -28,21 +28,21 @@ void COBSEncoder::_encode(uint8_t byte) {
     _encode_default(byte);
 }
 
-void COBSEncoder::_finish_encode() {
+void COBSWriter::_finish() {
     if (_current_size_of_the_sequence_to_be_replaced) _reset_elimination_sequence();
     if (_buffer_position == _cfg.depth) _write_buffer();
     _write_buffer();
     _write(_cfg.delimiter);
 }
 
-void COBSEncoder::_reset_elimination_sequence() {
+void COBSWriter::_reset_elimination_sequence() {
     for (size_t i = 0; i < _current_size_of_the_sequence_to_be_replaced; ++i) {
         _encode_default(_cfg.byte_of_the_sequence_to_be_replaced);
     }
     _current_size_of_the_sequence_to_be_replaced = 0;
 }
 
-void COBSEncoder::_write_buffer(bool is_elimination_sequence) {
+void COBSWriter::_write_buffer(bool is_elimination_sequence) {
     _buffer_ptr[0] = _cfg.delimiter not_eq 0x00 and _buffer_position == _cfg.delimiter ? 0 : _buffer_position;
     if (is_elimination_sequence) {
         _buffer_ptr[0] += 127;
@@ -51,7 +51,7 @@ void COBSEncoder::_write_buffer(bool is_elimination_sequence) {
     _buffer_position = 1;
 }
 
-COBSEncoder::COBSEncoder(cobs_config_t config) {
+COBSWriter::COBSWriter(cobs_config_t config) {
     _cfg = config;
 
     if (_cfg.size_of_the_sequence_to_be_replaced < 2) {
@@ -69,6 +69,6 @@ COBSEncoder::COBSEncoder(cobs_config_t config) {
     if (not _buffer_ptr) _is_ready = false;
 }
 
-COBSEncoder::~COBSEncoder() {
+COBSWriter::~COBSWriter() {
     free(_buffer_ptr);
 }

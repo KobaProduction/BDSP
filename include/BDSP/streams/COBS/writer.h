@@ -1,12 +1,12 @@
 #ifndef BDSP_STREAMS_COBS_ENCODER_H
 #define BDSP_STREAMS_COBS_ENCODER_H
 
-#include "BDSP/streams/abstract/encoder.h"
+#include "BDSP/streams/abstract/writer.h"
 #include "BDSP/streams/COBS/types.h"
 
 namespace BDSP::streams::COBS {
 
-    class COBSEncoder final : public ABS::AbstractEncoder {
+    class COBSWriter final : public ABS::AbstractWriter {
         COBS::cobs_config_t _cfg{};
         uint8_t *_buffer_ptr = nullptr;
         uint8_t _buffer_position = 1;
@@ -14,18 +14,18 @@ namespace BDSP::streams::COBS {
 
         void _encode_default(uint8_t byte);
 
-        void _encode(uint8_t byte) override;
+        void _process_byte(uint8_t byte) override;
 
-        void _finish_encode() override;
+        void _finish() override;
 
         void _reset_elimination_sequence();
 
         void _write_buffer(bool is_elimination_sequence = false);
 
     public:
-        explicit COBSEncoder(COBS::cobs_config_t config = {'\0', 255});
+        explicit COBSWriter(COBS::cobs_config_t config = {'\0', 255});
 
-        ~COBSEncoder();
+        ~COBSWriter();
     };
 }
 
