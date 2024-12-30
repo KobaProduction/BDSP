@@ -4,25 +4,20 @@
 #include <cstdint>
 #include <iostream>
 #include <vector>
+
 #include <BDSP/packet.h>
-#include <BDSP/decoders/types.h>
-#include <BDSP/encoders/types.h>
+#include <BDSP/streams/types.h>
 
-using namespace BDSP::decoders;
-using namespace BDSP::encoders;
+void show_byte(uint8_t byte, bool use_hex = false);
 
-enum show_t {DEC, HEX};
+void show_data(uint8_t *buf, size_t size, bool use_hex = false);
 
-void show_byte(uint8_t byte, show_t type = DEC);
+void show_data(std::vector<uint8_t> &data, bool use_hex = false);
 
-void show_data(uint8_t *buf, size_t size, show_t type = DEC);
+void show_packet(BDSP::Packet &packet, bool use_hex = false);
 
-void show_data(std::vector<uint8_t> &data, show_t type = DEC);
+void show_status(BDSP::streams::read_status_t status);
 
-void show_packet(BDSP::Packet &packet, show_t type = DEC);
-
-void show_status(decode_status_t status);
-
-void show_status(encode_status_t status);
+void show_status(BDSP::streams::write_status_t status);
 
 #endif //BDSP_TESTS_UTILS_SHOW_H

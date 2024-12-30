@@ -1,7 +1,9 @@
 #include "show.h"
 
-void show_byte(uint8_t byte, show_t type) {
-    if (type == HEX) {
+using namespace BDSP::streams;
+
+void show_byte(uint8_t byte, bool use_hex) {
+    if (use_hex) {
         if (byte <= 0xF) std::cout << 0;
         std::cout << std::hex << std::uppercase;
     }
@@ -9,57 +11,57 @@ void show_byte(uint8_t byte, show_t type) {
     std::cout << std::dec;
 }
 
-void show_data(uint8_t *buf, size_t size, show_t type) {
+void show_data(uint8_t *buf, size_t size, bool use_hex) {
     std::cout << "Data: ";
     if (not size) {
         std::cout << "EMPTY" << std::endl;
         return;
     }
-    show_byte(buf[0], type);
+    show_byte(buf[0], use_hex);
     for (int i = 1; i < size; ++i) {
         std::cout << " ";
-        show_byte(buf[i], type);
+        show_byte(buf[i], use_hex);
     }
     std::cout << std::dec << std::endl;
 }
 
-void show_data(std::vector<uint8_t> &data, show_t type) {
-    show_data(data.data(), data.size(), type);
+void show_data(std::vector<uint8_t> &data, bool use_hex) {
+    show_data(data.data(), data.size(), use_hex);
 }
 
-void show_packet(BDSP::Packet &packet, show_t type) {
+void show_packet(BDSP::Packet &packet, bool use_hex) {
     std::cout << "[id=" << uint32_t(packet.id) << "] Packet(size=" << packet.size << "): ";
-    show_data(packet.data_ptr, packet.size, type);
+    show_data(packet.data_ptr, packet.size, use_hex);
 }
 
-void show_status(decode_status_t status) {
+void show_status(read_status_t status) {
     switch (status) {
-        case DECODE_OK:
-            std::cout << "DECODE_OK";
+        case READ_OK:
+            std::cout << "READ_OK";
             break;
-        case DECODE_END:
-            std::cout << "DECODE_END";
+        case READ_END:
+            std::cout << "READ_END";
             break;
-        case DECODE_ERROR:
-            std::cout << "DECODE_ERROR";
+        case READ_ERROR:
+            std::cout << "READ_ERROR";
             break;
-        case UNKNOWN_DECODER_ERROR:
-            std::cout << "UNKNOWN_DECODER_ERROR";
+        case UNKNOWN_READER_ERROR:
+            std::cout << "UNKNOWN_READER_ERROR";
             break;
     }
     std::cout << std::endl;
 }
 
-void show_status(encode_status_t status) {
+void show_status(write_status_t status) {
     switch (status) {
-        case ENCODE_OK:
-            std::cout << "ENCODE_OK";
+        case WRITE_OK:
+            std::cout << "WRITE_OK";
             break;
-        case ENCODE_FINISH:
-            std::cout << "ENCODE_FINISH";
+        case WRITE_FINISH:
+            std::cout << "WRITE_FINISH";
             break;
-        case UNKNOWN_ENCODER_ERROR:
-            std::cout << "UNKNOWN_ENCODER_ERROR";
+        case UNKNOWN_WRITER_ERROR:
+            std::cout << "UNKNOWN_WRITER_ERROR";
             break;
     }
     std::cout << std::endl;
