@@ -52,8 +52,8 @@ set(utils_sources
 
 set(sources ${utils_sources}
         checksums.cpp
-        abs_decoder_tests.cpp
-        abs_encoder_tests.cpp
+        abstract_reader_tests.cpp
+        abstract_writer_tests.cpp
         cobs_tests.cpp
         ppp_tests.cpp
         bdsp_tests.cpp
