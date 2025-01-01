@@ -1,15 +1,13 @@
 #include <gtest/gtest.h>
 
 #include <BDSP/transceiver.h>
-#include <BDSP/encoders/COBS.h>
-#include <BDSP/decoders/COBS.h>
+#include <BDSP/streams/COBS/writer.h>
+#include <BDSP/streams/COBS/reader.h>
 
 #include "utils/testing.h"
 
 using namespace BDSP;
-
-using namespace encoders::COBS;
-using namespace decoders::COBS;
+using namespace BDSP::streams;
 
 TEST(bdsp_tests, bdsp_full_test) {
     struct Context {
@@ -17,14 +15,14 @@ TEST(bdsp_tests, bdsp_full_test) {
         Packet *packet_ptr = nullptr;
 
         BDSPTransceiver transceiver;
-        COBSEncoder encoder;
-        COBSDecoder decoder;
+        COBS::COBSWriter writer;
+        COBS::COBSReader reader;
     } ctx;
 
-    ctx.transceiver.set_encoder(&ctx.encoder);
-    ctx.transceiver.set_decoder(&ctx.decoder);
+    ctx.transceiver.set_writer(&ctx.writer);
+    ctx.transceiver.set_reader(&ctx.reader);
 
-    ctx.encoder.set_writer([] (uint8_t byte, void *ctx) {
+    ctx.writer.set_writer([] (uint8_t byte, void *ctx) {
         reinterpret_cast<Context*>(ctx)->transceiver.parse(byte);
     }, &ctx);
 
