@@ -1,17 +1,17 @@
 #include <iostream>
 #include <vector>
 
-#include <BDSP/decoders/PPP.h>
-#include <BDSP/encoders/PPP.h>
+#include <BDSP/streams/PPP/reader.h>
+#include <BDSP/streams/PPP/writer.h>
 
 #include "utils.h"
 
-using namespace BDSP::decoders::PPP;
-using namespace BDSP::encoders::PPP;
+using namespace BDSP::streams;
+using namespace BDSP::streams::PPP;
 
 struct Context {
-    std::vector<uint8_t> encoded_buffer;
-    std::vector<uint8_t> decoded_buffer;
+    std::vector<uint8_t> write_buffer;
+    std::vector<uint8_t> read_buffer;
 };
 
 int main() {
@@ -19,35 +19,35 @@ int main() {
 
     std::vector<uint8_t> data = {1, 0x7E, 3, 0x7D, 0};
     std::cout << "Default ";
-    show_data(data, true);
+    show_data_(data, true);
 
-    auto ppp_encoder = PPPEncoder();
-    ppp_encoder.set_writer([](uint8_t byte, void *ctx_ptr) {
+    auto ppp_writer = PPPWriter();
+    ppp_writer.set_writer([](uint8_t byte, void *ctx_ptr) {
         if (not ctx_ptr) {
-            std::cout << "encode writer ctx_ptr is null!" << std::endl;
+            std::cout << "read writer ctx_ptr is null!" << std::endl;
             return;
         };
-        reinterpret_cast<Context *>(ctx_ptr)->encoded_buffer.push_back(byte);
+        reinterpret_cast<Context *>(ctx_ptr)->write_buffer.push_back(byte);
     }, &context);
 
-    ppp_encoder.encode(data.data(), data.size());
+    ppp_writer.write(data.data(), data.size());
 
-    std::cout << "Encoded ";
-    show_data(context.encoded_buffer, true);
+    std::cout << "Write ";
+    show_data_(context.write_buffer, true);
 
-    auto ppp_decoder = PPPDecoder();
-    ppp_decoder.reset_decode_state(false);
-    ppp_decoder.set_data_handler([](uint8_t byte, decode_status_t state, void *ctx_ptr) {
+    auto ppp_reader = PPPDecoder();
+    ppp_reader.reset_read_state(false);
+    ppp_reader.set_data_handler([](uint8_t byte, read_status_t state, void *ctx_ptr) {
         if (not ctx_ptr) {
-            std::cout << "decode data handler ctx_ptr is null!" << std::endl;
+            std::cout << "read data handler ctx_ptr is null!" << std::endl;
             return;
         };
-        reinterpret_cast<Context *>(ctx_ptr)->decoded_buffer.push_back(byte);
+        reinterpret_cast<Context *>(ctx_ptr)->read_buffer.push_back(byte);
     }, &context);
 
-     ppp_decoder.decode(context.encoded_buffer.data(), context.encoded_buffer.size());
+    ppp_reader.read(context.write_buffer.data(), context.write_buffer.size());
 
-    std::cout << "Decoded ";
-    show_data(context.decoded_buffer, true);
+    std::cout << "Read ";
+    show_data_(context.read_buffer, true);
     return 0;
 }
