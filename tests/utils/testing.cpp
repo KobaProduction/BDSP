@@ -32,7 +32,7 @@ void start_test_writer(
 ) {
     std::vector<uint8_t> write_buffer;
 
-    writer.set_writer([](uint8_t byte, void *ctx_ptr) {
+    writer.set_stream_writer([](uint8_t byte, void *ctx_ptr) {
         reinterpret_cast<std::vector<uint8_t> *>(ctx_ptr)->push_back(byte);
     }, &write_buffer);
 
@@ -62,7 +62,7 @@ void start_test_reader(
         bool is_ended = false;
     } ctx;
 
-    reader.set_data_handler([](uint8_t byte, read_status_t status, void *ctx_ptr) {
+    reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx_ptr) {
         auto context = reinterpret_cast<Context *>(ctx_ptr);
         ASSERT_FALSE(context->is_ended);
         switch (status) {

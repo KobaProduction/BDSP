@@ -24,13 +24,13 @@ int main() {
     COBS::COBSReader reader;
     transceiver.set_reader(&reader);
 
-    writer.set_writer([] (uint8_t byte, void *ctx) {
+    writer.set_stream_writer([](uint8_t byte, void *ctx) {
         // This lambda function implements the sending of encoded data to the communication channel.
         // But for the current example, they are sent directly to the BDSPTransceiver, forming pipeline.
         //
         // In real-world use, you need to read a callback function that takes data from a communication channel and
         // passes it to a BDSPTransceiver or BDSPReceiver or configured decoder.
-        reinterpret_cast<BDSPTransceiver*>(ctx)->parse(byte);
+        reinterpret_cast<BDSPTransceiver *>(ctx)->parse(byte);
     }, &transceiver);
 
     transceiver.set_packet_handler([] (Packet &packet, void *ctx) {

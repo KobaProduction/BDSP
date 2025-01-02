@@ -34,7 +34,7 @@ TEST(abstract_reader_tests, abstract_reader_errors_test) {
     status = reader.read(&reader.error_byte, 1);
     EXPECT_EQ(status, UNKNOWN_READER_ERROR);
 
-    reader.set_data_handler([](uint8_t byte, read_status_t status, void *ctx) {
+    reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx) {
         EXPECT_EQ(status, READ_ERROR);
     }, nullptr);
 
@@ -55,7 +55,7 @@ TEST(abstract_reader_tests, abstract_reader_normal_using_test) {
     };
 
     bool handler_used = false;
-    reader.set_data_handler(normal_handler, &handler_used);
+    reader.set_stream_data_handler(normal_handler, &handler_used);
 
     auto status = reader.read(0x00);
     EXPECT_EQ(status, READ_OK);
@@ -71,7 +71,7 @@ TEST(abstract_reader_tests, abstract_reader_normal_using_test) {
     EXPECT_EQ(reader.byte_counter, data.size());
 
     handler_used = false;
-    reader.set_data_handler([](uint8_t byte, read_status_t status, void *ctx) {
+    reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx) {
         *reinterpret_cast<bool *>(ctx) = true;
         EXPECT_EQ(status, READ_END);
     }, &handler_used);
@@ -82,7 +82,7 @@ TEST(abstract_reader_tests, abstract_reader_normal_using_test) {
     EXPECT_EQ(reader.byte_counter, 0);
 
     handler_used = false;
-    reader.set_data_handler(normal_handler, &handler_used);
+    reader.set_stream_data_handler(normal_handler, &handler_used);
     status = reader.read(0x00);
     EXPECT_EQ(handler_used, true);
     EXPECT_EQ(status, READ_OK);
@@ -100,14 +100,14 @@ TEST(abstract_reader_tests, abstract_reader_read_correct_test) {
 
     ctx.write_buffer.push_back(ctx.reader.end_byte);
 
-    ctx.reader.set_data_handler([](uint8_t byte, read_status_t status, void *ctx) {
+    ctx.reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx) {
         reinterpret_cast<std::vector<uint8_t> *>(ctx)->push_back(byte);
     }, &ctx.read_buffer);
 
     start_test_reader(ctx.reader, ctx.write_buffer, ctx.correct);
     EXPECT_EQ(ctx.reader.byte_counter, 0);
 
-    ctx.reader.set_data_handler([](uint8_t byte, read_status_t status, void *ctx) {
+    ctx.reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx) {
         auto &context = *reinterpret_cast<Context *>(ctx);
         if (status == READ_OK) {
             context.read_buffer.push_back(byte);
@@ -143,7 +143,7 @@ TEST(abstract_reader_tests, abstract_reader_read_errors_test) {
 
     ctx.write_buffer.push_back(ctx.reader.error_byte);
 
-    ctx.reader.set_data_handler([](uint8_t byte, read_status_t status, void *ctx) {
+    ctx.reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx) {
         auto &context = *reinterpret_cast<Context *>(ctx);
         if (status == READ_OK) {
             context.read_buffer.push_back(byte);

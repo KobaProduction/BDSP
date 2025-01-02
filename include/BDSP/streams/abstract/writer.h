@@ -7,7 +7,7 @@
 namespace BDSP::streams::ABS {
 
     class AbstractWriter : public IWriter {
-        write_handler_t _writer = nullptr;
+        stream_writer_t _writer = nullptr;
         void *_writer_context = nullptr;
     protected:
         bool _is_ready = true;
@@ -27,7 +27,7 @@ namespace BDSP::streams::ABS {
 
         write_status_t finish() final;
 
-        void set_writer(write_handler_t writer, void *context_ptr) final;
+        void set_stream_writer(stream_writer_t writer, void *context_ptr) final;
     };
 }
 

@@ -22,7 +22,7 @@ int main() {
     show_data_(data, true);
 
     auto ppp_writer = PPPWriter();
-    ppp_writer.set_writer([](uint8_t byte, void *ctx_ptr) {
+    ppp_writer.set_stream_writer([](uint8_t byte, void *ctx_ptr) {
         if (not ctx_ptr) {
             std::cout << "read writer ctx_ptr is null!" << std::endl;
             return;
@@ -37,7 +37,7 @@ int main() {
 
     auto ppp_reader = PPPDecoder();
     ppp_reader.reset_read_state(false);
-    ppp_reader.set_data_handler([](uint8_t byte, read_status_t state, void *ctx_ptr) {
+    ppp_reader.set_stream_data_handler([](uint8_t byte, read_status_t state, void *ctx_ptr) {
         if (not ctx_ptr) {
             std::cout << "read data handler ctx_ptr is null!" << std::endl;
             return;

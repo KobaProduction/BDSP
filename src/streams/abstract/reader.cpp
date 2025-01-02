@@ -3,7 +3,7 @@
 using namespace BDSP::streams;
 using namespace BDSP::streams::ABS;
 
-void AbstractReader::set_data_handler(data_handler_t handler, void *context_ptr) {
+void AbstractReader::set_stream_data_handler(stream_data_handler_t handler, void *context_ptr) {
     _data_handler = handler;
     _data_handler_context = context_ptr;
 }

@@ -71,12 +71,12 @@ TEST(cobs_pipelines_tests, encoding_custom_delimiter_test) {
         bool is_ended = false;
     } ctx;
 
-    cobs_writer.set_writer([] (uint8_t byte, void *ctx) {
-        reinterpret_cast<Context*>(ctx)->encoded.push_back(byte);
+    cobs_writer.set_stream_writer([](uint8_t byte, void *ctx) {
+        reinterpret_cast<Context *>(ctx)->encoded.push_back(byte);
     }, &ctx);
 
-    cobs_reader.set_data_handler([] (uint8_t byte, read_status_t status, void *ctx) {
-        auto &context = *reinterpret_cast<Context*>(ctx);
+    cobs_reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx) {
+        auto &context = *reinterpret_cast<Context *>(ctx);
         ASSERT_FALSE(context.is_ended);
         if (status == READ_OK) context.decoded.push_back(byte);
         if (status == READ_END) context.is_ended = true;
@@ -108,12 +108,12 @@ TEST(cobs_pipelines_tests, cobs_with_sequence_replacement_test) {
         bool is_ended = false;
     } ctx;
 
-    cobs_writer.set_writer([] (uint8_t byte, void *ctx) {
-        reinterpret_cast<Context*>(ctx)->encoded.push_back(byte);
+    cobs_writer.set_stream_writer([](uint8_t byte, void *ctx) {
+        reinterpret_cast<Context *>(ctx)->encoded.push_back(byte);
     }, &ctx);
 
-    cobs_reader.set_data_handler([] (uint8_t byte, read_status_t status, void *ctx) {
-        auto &context = *reinterpret_cast<Context*>(ctx);
+    cobs_reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx) {
+        auto &context = *reinterpret_cast<Context *>(ctx);
         ASSERT_FALSE(context.is_ended);
         if (status == READ_OK) context.decoded.push_back(byte);
         if (status == READ_END) context.is_ended = true;

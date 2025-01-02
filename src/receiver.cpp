@@ -16,10 +16,10 @@ void BDSPReceiver::set_reader(streams::IReader *reader_ptr) {
     _reader = reader_ptr;
     // #todo error nullptr
     if (not reader_ptr) return;
-    data_handler_t callback = [](uint8_t byte, read_status_t read_state, void *context) {
+    stream_data_handler_t callback = [](uint8_t byte, read_status_t read_state, void *context) {
         reinterpret_cast<BDSPReceiver *>(context)->_parse_packet_byte(byte, read_state);
     };
-    _reader->set_data_handler(callback, this);
+    _reader->set_stream_data_handler(callback, this);
 }
 
 void BDSPReceiver::set_packet_handler(packet_handler_t packet_handler, void *context) {

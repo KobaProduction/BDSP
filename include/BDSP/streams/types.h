@@ -5,7 +5,7 @@
 
 namespace BDSP::streams {
 
-    typedef void (*write_handler_t)(uint8_t byte, void *write_handler_context_ptr);
+    typedef void (*stream_writer_t)(uint8_t byte, void *context_ptr);
 
     enum write_status_t {
         WRITE_OK, WRITE_FINISH, UNKNOWN_WRITER_ERROR
@@ -19,7 +19,7 @@ namespace BDSP::streams {
 
         virtual write_status_t finish() = 0;
 
-        virtual void set_writer(write_handler_t writer, void *context_ptr) = 0;
+        virtual void set_stream_writer(stream_writer_t writer, void *context_ptr) = 0;
 
     };
 
@@ -28,11 +28,11 @@ namespace BDSP::streams {
         READ_OK, READ_END, READ_ERROR, UNKNOWN_READER_ERROR
     };
 
-    typedef void (*data_handler_t)(uint8_t byte, read_status_t status, void *data_handler_context_ptr);
+    typedef void (*stream_data_handler_t)(uint8_t byte, read_status_t status, void *context_ptr);
 
     class IReader {
     public:
-        virtual void set_data_handler(data_handler_t handler, void *context_ptr) = 0;
+        virtual void set_stream_data_handler(stream_data_handler_t handler, void *context_ptr) = 0;
 
         virtual void reset_read_state(bool need_wait_delemiter) = 0;
 

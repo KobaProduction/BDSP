@@ -26,7 +26,7 @@ TEST(ppp_pipelines_tests, decoding_errors_test) {
         std::vector<uint8_t> write_buffer;
     } ctx;
 
-    ctx.reader.set_data_handler([](uint8_t byte, read_status_t status, void *ctx) {
+    ctx.reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx) {
         if (status == READ_OK) reinterpret_cast<Context *>(ctx)->read_buffer.push_back(byte);
     }, &ctx);
 
@@ -59,7 +59,7 @@ TEST(ppp_pipelines_tests, decoding_normal_test) {
     ctx.correct = {0x00, 0x01};
     start_test_reader(ctx.reader, ctx.write_buffer, ctx.correct);
 
-    ctx.reader.set_data_handler([](uint8_t byte, read_status_t status, void *ctx) {
+    ctx.reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx) {
         auto &context = *reinterpret_cast<Context *>(ctx);
         switch (status) {
             case READ_OK:

@@ -22,8 +22,8 @@ TEST(bdsp_tests, bdsp_full_test) {
     ctx.transceiver.set_writer(&ctx.writer);
     ctx.transceiver.set_reader(&ctx.reader);
 
-    ctx.writer.set_writer([] (uint8_t byte, void *ctx) {
-        reinterpret_cast<Context*>(ctx)->transceiver.parse(byte);
+    ctx.writer.set_stream_writer([](uint8_t byte, void *ctx) {
+        reinterpret_cast<Context *>(ctx)->transceiver.parse(byte);
     }, &ctx);
 
     ctx.transceiver.set_packet_handler([] (Packet &packet, void *ctx) {

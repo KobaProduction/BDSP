@@ -7,7 +7,7 @@
 namespace BDSP::streams::ABS {
 
     class AbstractReader : public IReader {
-        data_handler_t _data_handler = nullptr;
+        stream_data_handler_t _data_handler = nullptr;
         void *_data_handler_context = nullptr;
         bool _is_waiting_for_the_delemiter = false;
     protected:
@@ -26,7 +26,7 @@ namespace BDSP::streams::ABS {
 
         void reset_read_state(bool is_need_wait_delemiter) final;
 
-        void set_data_handler(data_handler_t handler, void *context_ptr) final;
+        void set_stream_data_handler(stream_data_handler_t handler, void *context_ptr) final;
     };
 }
 

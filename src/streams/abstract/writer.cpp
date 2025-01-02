@@ -32,7 +32,7 @@ write_status_t AbstractWriter::finish() {
     return WRITE_FINISH;
 }
 
-void AbstractWriter::set_writer(write_handler_t writer, void *context_ptr) {
+void AbstractWriter::set_stream_writer(stream_writer_t writer, void *context_ptr) {
     _writer = writer;
     _writer_context = context_ptr;
 }

@@ -27,7 +27,7 @@ int main() {
     auto writer = COBSWriter(config);
     auto reader = COBSReader(config);
 
-    writer.set_writer([](uint8_t byte, void *ctx_ptr) {
+    writer.set_stream_writer([](uint8_t byte, void *ctx_ptr) {
         if (not ctx_ptr) {
             std::cout << "read writer ctx_ptr is null!" << std::endl;
             return;
@@ -35,7 +35,7 @@ int main() {
         reinterpret_cast<Context *>(ctx_ptr)->write_buffer.push_back(byte);
     }, &context);
 
-    reader.set_data_handler([](uint8_t byte, read_status_t status, void *ctx_ptr) {
+    reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx_ptr) {
         if (not ctx_ptr) {
             std::cout << "read data handler ctx_ptr is null!" << std::endl;
             return;
