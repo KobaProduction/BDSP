@@ -1,16 +1,17 @@
 #include <iostream>
 #include <vector>
 
-#include <BDSP/decoders/COBS.h>
-#include <BDSP/encoders/COBS.h>
+#include <BDSP/streams/COBS/reader.h>
+#include <BDSP/streams/COBS/writer.h>
+
 #include "utils.h"
 
-using namespace BDSP::decoders::COBS;
-using namespace BDSP::encoders::COBS;
+using namespace BDSP::streams;
+using namespace BDSP::streams::COBS;
 
 struct Context {
-    std::vector<uint8_t> encoded_buffer;
-    std::vector<uint8_t> decoded_buffer;
+    std::vector<uint8_t> write_buffer;
+    std::vector<uint8_t> read_buffer;
 };
 
 int main() {
@@ -18,48 +19,50 @@ int main() {
 
     std::vector<uint8_t> data = {1, 0x7E, 3, 0x7D, 0};
     std::cout << "Default        ";
-    show_data(data, true);
+    show_data_(data, true);
 
-    auto encoder = COBSEncoder({'\0', 255});
-    auto decoder = COBSDecoder({'\0', 255});
+    cobs_config_t config = {'\0', 255};
 
-    encoder.set_writer([](uint8_t byte, void *ctx_ptr) {
+    auto writer = COBSWriter(config);
+    auto reader = COBSReader(config);
+
+    writer.set_writer([](uint8_t byte, void *ctx_ptr) {
         if (not ctx_ptr) {
-            std::cout << "encode writer ctx_ptr is null!" << std::endl;
+            std::cout << "read writer ctx_ptr is null!" << std::endl;
             return;
         };
-        reinterpret_cast<Context *>(ctx_ptr)->encoded_buffer.push_back(byte);
+        reinterpret_cast<Context *>(ctx_ptr)->write_buffer.push_back(byte);
     }, &context);
 
-    decoder.set_data_handler([](uint8_t byte, decode_status_t status, void *ctx_ptr) {
+    reader.set_data_handler([](uint8_t byte, read_status_t status, void *ctx_ptr) {
         if (not ctx_ptr) {
-            std::cout << "decode data handler ctx_ptr is null!" << std::endl;
+            std::cout << "read data handler ctx_ptr is null!" << std::endl;
             return;
         }
         switch (status) {
-            case DECODE_OK:
-                reinterpret_cast<Context *>(ctx_ptr)->decoded_buffer.push_back(byte);
+            case READ_OK:
+                reinterpret_cast<Context *>(ctx_ptr)->read_buffer.push_back(byte);
                 break;
-            case DECODE_END:
+            case READ_END:
 //                std::cout << "end" << std::endl;
                 break;
-            case DECODE_ERROR:
-            case UNKNOWN_DECODER_ERROR:
+            case READ_ERROR:
+            case UNKNOWN_READER_ERROR:
                 std::cout << "Symbol: " << uint32_t(byte) << " - ERROR";
                 break;
         }
     }, &context);
 
-    encoder.encode(data.data(), data.size());
-    encoder.finish_encode();
+    writer.write(data.data(), data.size());
+    writer.finish();
 
     std::cout << "Encoded Buffer ";
-    show_data(context.encoded_buffer, true);
+    show_data_(context.write_buffer, true);
 
-    decoder.decode(context.encoded_buffer.data(), context.encoded_buffer.size());
+    reader.read(context.write_buffer.data(), context.write_buffer.size());
 
     std::cout << "Decoded Buffer ";
-    show_data(context.decoded_buffer, true);
+    show_data_(context.read_buffer, true);
 
     return 0;
 }
