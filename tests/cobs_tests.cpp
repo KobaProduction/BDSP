@@ -1,17 +1,16 @@
 #include <cstdint>
 #include <gtest/gtest.h>
 
-#include <BDSP/encoders/COBS.h>
-#include <BDSP/decoders/COBS.h>
+#include <BDSP/streams/COBS/writer.h>
+#include <BDSP/streams/COBS/reader.h>
 
 #include "utils/cobs.h"
 #include "utils/testing.h"
 #include "utils/show.h"
 
-using namespace BDSP::encoders::COBS;
-using namespace BDSP::decoders::COBS;
+using namespace BDSP::streams;
 
-TEST(cobs_encoding_test, cobs_utils_test) {
+TEST(cobs_pipelines_tests, cobs_utils_test) {
     std::vector<uint8_t> data;
     std::vector<uint8_t> encoded;
     std::vector<uint8_t> decoded;
@@ -30,8 +29,8 @@ TEST(cobs_encoding_test, cobs_utils_test) {
     FAIL() << "the correct and encoded array is not equal";
 }
 
-TEST(cobs_encoding_test, encoding_default_test) {
-    COBSEncoder encoder;
+TEST(cobs_pipelines_tests, encoding_default_test) {
+    COBS::COBSWriter cobs_writer;
 
     std::vector<uint8_t> data;
     std::vector<uint8_t> correct_encoded;
@@ -42,12 +41,12 @@ TEST(cobs_encoding_test, encoding_default_test) {
 
         for (int i = 0; i < size; ++i) data.push_back(i);
         cobs_encode(data, correct_encoded);
-        start_test_encoder(encoder, data, correct_encoded);
+        start_test_writer(cobs_writer, data, correct_encoded);
     }
 }
 
-TEST(cobs_encoding_test, decoding_test) {
-    COBSDecoder decoder;
+TEST(cobs_pipelines_tests, decoding_test) {
+    COBS::COBSReader cobs_reader;
 
     std::vector<uint8_t> data;
     std::vector<uint8_t> encoded;
@@ -57,13 +56,13 @@ TEST(cobs_encoding_test, decoding_test) {
         encoded.clear();
         for (int i = 0; i < size; ++i) data.push_back(i);
         cobs_encode(data, encoded);
-        start_test_decoder(decoder, encoded, data);
+        start_test_reader(cobs_reader, encoded, data);
     }
 }
 
-TEST(cobs_encoding_test, encoding_custom_delimiter_test) {
-    COBSEncoder encoder({.delimiter = '\n'});
-    COBSDecoder decoder({.delimiter = '\n'});
+TEST(cobs_pipelines_tests, encoding_custom_delimiter_test) {
+    COBS::COBSWriter cobs_writer({.delimiter = '\n'});
+    COBS::COBSReader cobs_reader({.delimiter = '\n'});
 
     struct Context {
         std::vector<uint8_t> data;
@@ -72,15 +71,15 @@ TEST(cobs_encoding_test, encoding_custom_delimiter_test) {
         bool is_ended = false;
     } ctx;
 
-    encoder.set_writer([] (uint8_t byte, void *ctx) {
+    cobs_writer.set_writer([] (uint8_t byte, void *ctx) {
         reinterpret_cast<Context*>(ctx)->encoded.push_back(byte);
     }, &ctx);
 
-    decoder.set_data_handler([] (uint8_t byte, decode_status_t status, void *ctx) {
+    cobs_reader.set_data_handler([] (uint8_t byte, read_status_t status, void *ctx) {
         auto &context = *reinterpret_cast<Context*>(ctx);
         ASSERT_FALSE(context.is_ended);
-        if (status == DECODE_OK) context.decoded.push_back(byte);
-        if (status == DECODE_END) context.is_ended = true;
+        if (status == READ_OK) context.decoded.push_back(byte);
+        if (status == READ_END) context.is_ended = true;
     }, &ctx);
 
     for (int size = 1; size < 1000; ++size) {
@@ -89,18 +88,18 @@ TEST(cobs_encoding_test, encoding_custom_delimiter_test) {
         ctx.decoded.clear();
 
         for (int i = 0; i < size; ++i) ctx.data.push_back(i);
-        encoder.encode(ctx.data.data(), ctx.data.size());
-        encoder.finish_encode();
-        decoder.decode(ctx.encoded.data(), ctx.encoded.size());
+        cobs_writer.write(ctx.data.data(), ctx.data.size());
+        cobs_writer.finish();
+        cobs_reader.read(ctx.encoded.data(), ctx.encoded.size());
         ASSERT_TRUE(is_equals(ctx.data, ctx.decoded));
         ASSERT_TRUE(ctx.is_ended);
         ctx.is_ended = false;
     }
 }
 
-TEST(cobs_encoding_test, cobs_with_sequence_replacement_test) {
-    COBSEncoder encoder({.delimiter = 0, .size_of_the_sequence_to_be_replaced = 2});
-    COBSDecoder decoder({.delimiter = 0, .size_of_the_sequence_to_be_replaced = 2});
+TEST(cobs_pipelines_tests, cobs_with_sequence_replacement_test) {
+    COBS::COBSWriter cobs_writer({.delimiter = 0, .size_of_the_sequence_to_be_replaced = 2});
+    COBS::COBSReader cobs_reader({.delimiter = 0, .size_of_the_sequence_to_be_replaced = 2});
 
     struct Context {
         std::vector<uint8_t> data;
@@ -109,22 +108,22 @@ TEST(cobs_encoding_test, cobs_with_sequence_replacement_test) {
         bool is_ended = false;
     } ctx;
 
-    encoder.set_writer([] (uint8_t byte, void *ctx) {
+    cobs_writer.set_writer([] (uint8_t byte, void *ctx) {
         reinterpret_cast<Context*>(ctx)->encoded.push_back(byte);
     }, &ctx);
 
-    decoder.set_data_handler([] (uint8_t byte, decode_status_t status, void *ctx) {
+    cobs_reader.set_data_handler([] (uint8_t byte, read_status_t status, void *ctx) {
         auto &context = *reinterpret_cast<Context*>(ctx);
         ASSERT_FALSE(context.is_ended);
-        if (status == DECODE_OK) context.decoded.push_back(byte);
-        if (status == DECODE_END) context.is_ended = true;
+        if (status == READ_OK) context.decoded.push_back(byte);
+        if (status == READ_END) context.is_ended = true;
     }, &ctx);
 
     ctx.data = {0x00, 0x00, 0x00, 0x01};
-    encoder.encode(ctx.data.data(), ctx.data.size());
-    encoder.finish_encode();
+    cobs_writer.write(ctx.data.data(), ctx.data.size());
+    cobs_writer.finish();
     std::vector<uint8_t> correct_encoded = {127 + 1, 0x00, 0x00, 0x01};
-    decoder.decode(ctx.encoded.data(), ctx.encoded.size());
+    cobs_reader.read(ctx.encoded.data(), ctx.encoded.size());
     ASSERT_TRUE(is_equals(ctx.data, ctx.decoded));
     ASSERT_TRUE(ctx.is_ended);
     ctx.is_ended = false;
