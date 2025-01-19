@@ -1,7 +1,7 @@
 #include "BDSP/transmitter.h"
 
 using namespace BDSP;
-using namespace streams;
+using namespace BDSP::streams;
 
 void BDSPTransmitter::set_writer(streams::IWriter *writer_ptr) {
     // todo statuses
