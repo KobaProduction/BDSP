@@ -5,7 +5,7 @@
 #define MIN_BDSP_COBS_DEPTH 16
 #endif
 
-#include <cstdint>
+#include <stdint.h>
 
 namespace BDSP::streams::COBS {
     struct cobs_config_t {

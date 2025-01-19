@@ -1,11 +1,11 @@
 #ifndef BDSP_TRANSMITTER_H
 #define BDSP_TRANSMITTER_H
 
-#include <BDSP/types.h>
-#include <BDSP/mixins.h>
-#include <BDSP/packet.h>
-#include <BDSP/streams/types.h>
-#include <BDSP/checksums/crc/crc8.h>
+#include "BDSP/types.h"
+#include "BDSP/mixins.h"
+#include "BDSP/packet.h"
+#include "BDSP/streams/types.h"
+#include "BDSP/checksums/crc/crc8.h"
 
 namespace BDSP {
 

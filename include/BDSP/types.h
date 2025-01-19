@@ -1,7 +1,7 @@
 #ifndef BDSP_TYPES_H
 #define BDSP_TYPES_H
 
-#include <BDSP/packet.h>
+#include "BDSP/packet.h"
 
 namespace BDSP {
 

@@ -1,7 +1,8 @@
 #ifndef BDSP_STREAMS_PPP_DECODER_H
 #define BDSP_STREAMS_PPP_DECODER_H
 
-#include <cstdint>
+#include <stdint.h>
+
 #include "BDSP/streams/abstract/reader.h"
 
 namespace BDSP::streams::PPP {

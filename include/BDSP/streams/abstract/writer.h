@@ -1,7 +1,8 @@
 #ifndef BDSP_STREAMS_ABSTRACT_ENCODER_H
 #define BDSP_STREAMS_ABSTRACT_ENCODER_H
 
-#include <cstdint>
+#include <stdint.h>
+
 #include "BDSP/streams/types.h"
 
 namespace BDSP::streams::ABS {

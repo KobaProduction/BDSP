@@ -2,7 +2,7 @@
 #define BDSP_STREAMS_COBS_DECODER_H
 
 #include "BDSP/streams/abstract/reader.h"
-#include "types.h"
+#include "BDSP/streams/COBS/types.h"
 
 namespace BDSP::streams::COBS {
 

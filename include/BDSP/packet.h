@@ -1,9 +1,9 @@
 #ifndef BDSP_PACKET_H
 #define BDSP_PACKET_H
 
-#include "stdint.h"
-#include "stddef.h"
-#include "stdlib.h"
+#include <stdint.h>
+#include <stddef.h>
+#include <stdlib.h>
 
 namespace BDSP {
     class __attribute__((packed)) Packet {
