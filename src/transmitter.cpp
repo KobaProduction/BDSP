@@ -1,7 +1,9 @@
 #include "BDSP/transmitter.h"
+#include "BDSP/checksums/crc/crc8.h"
 
 using namespace BDSP;
 using namespace BDSP::streams;
+using namespace BDSP::utils;
 
 void BDSPTransmitter::set_writer(streams::IWriter *writer_ptr) {
     // todo statuses

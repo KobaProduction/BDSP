@@ -4,6 +4,8 @@
 
 #include <BDSP/checksums/crc/crc8.h>
 
+using namespace BDSP::utils;
+
 TEST(checksums_tests, crc8_full_test) {
     std::string data = "BDSP (Binary Data Separation Protocol)";
     EXPECT_EQ(crc8(reinterpret_cast<uint8_t *>(data.data()), data.size()), 0x1E);

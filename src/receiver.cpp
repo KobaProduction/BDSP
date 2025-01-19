@@ -1,8 +1,10 @@
 #include "BDSP/receiver.h"
+#include "BDSP/checksums/crc/crc8.h"
 
 using namespace BDSP;
 using namespace BDSP::core;
 using namespace BDSP::streams;
+using namespace BDSP::utils;
 
 BDSPReceiver::BDSPReceiver() {
     _error_handler = [](receiver_error_t error, void *context) {};
