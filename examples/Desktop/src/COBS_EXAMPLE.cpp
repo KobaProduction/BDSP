@@ -23,7 +23,8 @@ int main() {
 
     cobs_config_t config = {'\0', 255};
 
-    auto writer = COBSWriter(config);
+    COBSWriter writer;
+    writer.set_config(config);
     auto reader = COBSReader(config);
 
     writer.set_stream_writer([](uint8_t byte, void *ctx_ptr) {

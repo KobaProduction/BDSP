@@ -22,9 +22,10 @@ int main() {
         data.push_back(0);
     }
 
-    cobs_config_t config = {'\0', 255, 2};
+    cobs_config_t config = {.delimiter = '\0', .size_of_the_sequence_to_be_replaced = 2};
 
-    auto writer = COBSWriter(config);
+    COBSWriter writer;
+    writer.set_config(config);
     auto reader = COBSReader(config);
 
     writer.set_stream_writer([](uint8_t byte, void *ctx_ptr) {

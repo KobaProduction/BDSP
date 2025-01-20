@@ -1,4 +1,3 @@
-#include <cstdint>
 #include <gtest/gtest.h>
 
 #include <BDSP/streams/COBS/writer.h>
@@ -61,7 +60,8 @@ TEST(cobs_pipelines_tests, decoding_test) {
 }
 
 TEST(cobs_pipelines_tests, encoding_custom_delimiter_test) {
-    COBS::COBSWriter cobs_writer({.delimiter = '\n'});
+    COBS::COBSWriter cobs_writer;
+    cobs_writer.set_config({.delimiter = '\n'});
     COBS::COBSReader cobs_reader({.delimiter = '\n'});
 
     struct Context {
@@ -98,7 +98,8 @@ TEST(cobs_pipelines_tests, encoding_custom_delimiter_test) {
 }
 
 TEST(cobs_pipelines_tests, cobs_with_sequence_replacement_test) {
-    COBS::COBSWriter cobs_writer({.delimiter = 0, .size_of_the_sequence_to_be_replaced = 2});
+    COBS::COBSWriter cobs_writer;
+    cobs_writer.set_config({.delimiter = 0, .size_of_the_sequence_to_be_replaced = 2});
     COBS::COBSReader cobs_reader({.delimiter = 0, .size_of_the_sequence_to_be_replaced = 2});
 
     struct Context {
