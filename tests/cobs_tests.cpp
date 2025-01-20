@@ -118,33 +118,8 @@ TEST(cobs_pipelines_tests, cobs_with_sequence_replacement_test) {
     COBS::COBSReader cobs_reader;
     cobs_reader.set_config(config);
 
-    struct Context {
-        std::vector<uint8_t> data;
-        std::vector<uint8_t> encoded;
-        std::vector<uint8_t> decoded;
-        bool is_ended = false;
-    } ctx;
-
-    cobs_writer.set_stream_writer(
-        [](uint8_t byte, void *ctx) { reinterpret_cast<Context *>(ctx)->encoded.push_back(byte); }, &ctx);
-
-    cobs_reader.set_stream_data_handler(
-        [](uint8_t byte, read_status_t status, void *ctx) {
-            auto &context = *reinterpret_cast<Context *>(ctx);
-            ASSERT_FALSE(context.is_ended);
-            if (status == READ_OK)
-                context.decoded.push_back(byte);
-            if (status == READ_END)
-                context.is_ended = true;
-        },
-        &ctx);
-
-    ctx.data = {0x00, 0x00, 0x00, 0x01};
-    cobs_writer.write(ctx.data.data(), ctx.data.size());
-    cobs_writer.finish();
-    std::vector<uint8_t> correct_encoded = {127 + 1, 0x00, 0x00, 0x01};
-    cobs_reader.read(ctx.encoded.data(), ctx.encoded.size());
-    ASSERT_TRUE(is_equals(ctx.data, ctx.decoded));
-    ASSERT_TRUE(ctx.is_ended);
-    ctx.is_ended = false;
+    std::vector<uint8_t> data = {0x00, 0x00, 0x00, 0x01};
+    std::vector<uint8_t> correct_encoded = {127 + 1, 0x01, 0x02, 0x01, 0x00};
+    start_test_writer(cobs_writer, data, correct_encoded);
+    start_test_reader(cobs_reader,correct_encoded, data);
 }
