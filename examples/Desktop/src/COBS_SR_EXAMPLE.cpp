@@ -26,34 +26,35 @@ int main() {
 
     COBSWriter writer;
     writer.set_config(config);
-    auto reader = COBSReader(config);
+    COBSReader reader;
+    reader.set_config(config);
 
-    writer.set_stream_writer([](uint8_t byte, void *ctx_ptr) {
-        if (not ctx_ptr) {
-            std::cout << "read writer ctx_ptr is null!" << std::endl;
-            return;
-        };
-        reinterpret_cast<Context *>(ctx_ptr)->write_buffer.push_back(byte);
-    }, &context);
+    writer.set_stream_writer(
+        [](uint8_t byte, void *ctx_ptr) {
+            if (not ctx_ptr) {
+                std::cout << "read writer ctx_ptr is null!" << std::endl;
+                return;
+            };
+            reinterpret_cast<Context *>(ctx_ptr)->write_buffer.push_back(byte);
+        },
+        &context);
 
-    reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx_ptr) {
-        if (not ctx_ptr) {
-            std::cout << "read data handler ctx_ptr is null!" << std::endl;
-            return;
-        }
-        switch (status) {
-            case READ_OK:
-                reinterpret_cast<Context *>(ctx_ptr)->read_buffer.push_back(byte);
-                break;
+    reader.set_stream_data_handler(
+        [](uint8_t byte, read_status_t status, void *ctx_ptr) {
+            if (not ctx_ptr) {
+                std::cout << "read data handler ctx_ptr is null!" << std::endl;
+                return;
+            }
+            switch (status) {
+            case READ_OK: reinterpret_cast<Context *>(ctx_ptr)->read_buffer.push_back(byte); break;
             case READ_END:
-//                std::cout << "end" << std::endl;
+                //                std::cout << "end" << std::endl;
                 break;
             case READ_ERROR:
-            case UNKNOWN_READER_ERROR:
-                std::cout << "Symbol: " << uint32_t(byte) << " - ERROR" << std::endl;
-                break;
-        }
-    }, &context);
+            case UNKNOWN_READER_ERROR: std::cout << "Symbol: " << uint32_t(byte) << " - ERROR" << std::endl; break;
+            }
+        },
+        &context);
 
     writer.write(data.data(), data.size());
     writer.finish();
