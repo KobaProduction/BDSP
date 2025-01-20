@@ -1,11 +1,12 @@
 **BDSP** - Binary Data Separation Protocol
 ===========
-[![arduino-library-badge](https://www.ardu-badge.com/badge/BDSP.svg?)](https://www.ardu-badge.com/BDSP)
 [![PlatformIO Registry](https://badges.registry.platformio.org/packages/kobaproduction/library/BDSP.svg)](https://registry.platformio.org/libraries/kobaproduction/BDSP)
 [![Russian Translate](https://img.shields.io/badge/README-RUSSIAN_TRANLATE-blueviolet.svg?style=flat-square)](https://github-com.translate.goog/KobaProduction/BDSP?_x_tr_sl=en&_x_tr_tl=ru)
 
 
 The library implements a protocol for dividing a binary data stream into packets based on a modification of the COBS encoder that performs "on-the-fly" encoding (a depth parameter size buffer is used for encoding).
+
+This README is not relevant. Arduino IDE not supported. #todo add instruction for build library for Arduino IDE.
 
 We have multiple goals with this library:
 * Easy way to use;
@@ -15,8 +16,8 @@ We have multiple goals with this library:
 * Possibility of flexible configuration;
 * Low and predictable data redundancy based on the COBS encoder.
 
-## BDSP Protocol Data Redundancy
-![BDSP Protocol Data Redundancy](docs/attachments/images/bdsp-data-redundancy.webp)
+## BDSP (COBS) Protocol Data Redundancy
+![BDSP (COBS) Protocol Data Redundancy](docs/attachments/images/bdsp-data-redundancy.webp)
 Parameters 16, 32, 64, 128, 255 are the search depth parameter, which is equal to the allocated buffer for the COBS encoder, which is used at the base of the BDSP transmitter and transceiver objects.
 
 Redundancy is formed due to the constant component of the packet: identifier (1 byte), data size (2 bytes), checksum (1 byte), as well as COBS encoding redundancy of at least 1 service byte and a separator byte. 
@@ -27,7 +28,7 @@ _Redundancy is indicated in the worst case, since in COBS encoding, service byte
 
 ## Getting Started
 
-Here's a simple program for Arduino:
+Here's a simple program for Platformio (Arduino Framework):
 
 ```cpp
 #include <Arduino.h>
@@ -36,6 +37,7 @@ Here's a simple program for Arduino:
 BDSPTransceiver transceiver;
 
 void setup() {
+    // not relevant, need update
     Serial.begin(115200);
     Serial.println();
     COBS::config_t config = {.delimiter = '\n', .depth = 255};
