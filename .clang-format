@@ -12,7 +12,7 @@ BraceWrapping:
   AfterClass: false
   AfterControlStatement: Never
   AfterEnum: false
-  AfterFunction: true
+  AfterFunction: false
   AfterNamespace: false
   AfterStruct: false
   AfterUnion: false
@@ -81,5 +81,5 @@ EmptyLineBeforeAccessModifier: Always
 KeepEmptyLinesAtTheStartOfBlocks: true
 MaxEmptyLinesToKeep: 1
 PenaltyReturnTypeOnItsOwnLine: 1000
-PointerAlignment: Left
+PointerAlignment: Right
 SortUsingDeclarations: false
