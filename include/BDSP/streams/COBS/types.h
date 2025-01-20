@@ -45,7 +45,18 @@ enum set_config_status {
      * greater than 127. One of the eight bits is required to mark the location of the sequence to be replaced, so the
      * total length of the search should not be more than half of the maximum value of 255.
      */
-    WARNING_DEPTH_SR
+    WARNING_DEPTH_SR,
+    /**
+     * This error occurs when the length of the sequence being replaced is less than 2.
+     * The COBS/ZPE implementation uses a length of 2 by default, but we have modified it so that lengths in the range of 2-255 can also be used.
+     */
+    ERROR_SIZE_SR_ZPE,
+    /**
+     * This warning occurs when the search length of the delimiter byte in the configuration is not 224 (0xE0),
+     * the code automatically changes it to 224, and also generates this warning.
+     * The value cannot be changed at this time, but if testing shows the effectiveness of other values, this part can be modified.
+     */
+    WARNING_DEPTH_ZPE,
 };
 
 namespace core {

@@ -6,7 +6,8 @@
 
 namespace BDSP::streams::COBS {
 
-class COBSWriter final: public ABS::AbstractWriter {
+class COBSWriter: public ABS::AbstractWriter {
+protected:
     COBS::cobs_config_t _cfg{};
     uint8_t *_buffer_ptr = nullptr;
     uint8_t _buffer_position = 1;
@@ -20,15 +21,24 @@ class COBSWriter final: public ABS::AbstractWriter {
 
     void _reset_elimination_sequence();
 
-    void _write_buffer(bool is_elimination_sequence = false);
+    void _write_buffer(uint8_t cobs_offset_value = 0);
 
 public:
     explicit COBSWriter();
 
     ~COBSWriter();
 
-    set_config_status set_config(COBS::cobs_config_t config);
+    virtual set_config_status set_config(COBS::cobs_config_t config);
 };
+
+class COBSZPEWriter final: public COBSWriter {
+    void _process_byte(uint8_t byte) override;
+public:
+    explicit COBSZPEWriter();
+
+    set_config_status set_config(COBS::cobs_config_t config) override;
+};
+
 
 } // namespace BDSP::streams::COBS
 
