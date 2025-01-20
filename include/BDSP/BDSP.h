@@ -1,6 +1,6 @@
 #pragma once
 
-#if defined(PLATFORMIO)
+#if defined(PLATFORMIO) or defined(ARDUINO)
 #include "BDSP/types.h"
 #include "BDSP/packet.h"
 #include <BDSP/receiver.h>
