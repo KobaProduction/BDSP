@@ -6,7 +6,8 @@
 
 namespace BDSP::streams::COBS {
 
-class COBSReader final: public ABS::AbstractReader {
+class COBSReader: public ABS::AbstractReader {
+protected:
     cobs_config_t _cfg{};
     core::fsm_state_t _fsm_state{};
     uint8_t _service_byte_offset{};
@@ -18,11 +19,18 @@ class COBSReader final: public ABS::AbstractReader {
 
     void _reset() override;
 
-    read_status_t _set_swap_byte_offset(uint8_t offset);
+    virtual read_status_t _set_swap_byte_offset(uint8_t offset);
 
 public:
     explicit COBSReader();
-    set_config_status set_config(cobs_config_t config);
+    virtual set_config_status set_config(cobs_config_t config);
+};
+
+class COBSZPEReader final: public COBSReader {
+    read_status_t _set_swap_byte_offset(uint8_t offset) override;
+public:
+    explicit COBSZPEReader();
+    set_config_status set_config(cobs_config_t config) override;
 };
 } // namespace BDSP::streams::COBS
 

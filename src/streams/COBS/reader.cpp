@@ -64,7 +64,7 @@ void COBSReader::_reset() {
 
 COBSReader::COBSReader() {
     _service_byte_offset = _cfg.depth;
-    set_config({.delimiter = '\0', .depth = 255});
+    COBSReader::set_config({.delimiter = '\0', .depth = 255});
 }
 
 set_config_status COBSReader::set_config(cobs_config_t config) {
@@ -87,6 +87,48 @@ set_config_status COBSReader::set_config(cobs_config_t config) {
     if (config.depth < MIN_BDSP_COBS_DEPTH) {
         status = WARNING_COBS_DEPTH;
         config.depth = MIN_BDSP_COBS_DEPTH;
+    }
+
+    _cfg = config;
+    _is_ready = true;
+    _reset();
+    return status;
+}
+
+
+read_status_t COBSZPEReader::_set_swap_byte_offset(uint8_t offset) {
+    // Substitution of swap_byte_offset if the delimiter in the configuration is not equal to 0.
+    _swap_byte_offset = _cfg.delimiter not_eq 0x00 and offset == 0x00 ? _cfg.delimiter : offset;
+    if (_swap_byte_offset > _cfg.depth) {
+        _swap_byte_offset -= _cfg.depth;
+        next_swap_byte_is_place_of_the_replaced_sequence = true;
+    } else {
+        next_swap_byte_is_place_of_the_replaced_sequence = false;
+    }
+    _service_byte_offset = _cfg.depth;
+    return _swap_byte_offset == 0 or _swap_byte_offset > _cfg.depth ? READ_ERROR : READ_OK;
+}
+
+
+COBSZPEReader::COBSZPEReader() {
+    set_config({'\0', 224, 2,'\0'});
+}
+
+
+set_config_status COBSZPEReader::set_config(cobs_config_t config) {
+    set_config_status status = SET_OK;
+    _is_ready = false;
+
+    if (_fsm_state not_eq SERVICE_BYTE or _service_byte_offset not_eq _cfg.depth) {
+        return ERROR_PROCESS_NOT_FINISHED;
+    }
+
+    if (config.size_of_the_sequence_to_be_replaced < 2) {
+        return ERROR_SIZE_SR_ZPE;
+    }
+
+    if (config.size_of_the_sequence_to_be_replaced and config.depth not_eq 224) {
+        return WARNING_DEPTH_ZPE;
     }
 
     _cfg = config;
