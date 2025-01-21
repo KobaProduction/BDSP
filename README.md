@@ -92,7 +92,8 @@ Thx `pananton` for https://github.com/pananton/cpp-lib-template
 
 ToDo: Write instruction on install BDSP
 
-get coverage from python package `gcovr`
-```
-gcovr --filter src --html-details tests/coverage/coverage.html
-```
+# Coverage
+
+[Instructions on how to set up an environment for assessing code coverage.](docs/coverage.md)
+
+ToDo: add coverage status
