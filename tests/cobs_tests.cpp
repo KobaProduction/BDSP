@@ -8,6 +8,7 @@
 #include "utils/testing.h"
 
 using namespace BDSP::streams;
+using namespace BDSP::streams::COBS;
 
 TEST(cobs_pipelines_tests, cobs_utils_test) {
     std::vector<uint8_t> data;
@@ -31,8 +32,29 @@ TEST(cobs_pipelines_tests, cobs_utils_test) {
     FAIL() << "the correct and encoded array is not equal";
 }
 
+TEST(cobs_pipelines_tests, cobs_writer_configuration_test) {
+    class COBSWriterCustom : public COBSWriter {
+    public:
+        void set_allocator(BDSP::core::bdsp_memory_allocator_t allocator) {
+            _malloc = allocator;
+        }
+    };
+
+    COBSWriterCustom cobs_writer;
+    auto config = cobs_writer.get_config();
+    config.depth = 233;
+    cobs_writer.set_allocator([] (size_t size) -> void * {return nullptr;});
+    auto status = cobs_writer.set_config(config);
+    EXPECT_EQ(status, ERROR_MEMORY_ALLOCATION);
+
+    cobs_writer.set_allocator(malloc);
+    status = cobs_writer.set_config(cobs_writer.get_config());
+    EXPECT_EQ(status, SET_OK);
+
+}
+
 TEST(cobs_pipelines_tests, encoding_default_test) {
-    COBS::COBSWriter cobs_writer;
+    COBSWriter cobs_writer;
 
     std::vector<uint8_t> data;
     std::vector<uint8_t> correct_encoded;
@@ -50,7 +72,7 @@ TEST(cobs_pipelines_tests, encoding_default_test) {
 }
 
 TEST(cobs_pipelines_tests, decoding_test) {
-    COBS::COBSReader cobs_reader;
+    COBSReader cobs_reader;
 
     std::vector<uint8_t> data;
     std::vector<uint8_t> encoded;
@@ -67,10 +89,10 @@ TEST(cobs_pipelines_tests, decoding_test) {
 }
 
 TEST(cobs_pipelines_tests, encoding_custom_delimiter_test) {
-    COBS::cobs_config_t config = {.delimiter = '\n'};
-    COBS::COBSWriter cobs_writer;
+    cobs_config_t config = {.delimiter = '\n'};
+    COBSWriter cobs_writer;
     cobs_writer.set_config(config);
-    COBS::COBSReader cobs_reader;
+    COBSReader cobs_reader;
     cobs_reader.set_config(config);
 
     struct Context {
@@ -112,10 +134,10 @@ TEST(cobs_pipelines_tests, encoding_custom_delimiter_test) {
 }
 
 TEST(cobs_pipelines_tests, cobs_with_sequence_replacement_test) {
-    COBS::cobs_config_t config = {.delimiter = 0, .size_of_the_sequence_to_be_replaced = 2};
-    COBS::COBSWriter cobs_writer;
+    cobs_config_t config = {.delimiter = 0, .size_of_the_sequence_to_be_replaced = 2};
+    COBSWriter cobs_writer;
     cobs_writer.set_config(config);
-    COBS::COBSReader cobs_reader;
+    COBSReader cobs_reader;
     cobs_reader.set_config(config);
 
     std::vector<uint8_t> data = {0x00, 0x00, 0x00, 0x01};
@@ -125,8 +147,8 @@ TEST(cobs_pipelines_tests, cobs_with_sequence_replacement_test) {
 }
 
 TEST(cobs_pipelines_tests, cobs_with_zero_pair_elimination_article_test) {
-    COBS::COBSZPEWriter cobs_writer;
-    COBS::COBSZPEReader cobs_reader;
+    COBSZPEWriter cobs_writer;
+    COBSZPEReader cobs_reader;
 
     std::vector<uint8_t> data = {0x45, 0x00, 0x00, 0x2C, 0x4C, 0x79, 0x00, 0x00, 0x40, 0x06, 0x4F, 0x37};
     ;
@@ -136,8 +158,8 @@ TEST(cobs_pipelines_tests, cobs_with_zero_pair_elimination_article_test) {
 }
 
 TEST(cobs_pipelines_tests, cobs_with_zero_pair_elimination_full_test) {
-    COBS::COBSZPEWriter cobs_writer;
-    COBS::COBSZPEReader cobs_reader;
+    COBSZPEWriter cobs_writer;
+    COBSZPEReader cobs_reader;
 
     std::vector<uint8_t> data = {
         0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
