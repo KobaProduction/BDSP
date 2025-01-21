@@ -3,11 +3,14 @@
 
 #include "BDSP/streams/COBS/types.h"
 #include "BDSP/streams/abstract/writer.h"
+#include "BDSP/types.h"
 
 namespace BDSP::streams::COBS {
 
 class COBSWriter: public ABS::AbstractWriter {
 protected:
+    BDSP::core::bdsp_memory_allocator_t _malloc = malloc;
+    BDSP::core::bdsp_memory_cleaner_t _free = free;
     COBS::cobs_config_t _cfg{};
     uint8_t *_buffer_ptr = nullptr;
     uint8_t _buffer_position = 1;
@@ -37,12 +40,12 @@ public:
 
 class COBSZPEWriter final: public COBSWriter {
     void _process_byte(uint8_t byte) override;
+
 public:
     explicit COBSZPEWriter();
 
     set_config_status set_config(COBS::cobs_config_t config) override;
 };
-
 
 } // namespace BDSP::streams::COBS
 

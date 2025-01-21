@@ -5,27 +5,30 @@
 
 namespace BDSP {
 
-    enum status_t {
-        WRITE_OK,
-        PARSE_OK,
-        BDSP_CONFIG_NOT_INSTALLED,
-        BDSP_EXCESS_SIZE_PACKET, // Data packet size exceeded.
-    };
+enum status_t {
+    WRITE_OK,
+    PARSE_OK,
+    BDSP_CONFIG_NOT_INSTALLED,
+    BDSP_EXCESS_SIZE_PACKET, // Data packet size exceeded.
+};
 
-    namespace core {
-        enum receiver_fsm_state_t {PACKET_ID, SIZE_A, SIZE_B, PACKET_DATA, PACKET_CHECKSUM, WAIT_END};
-    }
+namespace core {
+enum receiver_fsm_state_t { PACKET_ID, SIZE_A, SIZE_B, PACKET_DATA, PACKET_CHECKSUM, WAIT_END };
+typedef void *(*bdsp_memory_allocator_t)(size_t);
+typedef void (*bdsp_memory_cleaner_t)(void *);
 
-    enum receiver_error_t {
-        ERROR_DECODING = 1,
-        EXCEEDING_THE_MAXIMUM_PACKET_SIZE,
-        NOT_ENOUGH_RAM_FOR_PACKET,
-        PACKET_CHECKSUM_DOES_NOT_MATCH
-    };
+} // namespace core
 
-    typedef void (*receiver_error_handler_t)(receiver_error_t error, void *packet_handler_context);
+enum receiver_error_t {
+    ERROR_DECODING = 1,
+    EXCEEDING_THE_MAXIMUM_PACKET_SIZE,
+    NOT_ENOUGH_RAM_FOR_PACKET,
+    PACKET_CHECKSUM_DOES_NOT_MATCH
+};
 
-    typedef void (*packet_handler_t)(Packet &packet, void *packet_handler_context);
-}
+typedef void (*receiver_error_handler_t)(receiver_error_t error, void *packet_handler_context);
 
-#endif //BDSP_TYPES_H
+typedef void (*packet_handler_t)(Packet &packet, void *packet_handler_context);
+} // namespace BDSP
+
+#endif // BDSP_TYPES_H

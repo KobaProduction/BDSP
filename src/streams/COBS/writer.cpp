@@ -1,6 +1,7 @@
-#include <BDSP/streams/COBS/writer.h>
+#include "BDSP/streams/COBS/writer.h"
 #include <stdlib.h>
 
+using namespace BDSP::core;
 using namespace BDSP::streams;
 using namespace BDSP::streams::COBS;
 
@@ -54,20 +55,19 @@ void COBSWriter::_write_buffer(uint8_t cobs_offset_value) {
     if (not cobs_offset_value) {
         cobs_offset_value = _buffer_position;
     }
-    _buffer_ptr[0] = _cfg.delimiter not_eq 0x00 and cobs_offset_value == _cfg.delimiter ? 0 : cobs_offset_value;;
+    _buffer_ptr[0] = _cfg.delimiter not_eq 0x00 and cobs_offset_value == _cfg.delimiter ? 0 : cobs_offset_value;
     _write(_buffer_ptr, _buffer_position);
     _buffer_position = 1;
 }
 
-
 bool COBSWriter::_create_buffer_and_set_config(COBS::cobs_config_t config) {
     if (_buffer_ptr and _cfg.depth not_eq config.depth) {
-        free(_buffer_ptr);
+        _free(_buffer_ptr);
         _buffer_ptr = nullptr;
     }
 
     if (not _buffer_ptr) {
-        _buffer_ptr = reinterpret_cast<uint8_t *>(malloc(config.depth));
+        _buffer_ptr = reinterpret_cast<uint8_t *>(_malloc(config.depth));
     }
 
     if (not _buffer_ptr) {
@@ -78,7 +78,6 @@ bool COBSWriter::_create_buffer_and_set_config(COBS::cobs_config_t config) {
     _is_ready = true;
     return true;
 }
-
 
 COBSWriter::COBSWriter() {
     COBSWriter::set_config({'\0', 255});
@@ -131,7 +130,6 @@ void COBSZPEWriter::_process_byte(uint8_t byte) {
         return;
     } else if (_current_size_of_the_sequence_to_be_replaced) {
         _reset_elimination_sequence();
-
     }
     _encode_default(byte);
 }
