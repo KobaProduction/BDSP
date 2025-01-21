@@ -85,6 +85,10 @@ COBSWriter::~COBSWriter() {
     free(_buffer_ptr);
 }
 
+COBS::cobs_config_t COBSWriter::get_config() {
+    return _cfg;
+}
+
 set_config_status COBSWriter::set_config(COBS::cobs_config_t config) {
     _is_ready = false;
     set_config_status status = SET_OK;
@@ -113,8 +117,6 @@ set_config_status COBSWriter::set_config(COBS::cobs_config_t config) {
 
     return status;
 }
-
-
 
 void COBSZPEWriter::_process_byte(uint8_t byte) {
     if (byte == _cfg.byte_of_the_sequence_to_be_replaced and _buffer_position < 31) {

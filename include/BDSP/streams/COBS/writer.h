@@ -30,6 +30,8 @@ public:
 
     ~COBSWriter();
 
+    COBS::cobs_config_t get_config();
+
     virtual set_config_status set_config(COBS::cobs_config_t config);
 };
 
