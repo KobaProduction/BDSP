@@ -59,9 +59,23 @@ void COBSWriter::_write_buffer(uint8_t cobs_offset_value) {
     _buffer_position = 1;
 }
 
-bool COBSWriter::_create_buffer() {
-    return false;
+
+bool COBSWriter::_create_buffer_and_set_config(COBS::cobs_config_t config) {
+    if (_buffer_ptr) {
+        free(_buffer_ptr);
+    }
+
+    _buffer_ptr = reinterpret_cast<uint8_t *>(malloc(config.depth));
+
+    if (not _buffer_ptr) {
+        return false;
+    }
+
+    _cfg = config;
+    _is_ready = true;
+    return true;
 }
+
 
 COBSWriter::COBSWriter() {
     COBSWriter::set_config({'\0', 255});
@@ -93,18 +107,10 @@ set_config_status COBSWriter::set_config(COBS::cobs_config_t config) {
         config.depth = MIN_BDSP_COBS_DEPTH;
     }
 
-    if (_buffer_ptr) {
-        free(_buffer_ptr);
-    }
-
-    _buffer_ptr = reinterpret_cast<uint8_t *>(malloc(config.depth));
-
-    if (not _buffer_ptr) {
+    if (not _create_buffer_and_set_config(config)) {
         return ERROR_MEMORY_ALLOCATION;
     }
 
-    _cfg = config;
-    _is_ready = true;
     return status;
 }
 
@@ -130,7 +136,6 @@ COBSZPEWriter::COBSZPEWriter() {
 }
 
 set_config_status COBSZPEWriter::set_config(COBS::cobs_config_t config) {
-
     _is_ready = false;
     set_config_status status = SET_OK;
 
@@ -147,17 +152,9 @@ set_config_status COBSZPEWriter::set_config(COBS::cobs_config_t config) {
         status = WARNING_DEPTH_ZPE;
     }
 
-    if (_buffer_ptr) {
-        free(_buffer_ptr);
-    }
-
-    _buffer_ptr = reinterpret_cast<uint8_t *>(malloc(config.depth));
-
-    if (not _buffer_ptr) {
+    if (not _create_buffer_and_set_config(config)) {
         return ERROR_MEMORY_ALLOCATION;
     }
 
-    _cfg = config;
-    _is_ready = true;
     return status;
 }
