@@ -29,7 +29,7 @@ endif ()
 
 if (NOT DEFINED CMAKE_BUILD_TYPE AND NOT DEFINED CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
-    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo" "Coverage")
 endif ()
 
 set_if_undefined(CMAKE_CXX_VISIBILITY_PRESET hidden)
@@ -89,7 +89,6 @@ set(sources
         src/receiver.cpp
         src/transmitter.cpp
 
-
         src/streams/abstract/reader.cpp
         src/streams/abstract/writer.cpp
 
@@ -98,7 +97,6 @@ set(sources
 
         src/streams/PPP/reader.cpp
         src/streams/PPP/writer.cpp
-
 
         src/checksums/crc/crc8.cpp
 )
