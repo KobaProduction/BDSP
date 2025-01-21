@@ -23,6 +23,8 @@ protected:
 
     void _write_buffer(uint8_t cobs_offset_value = 0);
 
+    bool _create_buffer_and_set_config();
+
 public:
     explicit COBSWriter();
 

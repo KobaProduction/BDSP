@@ -59,6 +59,10 @@ void COBSWriter::_write_buffer(uint8_t cobs_offset_value) {
     _buffer_position = 1;
 }
 
+bool COBSWriter::_create_buffer() {
+    return false;
+}
+
 COBSWriter::COBSWriter() {
     COBSWriter::set_config({'\0', 255});
 }
@@ -93,7 +97,7 @@ set_config_status COBSWriter::set_config(COBS::cobs_config_t config) {
         free(_buffer_ptr);
     }
 
-    _buffer_ptr = reinterpret_cast<uint8_t *>(malloc(_cfg.depth));
+    _buffer_ptr = reinterpret_cast<uint8_t *>(malloc(config.depth));
 
     if (not _buffer_ptr) {
         return ERROR_MEMORY_ALLOCATION;
@@ -103,6 +107,7 @@ set_config_status COBSWriter::set_config(COBS::cobs_config_t config) {
     _is_ready = true;
     return status;
 }
+
 
 
 void COBSZPEWriter::_process_byte(uint8_t byte) {
@@ -146,7 +151,7 @@ set_config_status COBSZPEWriter::set_config(COBS::cobs_config_t config) {
         free(_buffer_ptr);
     }
 
-    _buffer_ptr = reinterpret_cast<uint8_t *>(malloc(_cfg.depth));
+    _buffer_ptr = reinterpret_cast<uint8_t *>(malloc(config.depth));
 
     if (not _buffer_ptr) {
         return ERROR_MEMORY_ALLOCATION;
