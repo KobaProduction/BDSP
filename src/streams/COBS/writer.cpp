@@ -61,11 +61,14 @@ void COBSWriter::_write_buffer(uint8_t cobs_offset_value) {
 
 
 bool COBSWriter::_create_buffer_and_set_config(COBS::cobs_config_t config) {
-    if (_buffer_ptr) {
+    if (_buffer_ptr and _cfg.depth not_eq config.depth) {
         free(_buffer_ptr);
+        _buffer_ptr = nullptr;
     }
 
-    _buffer_ptr = reinterpret_cast<uint8_t *>(malloc(config.depth));
+    if (not _buffer_ptr) {
+        _buffer_ptr = reinterpret_cast<uint8_t *>(malloc(config.depth));
+    }
 
     if (not _buffer_ptr) {
         return false;
