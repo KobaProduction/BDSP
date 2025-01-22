@@ -11,6 +11,7 @@ class COBSWriter: public ABS::AbstractWriter {
 protected:
     BDSP::core::bdsp_memory_allocator_t _malloc = malloc;
     BDSP::core::bdsp_memory_cleaner_t _free = free;
+    bool (*_set_config)(cobs_config_t &config, set_config_status &status){};
     COBS::cobs_config_t _cfg{};
     uint8_t *_buffer_ptr = nullptr;
     uint8_t _buffer_position = 1;
@@ -18,15 +19,13 @@ protected:
     void _encode(uint8_t byte);
     void _finish() override;
     void _process_byte(uint8_t byte) override;
-
-    set_config_status _set_config_and_ready(cobs_config_t config);
     void _write_buffer(uint8_t cobs_offset_value = 0);
 
 public:
     ~COBSWriter();
     explicit COBSWriter();
     COBS::cobs_config_t get_config();
-    virtual set_config_status set_config(COBS::cobs_config_t config);
+    set_config_status set_config(COBS::cobs_config_t config);
 };
 
 class COBSSRWriter: public COBSWriter {
@@ -39,7 +38,6 @@ protected:
 
 public:
     explicit COBSSRWriter();
-    set_config_status set_config(COBS::cobs_config_t config) override;
 };
 
 class COBSZPEWriter final: public COBSSRWriter {
@@ -47,7 +45,6 @@ class COBSZPEWriter final: public COBSSRWriter {
 
 public:
     explicit COBSZPEWriter();
-    set_config_status set_config(COBS::cobs_config_t config) override;
 };
 
 } // namespace BDSP::streams::COBS

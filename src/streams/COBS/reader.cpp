@@ -139,16 +139,19 @@ read_status_t COBSZPEReader::_set_swap_byte_offset(uint8_t offset) {
 }
 
 COBSReader::COBSReader() {
+    _set_config = core::cobs_default_config_checker;
     COBSReader::_reset();
-    COBSReader::set_config({.delimiter = '\0', .depth = 255});
+    COBSReader::set_config({'\0', 255});
 }
 
 COBSSRReader::COBSSRReader() {
+    _set_config = core::cobs_sr_config_checker;
     COBSReader::_reset();
-    COBSSRReader::set_config({.delimiter = '\0', .depth = 127});
+    COBSSRReader::set_config({'\0', 127});
 }
 
 COBSZPEReader::COBSZPEReader() {
+    _set_config = core::cobs_zpe_config_checker;
     COBSReader::_reset();
     set_config({'\0', 224, 2});
 }
@@ -158,59 +161,26 @@ COBS::cobs_config_t COBSReader::get_config() {
 }
 
 set_config_status COBSReader::set_config(cobs_config_t config) {
-    set_config_status status = SET_OK;
+
     _is_ready = false;
 
-    if (config.size_of_the_sequence_to_be_replaced not_eq 0) {
-        config.size_of_the_sequence_to_be_replaced = 0;
-        status = WARNING_COBS_SIZE_SR;
+    if (_fsm_state not_eq SERVICE_BYTE or _service_byte_offset not_eq _cfg.depth) {
+        return ERROR_PROCESS_NOT_FINISHED;
     }
 
-    auto final_status = _set_config_and_ready(config);
-    if (final_status == ERROR_PROCESS_NOT_FINISHED or status == SET_OK) {
-        return final_status;
-    }
-    return status;
-}
-
-set_config_status COBSSRReader::set_config(cobs_config_t config) {
     set_config_status status = SET_OK;
-    _is_ready = false;
 
-    if (config.size_of_the_sequence_to_be_replaced < 2) {
-        return ERROR_SIZE_SR;
+    if (config.depth < MIN_BDSP_COBS_DEPTH) {
+        status = WARNING_COBS_DEPTH;
+        config.depth = MIN_BDSP_COBS_DEPTH;
     }
 
-    if (config.depth > 127) {
-        status = WARNING_DEPTH_SR;
-        config.depth = 127;
+    if (not _set_config(config, status)) {
+        return status;
     }
 
-    auto final_status = _set_config_and_ready(config);
-    if (final_status == ERROR_PROCESS_NOT_FINISHED or status == SET_OK) {
-        return final_status;
-    }
-    return status;
-}
-
-
-
-set_config_status COBSZPEReader::set_config(cobs_config_t config) {
-    set_config_status status = SET_OK;
-    _is_ready = false;
-
-    if (config.size_of_the_sequence_to_be_replaced < 2) {
-        return ERROR_SIZE_SR;
-    }
-
-    if (config.depth not_eq 224) {
-        config.depth = 244;
-        status = WARNING_DEPTH_ZPE;
-    }
-
-    auto final_status = _set_config_and_ready(config);
-    if (final_status == ERROR_PROCESS_NOT_FINISHED or status == SET_OK) {
-        return final_status;
-    }
+    _cfg = config;
+    _is_ready = true;
+    _reset();
     return status;
 }

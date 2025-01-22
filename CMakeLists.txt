@@ -73,6 +73,7 @@ set(headers
         include/BDSP/streams/types.h
         include/BDSP/streams/abstract/writer.h
 
+        include/BDSP/streams/COBS/checkers.h
         include/BDSP/streams/COBS/reader.h
         include/BDSP/streams/COBS/types.h
         include/BDSP/streams/COBS/writer.h
@@ -92,6 +93,7 @@ set(sources
         src/streams/abstract/reader.cpp
         src/streams/abstract/writer.cpp
 
+        src/streams/COBS/checkers.cpp
         src/streams/COBS/reader.cpp
         src/streams/COBS/writer.cpp
 
