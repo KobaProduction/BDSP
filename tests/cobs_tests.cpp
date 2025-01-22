@@ -135,7 +135,7 @@ TEST(cobs_pipelines_tests, encoding_custom_delimiter_test) {
 
 TEST(cobs_pipelines_tests, cobs_with_sequence_replacement_test) {
     cobs_config_t config = {.delimiter = 0, .size_of_the_sequence_to_be_replaced = 2};
-    COBSWriter cobs_writer;
+    COBSSRWriter cobs_writer;
     cobs_writer.set_config(config);
     COBSSRReader cobs_reader;
     cobs_reader.set_config(config);

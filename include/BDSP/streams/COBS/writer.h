@@ -14,36 +14,39 @@ protected:
     COBS::cobs_config_t _cfg{};
     uint8_t *_buffer_ptr = nullptr;
     uint8_t _buffer_position = 1;
-    uint8_t _current_size_of_the_sequence_to_be_replaced = 0;
 
-    void _encode_default(uint8_t byte);
-
+    void _encode(uint8_t byte);
+    void _finish() override;
     void _process_byte(uint8_t byte) override;
 
-    void _finish() override;
-
-    void _reset_elimination_sequence();
-
+    set_config_status _set_config_and_ready(cobs_config_t config);
     void _write_buffer(uint8_t cobs_offset_value = 0);
 
-    bool _create_buffer_and_set_config(COBS::cobs_config_t config);
-
 public:
-    explicit COBSWriter();
-
     ~COBSWriter();
-
+    explicit COBSWriter();
     COBS::cobs_config_t get_config();
-
     virtual set_config_status set_config(COBS::cobs_config_t config);
 };
 
-class COBSZPEWriter final: public COBSWriter {
+class COBSSRWriter: public COBSWriter {
+protected:
+    uint8_t _current_size_of_the_sequence_to_be_replaced = 0;
+
+    void _finish() override;
+    void _process_byte(uint8_t byte) override;
+    void _reset_elimination_sequence();
+
+public:
+    explicit COBSSRWriter();
+    set_config_status set_config(COBS::cobs_config_t config) override;
+};
+
+class COBSZPEWriter final: public COBSSRWriter {
     void _process_byte(uint8_t byte) override;
 
 public:
     explicit COBSZPEWriter();
-
     set_config_status set_config(COBS::cobs_config_t config) override;
 };
 
