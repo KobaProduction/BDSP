@@ -53,6 +53,7 @@ set(utils_sources
 set(sources ${utils_sources}
         checksums.cpp
         abstract_reader_tests.cpp
+        abstract_stream_tests.cpp
         abstract_writer_tests.cpp
         cobs_tests.cpp
         ppp_tests.cpp
