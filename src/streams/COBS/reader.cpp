@@ -101,7 +101,7 @@ set_config_status COBSReader::_set_config_and_ready(cobs_config_t config) {
     }
 
     _cfg = config;
-    _is_ready = true;
+    _set_ready_state(true);
     _reset();
     return status;
 }
@@ -161,8 +161,7 @@ COBS::cobs_config_t COBSReader::get_config() {
 }
 
 set_config_status COBSReader::set_config(cobs_config_t config) {
-
-    _is_ready = false;
+    _set_ready_state(false);
 
     if (_fsm_state not_eq SERVICE_BYTE or _service_byte_offset not_eq _cfg.depth) {
         return ERROR_PROCESS_NOT_FINISHED;
@@ -180,7 +179,7 @@ set_config_status COBSReader::set_config(cobs_config_t config) {
     }
 
     _cfg = config;
-    _is_ready = true;
+    _set_ready_state(true);
     _reset();
     return status;
 }

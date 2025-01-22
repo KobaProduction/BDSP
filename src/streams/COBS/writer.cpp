@@ -104,7 +104,7 @@ COBS::cobs_config_t COBSWriter::get_config() {
 }
 
 set_config_status COBSWriter::set_config(COBS::cobs_config_t config) {
-    _is_ready = false;
+    _set_ready_state(false);
 
     if (_buffer_position not_eq 1) {
         return ERROR_PROCESS_NOT_FINISHED;
@@ -135,7 +135,7 @@ set_config_status COBSWriter::set_config(COBS::cobs_config_t config) {
     }
 
     _cfg = config;
-    _is_ready = true;
+    _set_ready_state(true);
 
     return status;
 }

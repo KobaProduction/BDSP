@@ -3,11 +3,6 @@
 using namespace BDSP::streams;
 using namespace BDSP::streams::ABS;
 
-void AbstractReader::set_stream_data_handler(stream_data_handler_t handler, void *context_ptr) {
-    _data_handler = handler;
-    _data_handler_context = context_ptr;
-}
-
 void AbstractReader::_handler(uint8_t byte, read_status_t status) {
     if (_is_waiting_for_the_delimiter) {
         return;
@@ -16,7 +11,7 @@ void AbstractReader::_handler(uint8_t byte, read_status_t status) {
 }
 
 read_status_t AbstractReader::read(uint8_t byte) {
-    if (not (_data_handler and _is_ready)) {
+    if (_state not_eq READY) {
         return UNKNOWN_READER_ERROR;
     }
     read_status_t status = _process_byte(byte);
@@ -42,4 +37,10 @@ read_status_t AbstractReader::read(uint8_t *buffer_ptr, size_t size) {
 void AbstractReader::reset_read_state(bool is_need_wait_delimiter) {
     _is_waiting_for_the_delimiter = is_need_wait_delimiter;
     _reset();
+}
+
+void AbstractReader::set_stream_data_handler(stream_data_handler_t handler, void *context_ptr) {
+    _data_handler = handler;
+    _data_handler_context = context_ptr;
+    _set_handler_state(_data_handler not_eq nullptr);
 }

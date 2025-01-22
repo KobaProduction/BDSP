@@ -14,7 +14,7 @@ void AbstractWriter::_write(uint8_t *buffer_ptr, size_t size) {
 }
 
 write_status_t AbstractWriter::write(uint8_t byte) {
-    if (not (_writer and _is_ready)) {
+    if (_state not_eq READY) {
         return UNKNOWN_WRITER_ERROR;
     }
     _process_byte(byte);
@@ -33,7 +33,7 @@ write_status_t AbstractWriter::write(uint8_t *buffer_ptr, size_t size) {
 }
 
 write_status_t AbstractWriter::finish() {
-    if (not _writer or not _is_ready) {
+    if (_state not_eq READY) {
         return UNKNOWN_WRITER_ERROR;
     }
     _finish();
@@ -43,4 +43,5 @@ write_status_t AbstractWriter::finish() {
 void AbstractWriter::set_stream_writer(stream_writer_t writer, void *context_ptr) {
     _writer = writer;
     _writer_context = context_ptr;
+    _set_handler_state(_writer not_eq nullptr);
 }
