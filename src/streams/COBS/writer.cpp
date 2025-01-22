@@ -147,7 +147,7 @@ set_config_status COBSZPEWriter::set_config(COBS::cobs_config_t config) {
     }
 
     if (config.size_of_the_sequence_to_be_replaced < 2) {
-        return ERROR_SIZE_SR_ZPE;
+        return ERROR_SIZE_SR;
     }
 
     if (config.depth not_eq 224) {
