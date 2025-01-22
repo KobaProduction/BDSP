@@ -48,7 +48,7 @@ TEST(cobs_pipelines_tests, cobs_writer_configuration_test) {
     EXPECT_EQ(status, ERROR_MEMORY_ALLOCATION);
 
     cobs_writer.set_allocator(malloc);
-    status = cobs_writer.set_config(cobs_writer.get_config());
+    status = cobs_writer.set_config(config);
     EXPECT_EQ(status, SET_OK);
 
 }
@@ -143,7 +143,7 @@ TEST(cobs_pipelines_tests, cobs_with_sequence_replacement_test) {
     std::vector<uint8_t> data = {0x00, 0x00, 0x00, 0x01};
     std::vector<uint8_t> correct_encoded = {128, 0x01, 0x02, 0x01, 0x00};
     start_test_writer(cobs_writer, data, correct_encoded);
-    //    start_test_reader(cobs_reader,correct_encoded, data);
+    start_test_reader(cobs_reader,correct_encoded, data);
 }
 
 TEST(cobs_pipelines_tests, cobs_with_zero_pair_elimination_article_test) {
