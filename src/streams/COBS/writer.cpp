@@ -4,39 +4,40 @@
 using namespace BDSP::core;
 using namespace BDSP::streams;
 using namespace BDSP::streams::COBS;
+using namespace BDSP::streams::COBS::core;
 
-void COBSWriter::_encode(uint8_t byte) {
+void COBSWriterCore::_encode(uint8_t byte) {
     if (_buffer_position == _cfg.depth) {
-        _write_buffer();
+        _write_buffer(_buffer_position);
     }
 
     if (byte not_eq _cfg.delimiter) {
         _buffer_ptr[_buffer_position++] = byte;
     } else {
-        _write_buffer();
+        _write_buffer(_buffer_position);
     }
 }
 
-void COBSWriter::_finish() {
+void COBSWriterCore::_finish() {
     if (_buffer_position == _cfg.depth) {
-        _write_buffer();
+        _write_buffer(_buffer_position);
     }
-    _write_buffer();
+    _write_buffer(_buffer_position);
     _write(_cfg.delimiter);
 }
 
-void COBSSRWriter::_finish() {
+void COBSSRWriterCore::_finish() {
     if (_current_size_of_the_sequence_to_be_replaced) {
         _reset_elimination_sequence();
     }
-    COBSWriter::_finish();
+    COBSWriterCore::_finish();
 }
 
-void COBSWriter::_process_byte(uint8_t byte) {
+void COBSWriterCore::_process_byte(uint8_t byte) {
     _encode(byte);
 }
 
-void COBSSRWriter::_process_byte(uint8_t byte) {
+void COBSSRWriterCore::_process_byte(uint8_t byte) {
     if (byte == _cfg.byte_of_the_sequence_to_be_replaced) {
         _current_size_of_the_sequence_to_be_replaced++;
         if (_current_size_of_the_sequence_to_be_replaced == _cfg.size_of_the_sequence_to_be_replaced) {
@@ -50,7 +51,7 @@ void COBSSRWriter::_process_byte(uint8_t byte) {
     _encode(byte);
 }
 
-void COBSZPEWriter::_process_byte(uint8_t byte) {
+void COBSZPEWriterCore::_process_byte(uint8_t byte) {
     if (byte == _cfg.byte_of_the_sequence_to_be_replaced and _buffer_position < 31) {
         _current_size_of_the_sequence_to_be_replaced++;
         if (_current_size_of_the_sequence_to_be_replaced == _cfg.size_of_the_sequence_to_be_replaced) {
@@ -64,48 +65,28 @@ void COBSZPEWriter::_process_byte(uint8_t byte) {
     _encode(byte);
 }
 
-void COBSSRWriter::_reset_elimination_sequence() {
+void COBSSRWriterCore::_reset_elimination_sequence() {
     for (size_t i = 0; i < _current_size_of_the_sequence_to_be_replaced; ++i) {
         _encode(_cfg.byte_of_the_sequence_to_be_replaced);
     }
     _current_size_of_the_sequence_to_be_replaced = 0;
 }
 
-void COBSWriter::_write_buffer(uint8_t cobs_offset_value) {
-    if (not cobs_offset_value) {
-        cobs_offset_value = _buffer_position;
-    }
-    _buffer_ptr[0] = _cfg.delimiter not_eq 0x00 and cobs_offset_value == _cfg.delimiter ? 0 : cobs_offset_value;
+void COBSWriterCore::_write_buffer(uint8_t offset_value) {
+    _buffer_ptr[0] = _cfg.delimiter not_eq 0x00 and offset_value == _cfg.delimiter ? 0 : offset_value;
     _write(_buffer_ptr, _buffer_position);
     _buffer_position = 1;
 }
 
-COBSWriter::~COBSWriter() {
+COBSWriterCore::~COBSWriterCore() {
     _free(_buffer_ptr);
 }
 
-COBSWriter::COBSWriter() {
-    _set_config = core::cobs_default_config_checker;
-    COBSWriter::set_config({'\0', 255});
-}
-
-COBSSRWriter::COBSSRWriter() {
-    _set_config = core::cobs_sr_config_checker;
-    COBSWriter::set_config({'\0', 127, 2});
-}
-
-COBSZPEWriter::COBSZPEWriter() {
-    _set_config = core::cobs_zpe_config_checker;
-    COBSZPEWriter::set_config({'\0', 224, 2});
-}
-
-COBS::cobs_config_t COBSWriter::get_config() {
+COBS::cobs_config_t COBSWriterCore::get_config() {
     return _cfg;
 }
 
-set_config_status COBSWriter::set_config(COBS::cobs_config_t config) {
-    _set_ready_state(false);
-
+set_config_status COBSWriterCore::_set_config(cobs_config_t config) {
     if (_buffer_position not_eq 1) {
         return ERROR_PROCESS_NOT_FINISHED;
     }
@@ -113,22 +94,17 @@ set_config_status COBSWriter::set_config(COBS::cobs_config_t config) {
     set_config_status status = SET_OK;
 
     if (config.depth < MIN_BDSP_COBS_DEPTH) {
-        status = WARNING_COBS_DEPTH;
-        config.depth = MIN_BDSP_COBS_DEPTH;
+        return ERROR_COBS_DEPTH;
     }
 
-    if (not _set_config(config, status)) {
-        return status;
-    }
+    _set_ready_state(false);
 
-    if (_buffer_ptr and _cfg.depth not_eq config.depth) {
+    if (_buffer_ptr) {
         _free(_buffer_ptr);
         _buffer_ptr = nullptr;
     }
 
-    if (not _buffer_ptr) {
-        _buffer_ptr = reinterpret_cast<uint8_t *>(_malloc(config.depth));
-    }
+    _buffer_ptr = reinterpret_cast<uint8_t *>(_malloc(config.depth));
 
     if (not _buffer_ptr) {
         return ERROR_MEMORY_ALLOCATION;
@@ -138,4 +114,37 @@ set_config_status COBSWriter::set_config(COBS::cobs_config_t config) {
     _set_ready_state(true);
 
     return status;
+}
+
+set_config_status COBSWriterCore::set_config(cobs_config_t config) {
+    set_config_status status = cobs_default_config_checker(config);
+    return status not_eq SET_OK ? status : _set_config(config);
+}
+
+set_config_status COBSSRWriterCore::set_config(COBS::cobs_config_t config) {
+    set_config_status status = cobs_sr_config_checker(config);
+    if (_current_size_of_the_sequence_to_be_replaced not_eq 0) {
+        return ERROR_PROCESS_NOT_FINISHED;
+    }
+    return status not_eq SET_OK ? status : _set_config(config);
+}
+
+set_config_status COBSZPEWriterCore::set_config(cobs_config_t config) {
+    set_config_status status = cobs_zpe_config_checker(config);
+    if (_current_size_of_the_sequence_to_be_replaced not_eq 0) {
+        return ERROR_PROCESS_NOT_FINISHED;
+    }
+    return status not_eq SET_OK ? status : _set_config(config);
+}
+
+COBSWriter::COBSWriter() {
+    COBSWriterCore::set_config({'\0', 255});
+}
+
+COBSSRWriter::COBSSRWriter() {
+    COBSSRWriterCore::set_config({'\0', 127, 2});
+}
+
+COBSZPEWriter::COBSZPEWriter() {
+    COBSZPEWriterCore::set_config({'\0', 224, 2});
 }

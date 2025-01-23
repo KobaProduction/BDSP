@@ -7,28 +7,29 @@
 
 namespace BDSP::streams::COBS {
 
-class COBSWriter: public ABS::AbstractWriter {
+namespace core {
+
+class COBSWriterCore: public ABS::AbstractWriter {
 protected:
     BDSP::core::bdsp_memory_allocator_t _malloc = malloc;
     BDSP::core::bdsp_memory_cleaner_t _free = free;
-    bool (*_set_config)(cobs_config_t &config, set_config_status &status){};
-    COBS::cobs_config_t _cfg{};
+    cobs_config_t _cfg{};
     uint8_t *_buffer_ptr = nullptr;
     uint8_t _buffer_position = 1;
 
     void _encode(uint8_t byte);
     void _finish() override;
     void _process_byte(uint8_t byte) override;
-    void _write_buffer(uint8_t cobs_offset_value = 0);
+    set_config_status _set_config(cobs_config_t config);
+    void _write_buffer(uint8_t offset_value);
 
 public:
-    ~COBSWriter();
-    explicit COBSWriter();
-    COBS::cobs_config_t get_config();
-    set_config_status set_config(COBS::cobs_config_t config);
+    ~COBSWriterCore();
+    cobs_config_t get_config();
+    virtual set_config_status set_config(cobs_config_t config);
 };
 
-class COBSSRWriter: public COBSWriter {
+class COBSSRWriterCore: public COBSWriterCore {
 protected:
     uint8_t _current_size_of_the_sequence_to_be_replaced = 0;
 
@@ -37,12 +38,28 @@ protected:
     void _reset_elimination_sequence();
 
 public:
+    set_config_status set_config(cobs_config_t config) override;
+};
+
+class COBSZPEWriterCore: public COBSSRWriterCore {
+    void _process_byte(uint8_t byte) final;
+
+public:
+    set_config_status set_config(cobs_config_t config) override;
+};
+} // namespace core
+
+class COBSWriter final: public core::COBSWriterCore {
+public:
+    explicit COBSWriter();
+};
+
+class COBSSRWriter final: public core::COBSSRWriterCore {
+public:
     explicit COBSSRWriter();
 };
 
-class COBSZPEWriter final: public COBSSRWriter {
-    void _process_byte(uint8_t byte) override;
-
+class COBSZPEWriter final: public core::COBSZPEWriterCore {
 public:
     explicit COBSZPEWriter();
 };
