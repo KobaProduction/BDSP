@@ -6,18 +6,13 @@
 using namespace BDSP::streams;
 
 class SimpleWriter: public ABS::AbstractWriter {
-    bool _is_ready = true;
-
     void _process_byte(uint8_t byte) override { _write(byte); };
     void _finish() override { _write(end_header.data(), end_header.size()); };
 
 public:
     std::vector<uint8_t> end_header = {0xFF, 0xFF};
 
-    void toggle_ready() {
-        _is_ready = !_is_ready;
-        _set_ready_state(_is_ready);
-    }
+    void toggle_ready() { _set_ready_state(not get_ready_status()); }
 };
 
 TEST(abstract_writer_tests, abstract_writer_errors_test) {
