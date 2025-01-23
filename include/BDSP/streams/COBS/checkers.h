@@ -5,9 +5,9 @@
 
 namespace BDSP::streams::COBS::core {
 
-bool cobs_default_config_checker(cobs_config_t &config, set_config_status &status);
-bool cobs_sr_config_checker(cobs_config_t &config, set_config_status &status);
-bool cobs_zpe_config_checker(cobs_config_t &config, set_config_status &status);
+set_config_status cobs_default_config_checker(cobs_config_t config);
+set_config_status cobs_sr_config_checker(cobs_config_t config);
+set_config_status cobs_zpe_config_checker(cobs_config_t config);
 
 } // namespace BDSP::streams::COBS::core
 

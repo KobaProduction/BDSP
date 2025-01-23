@@ -33,34 +33,33 @@ enum set_config_status {
      */
     ERROR_MEMORY_ALLOCATION,
     /**
-     * This warning occurs when the search depth of a delimiter byte is less than
-     * MIN_BDSP_COBS_DEPTH value (default value 16). Automatically replaces the depth value to 16.
+     * This error occurs when the search depth of a delimiter byte is less than
+     * MIN_BDSP_COBS_DEPTH value (default value 16).
      */
-    WARNING_COBS_DEPTH,
+    ERROR_COBS_DEPTH,
     /**
      * This warning occurs if the length of the sequence being replaced is not 0.
      * The standard COBS implementation does not use this option.
      * To replace the sequence, you need to use COBS/SR or COBS/ZPE algorithms.
      */
-    WARNING_COBS_SIZE_SR,
+    ERROR_DEFAULT_COBS_SIZE_SR,
     /**
      * This error occurs when the length of the sequence being replaced is less than 2 in a COBS/SR or COBS/ZPE configuration.
      * Logically, you need 2 or more bytes to replace the sequence.
      */
     ERROR_SIZE_SR,
     /**
-     * This warning occurs when a sequence replacement algorithm (only COBS/SR) is used and the length of the separator byte lookup is
+     * This error occurs when a sequence replacement algorithm (only COBS/SR) is used and the length of the separator byte lookup is
      * greater than 127. One of the eight bits is required to mark the location of the sequence to be replaced, so the
      * total length of the search should not be more than half of the maximum value of 255.
      */
-    WARNING_DEPTH_SR,
+    ERROR_DEPTH_SR,
     /**
-     * This warning occurs when the search length of the delimiter byte in the configuration is not 224 (0xE0),
-     * the code automatically changes it to 224, and also generates this warning.
+     * This warning occurs when the search length of the delimiter byte in the configuration is not 224 (0xE0).
      * The value cannot be changed at this time, but if testing shows the effectiveness of other values, this part can
      * be modified.
      */
-    WARNING_DEPTH_ZPE,
+    ERROR_DEPTH_ZPE,
 };
 
 namespace core {
