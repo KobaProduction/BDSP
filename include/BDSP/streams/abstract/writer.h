@@ -13,16 +13,17 @@ class AbstractWriter: public IWriter, protected AbstractStreamReadyMixin {
     void *_writer_context = nullptr;
 
 protected:
-    virtual void _process_byte(uint8_t byte) = 0;
     virtual void _finish() = 0;
+    virtual void _process_byte(uint8_t byte) = 0;
     void _write(uint8_t byte);
     void _write(uint8_t *buffer_ptr, size_t size);
 
 public:
+    write_status_t finish() final;
+    bool get_ready_status() override;
+    void set_stream_writer(stream_writer_t writer, void *context_ptr) final;
     write_status_t write(uint8_t byte) final;
     write_status_t write(uint8_t *buffer_ptr, size_t size) final;
-    write_status_t finish() final;
-    void set_stream_writer(stream_writer_t writer, void *context_ptr) final;
 };
 } // namespace BDSP::streams::ABS
 

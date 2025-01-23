@@ -15,8 +15,6 @@ class AbstractStreamReadyMixin {
 
 protected:
     StreamReadyState _state = NOT_READY;
-
-public:
     void _set_handler_state(bool is_set);
     void _set_ready_state(bool is_ready);
 };

@@ -40,6 +40,10 @@ write_status_t AbstractWriter::finish() {
     return WRITE_FINISH;
 }
 
+bool AbstractWriter::get_ready_status() {
+    return _state == READY;
+}
+
 void AbstractWriter::set_stream_writer(stream_writer_t writer, void *context_ptr) {
     _writer = writer;
     _writer_context = context_ptr;

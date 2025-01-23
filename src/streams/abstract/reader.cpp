@@ -10,6 +10,10 @@ void AbstractReader::_handler(uint8_t byte, read_status_t status) {
     _data_handler(byte, status, _data_handler_context);
 }
 
+bool AbstractReader::get_ready_status() {
+    return _state == READY;
+}
+
 read_status_t AbstractReader::read(uint8_t byte) {
     if (_state not_eq READY) {
         return UNKNOWN_READER_ERROR;

@@ -19,6 +19,7 @@ protected:
     virtual void _reset() = 0;
 
 public:
+    bool get_ready_status() override;
     read_status_t read(uint8_t byte) final;
     read_status_t read(uint8_t *buffer_ptr, size_t size) final;
     void reset_read_state(bool is_need_wait_delimiter) final;
