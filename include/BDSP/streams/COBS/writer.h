@@ -51,17 +51,17 @@ public:
 
 class COBSWriter final: public core::COBSWriterCore {
 public:
-    explicit COBSWriter();
+    explicit COBSWriter() noexcept;
 };
 
 class COBSSRWriter final: public core::COBSSRWriterCore {
 public:
-    explicit COBSSRWriter();
+    explicit COBSSRWriter() noexcept;
 };
 
 class COBSZPEWriter final: public core::COBSZPEWriterCore {
 public:
-    explicit COBSZPEWriter();
+    explicit COBSZPEWriter() noexcept;
 };
 
 } // namespace BDSP::streams::COBS

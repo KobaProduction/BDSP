@@ -137,14 +137,14 @@ set_config_status COBSZPEWriterCore::set_config(cobs_config_t config) {
     return status not_eq SET_OK ? status : _set_config(config);
 }
 
-COBSWriter::COBSWriter() {
+COBSWriter::COBSWriter() noexcept {
     COBSWriterCore::set_config({'\0', 255});
 }
 
-COBSSRWriter::COBSSRWriter() {
+COBSSRWriter::COBSSRWriter() noexcept {
     COBSSRWriterCore::set_config({'\0', 127, 2});
 }
 
-COBSZPEWriter::COBSZPEWriter() {
+COBSZPEWriter::COBSZPEWriter() noexcept {
     COBSZPEWriterCore::set_config({'\0', 224, 2});
 }
