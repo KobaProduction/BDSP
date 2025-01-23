@@ -14,19 +14,20 @@ protected:
     BDSP::core::bdsp_memory_allocator_t _malloc = malloc;
     BDSP::core::bdsp_memory_cleaner_t _free = free;
     cobs_config_t _cfg{};
+    set_config_status (*_config_checker)(cobs_config_t config){};
     uint8_t *_buffer_ptr = nullptr;
     uint8_t _buffer_position = 1;
 
     void _encode(uint8_t byte);
     void _finish() override;
     void _process_byte(uint8_t byte) override;
-    set_config_status _set_config(cobs_config_t config);
     void _write_buffer(uint8_t offset_value);
 
 public:
-    ~COBSWriterCore();
     cobs_config_t get_config();
     virtual set_config_status set_config(cobs_config_t config);
+    COBSWriterCore();
+    ~COBSWriterCore();
 };
 
 class COBSSRWriterCore: public COBSWriterCore {
@@ -39,13 +40,14 @@ protected:
 
 public:
     set_config_status set_config(cobs_config_t config) override;
+    explicit COBSSRWriterCore();
 };
 
 class COBSZPEWriterCore: public COBSSRWriterCore {
     void _process_byte(uint8_t byte) final;
 
 public:
-    set_config_status set_config(cobs_config_t config) override;
+    explicit COBSZPEWriterCore();
 };
 } // namespace core
 

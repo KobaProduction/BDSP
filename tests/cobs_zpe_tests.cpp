@@ -26,6 +26,7 @@ TEST(cobs_zpe_tests, cobs_zpe_writer_set_configuration_test) {
 
     COBSZPEWriterCoreTest cobs_writer;
     COBSZPEReaderCoreTest cobs_reader;
+    cobs_reader.reset_read_state(false);
 
     cobs_config_t config = {.delimiter = '\0',
                             .depth = 224,
@@ -33,6 +34,7 @@ TEST(cobs_zpe_tests, cobs_zpe_writer_set_configuration_test) {
                             .byte_of_the_sequence_to_be_replaced = '\0'};
 
     EXPECT_EQ(cobs_writer.set_config(config), SET_OK);
+    EXPECT_EQ(cobs_reader.set_config(config), SET_OK);
 
     cobs_writer.set_current_size_of_the_sequence_to_be_replaced(1);
     cobs_reader.set_fst_state(REGULAR_BYTE);

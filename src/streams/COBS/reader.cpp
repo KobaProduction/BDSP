@@ -1,4 +1,5 @@
 #include "BDSP/streams/COBS/reader.h"
+#include "BDSP/streams/COBS/checkers.h"
 
 using namespace BDSP::streams;
 using namespace BDSP::streams::COBS;
@@ -63,22 +64,6 @@ void COBSReaderCore::_reset() {
     _service_byte_offset = _cfg.depth;
 }
 
-set_config_status COBSReaderCore::_set_config(cobs_config_t config) {
-    if (_fsm_state not_eq SERVICE_BYTE or _service_byte_offset not_eq _cfg.depth) {
-        return ERROR_PROCESS_NOT_FINISHED;
-    }
-
-    set_config_status status = SET_OK;
-
-    if (config.depth < MIN_BDSP_COBS_DEPTH) {
-        return ERROR_COBS_DEPTH;
-    }
-    _cfg = config;
-    _reset();
-    _set_ready_state(true);
-    return status;
-}
-
 read_status_t COBSReaderCore::_set_swap_byte_offset(uint8_t offset) {
     _swap_byte_offset = _get_converted_swap_byte_offset(offset);
     _service_byte_offset = _cfg.depth;
@@ -110,20 +95,38 @@ COBS::cobs_config_t COBSReaderCore::get_config() {
 }
 
 set_config_status COBSReaderCore::set_config(cobs_config_t config) {
-    set_config_status status = cobs_default_config_checker(config);
-    return status not_eq SET_OK ? status : _set_config(config);
+    _set_ready_state(false);
+
+    set_config_status status = _config_checker(config);
+
+    if (status not_eq SET_OK) {
+        return status;
+    }
+
+    if (_fsm_state not_eq SERVICE_BYTE or _service_byte_offset not_eq _cfg.depth) {
+        return ERROR_PROCESS_NOT_FINISHED;
+    }
+
+    if (config.depth < MIN_BDSP_COBS_DEPTH) {
+        return ERROR_COBS_DEPTH;
+    }
+
+    _cfg = config;
+    _reset();
+    _set_ready_state(true);
+    return status;
+}
+COBSReaderCore::COBSReaderCore() {
+    _config_checker = cobs_default_config_checker;
 }
 
-set_config_status COBSSRReaderCore::set_config(cobs_config_t config) {
-    set_config_status status = cobs_sr_config_checker(config);
-    return status not_eq SET_OK ? status : _set_config(config);
+COBSSRReaderCore::COBSSRReaderCore() {
+    _config_checker = cobs_sr_config_checker;
+    _sequence_replace_length_threshold = 127;
 }
 
-set_config_status COBSZPEReaderCore::set_config(cobs_config_t config) {
-    set_config_status status = cobs_zpe_config_checker(config);
-    return status not_eq SET_OK ? status : _set_config(config);
-}
 COBSZPEReaderCore::COBSZPEReaderCore() {
+    _config_checker = cobs_zpe_config_checker;
     _sequence_replace_length_threshold = 224;
 }
 

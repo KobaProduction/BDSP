@@ -88,9 +88,6 @@ TEST(cobs_tests, cobs_writer_set_configuration_test) {
     class COBSWriterTest: public COBSWriterCore {
     public:
         void set_allocator(BDSP::core::bdsp_memory_allocator_t allocator) { _malloc = allocator; }
-        set_config_status set_config(cobs_config_t config) override {
-            return _set_config(config);
-        };
         void set_buffer_position(uint8_t value) {
             _buffer_position = value;
         }
