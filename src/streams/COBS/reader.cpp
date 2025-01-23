@@ -96,8 +96,7 @@ set_config_status COBSReader::_set_config_and_ready(cobs_config_t config) {
     set_config_status status = SET_OK;
 
     if (config.depth < MIN_BDSP_COBS_DEPTH) {
-        status = WARNING_COBS_DEPTH;
-        config.depth = MIN_BDSP_COBS_DEPTH;
+        return ERROR_COBS_DEPTH;
     }
 
     _cfg = config;
@@ -161,22 +160,21 @@ COBS::cobs_config_t COBSReader::get_config() {
 }
 
 set_config_status COBSReader::set_config(cobs_config_t config) {
-    _set_ready_state(false);
 
     if (_fsm_state not_eq SERVICE_BYTE or _service_byte_offset not_eq _cfg.depth) {
         return ERROR_PROCESS_NOT_FINISHED;
     }
 
-    set_config_status status = SET_OK;
+    set_config_status status = _set_config(config);
+    if (status not_eq SET_OK) return status;
+
+    _set_ready_state(false);
 
     if (config.depth < MIN_BDSP_COBS_DEPTH) {
-        status = WARNING_COBS_DEPTH;
+        status = ERROR_COBS_DEPTH;
         config.depth = MIN_BDSP_COBS_DEPTH;
     }
 
-    if (not _set_config(config, status)) {
-        return status;
-    }
 
     _cfg = config;
     _set_ready_state(true);
