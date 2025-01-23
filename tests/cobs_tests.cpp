@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <BDSP/streams/COBS/checkers.h>
 #include <BDSP/streams/COBS/reader.h>
 #include <BDSP/streams/COBS/writer.h>
 
@@ -9,8 +10,9 @@
 
 using namespace BDSP::streams;
 using namespace BDSP::streams::COBS;
+using namespace BDSP::streams::COBS::core;
 
-TEST(cobs_pipelines_tests, cobs_utils_test) {
+TEST(cobs_tests, cobs_reference_encoders_test) {
     std::vector<uint8_t> data;
     std::vector<uint8_t> encoded;
     std::vector<uint8_t> decoded;
@@ -32,167 +34,121 @@ TEST(cobs_pipelines_tests, cobs_utils_test) {
     FAIL() << "the correct and encoded array is not equal";
 }
 
-TEST(cobs_pipelines_tests, cobs_writer_configuration_test) {
-    class COBSWriterCustom : public COBSWriter {
+TEST(cobs_tests, cobs_default_config_checker_test) {
+
+    cobs_config_t config = {.delimiter = '\0',
+                            .depth = 255,
+                            .size_of_the_sequence_to_be_replaced = 0,
+                            .byte_of_the_sequence_to_be_replaced = '\0'};
+
+    EXPECT_EQ(cobs_default_config_checker(config), SET_OK);
+
+    config.size_of_the_sequence_to_be_replaced = 2;
+
+    EXPECT_EQ(cobs_default_config_checker(config), ERROR_DEFAULT_COBS_SIZE_SR);
+}
+
+TEST(cobs_tests, cobs_sr_config_checker_test) {
+
+    cobs_config_t config = {.delimiter = '\0',
+                            .depth = 127,
+                            .size_of_the_sequence_to_be_replaced = 2,
+                            .byte_of_the_sequence_to_be_replaced = '\0'};
+
+    EXPECT_EQ(cobs_sr_config_checker(config), SET_OK);
+
+    config.depth = 255;
+
+    EXPECT_EQ(cobs_sr_config_checker(config), ERROR_DEPTH_SR);
+
+    config.size_of_the_sequence_to_be_replaced = 0;
+
+    EXPECT_EQ(cobs_sr_config_checker(config), ERROR_SIZE_SR);
+}
+
+TEST(cobs_tests, cobs_zpe_config_checker_test) {
+
+    cobs_config_t config = {.delimiter = '\0',
+                            .depth = 224,
+                            .size_of_the_sequence_to_be_replaced = 2,
+                            .byte_of_the_sequence_to_be_replaced = '\0'};
+
+    EXPECT_EQ(cobs_zpe_config_checker(config), SET_OK);
+
+    config.depth = 255;
+
+    EXPECT_EQ(cobs_zpe_config_checker(config), ERROR_DEPTH_ZPE);
+
+    config.size_of_the_sequence_to_be_replaced = 0;
+
+    EXPECT_EQ(cobs_zpe_config_checker(config), ERROR_SIZE_SR);
+}
+
+TEST(cobs_tests, cobs_writer_set_configuration_test) {
+    class COBSWriterTest: public COBSWriterCore {
     public:
-        void set_allocator(BDSP::core::bdsp_memory_allocator_t allocator) {
-            _malloc = allocator;
+        void set_allocator(BDSP::core::bdsp_memory_allocator_t allocator) { _malloc = allocator; }
+        set_config_status set_config(cobs_config_t config) override {
+            return _set_config(config);
+        };
+        void set_buffer_position(uint8_t value) {
+            _buffer_position = value;
         }
     };
 
-    COBSWriterCustom cobs_writer;
-    auto config = cobs_writer.get_config();
-    config.depth = 233;
-    cobs_writer.set_allocator([] (size_t size) -> void * {return nullptr;});
-    auto status = cobs_writer.set_config(config);
-    EXPECT_EQ(status, ERROR_MEMORY_ALLOCATION);
+    COBSWriterTest cobs_writer;
+    cobs_config_t config = cobs_writer.get_config();
+
+    cobs_writer.set_allocator([](size_t size) -> void * { return nullptr; });
+    EXPECT_EQ(cobs_writer.set_config(config), ERROR_MEMORY_ALLOCATION);
 
     cobs_writer.set_allocator(malloc);
-    status = cobs_writer.set_config(config);
-    EXPECT_EQ(status, SET_OK);
 
+    EXPECT_EQ(cobs_writer.set_config(config), SET_OK);
+    EXPECT_EQ(cobs_writer.set_config(config), SET_OK);
+
+    cobs_writer.set_buffer_position(2);
+    EXPECT_EQ(cobs_writer.set_config(config), ERROR_PROCESS_NOT_FINISHED);
+    cobs_writer.set_buffer_position(1);
+
+    config.depth = 1;
+    EXPECT_EQ(cobs_writer.set_config(config), ERROR_COBS_DEPTH);
 }
 
-TEST(cobs_pipelines_tests, encoding_default_test) {
-    COBSWriter cobs_writer;
-
-    std::vector<uint8_t> data;
-    std::vector<uint8_t> correct_encoded;
-
-    for (int size = 1; size < 1000; ++size) {
-        data.clear();
-        correct_encoded.clear();
-
-        for (int i = 0; i < size; ++i) {
-            data.push_back(i);
+TEST(cobs_tests, cobs_reader_set_configuration_test) {
+    class COBSReaderTest : public COBSReaderCore {
+    public:
+        COBSReaderTest() {
+            _cfg = {'\0', 255};
+            _reset();
         }
-        cobs_encode(data, correct_encoded);
-        start_test_writer(cobs_writer, data, correct_encoded);
-    }
-}
 
-TEST(cobs_pipelines_tests, decoding_test) {
-    COBSReader cobs_reader;
-
-    std::vector<uint8_t> data;
-    std::vector<uint8_t> encoded;
-
-    for (int size = 1; size < 1000; ++size) {
-        data.clear();
-        encoded.clear();
-        for (int i = 0; i < size; ++i) {
-            data.push_back(i);
+        void set_fst_state(fsm_state_t state) {
+            _fsm_state = state;
         }
-        cobs_encode(data, encoded);
-        start_test_reader(cobs_reader, encoded, data);
-    }
-}
 
-TEST(cobs_pipelines_tests, encoding_custom_delimiter_test) {
-    cobs_config_t config = {.delimiter = '\n'};
-    COBSWriter cobs_writer;
-    cobs_writer.set_config(config);
-    COBSReader cobs_reader;
-    cobs_reader.set_config(config);
-
-    struct Context {
-        std::vector<uint8_t> data;
-        std::vector<uint8_t> encoded;
-        std::vector<uint8_t> decoded;
-        bool is_ended = false;
-    } ctx;
-
-    cobs_writer.set_stream_writer(
-        [](uint8_t byte, void *ctx) { reinterpret_cast<Context *>(ctx)->encoded.push_back(byte); }, &ctx);
-
-    cobs_reader.set_stream_data_handler(
-        [](uint8_t byte, read_status_t status, void *ctx) {
-            auto &context = *reinterpret_cast<Context *>(ctx);
-            ASSERT_FALSE(context.is_ended);
-            if (status == READ_OK)
-                context.decoded.push_back(byte);
-            if (status == READ_END)
-                context.is_ended = true;
-        },
-        &ctx);
-
-    for (int size = 1; size < 1000; ++size) {
-        ctx.data.clear();
-        ctx.encoded.clear();
-        ctx.decoded.clear();
-
-        for (int i = 0; i < size; ++i) {
-            ctx.data.push_back(i);
+        void set_service_byte_offset(uint8_t offset) {
+            _service_byte_offset = offset;
         }
-        cobs_writer.write(ctx.data.data(), ctx.data.size());
-        cobs_writer.finish();
-        cobs_reader.read(ctx.encoded.data(), ctx.encoded.size());
-        ASSERT_TRUE(is_equals(ctx.data, ctx.decoded));
-        ASSERT_TRUE(ctx.is_ended);
-        ctx.is_ended = false;
-    }
+    };
+
+    COBSReaderTest cobs_reader;
+    cobs_config_t config = cobs_reader.get_config();
+
+    EXPECT_EQ(cobs_reader.set_config(config), SET_OK);
+
+    cobs_reader.set_fst_state(REGULAR_BYTE);
+    EXPECT_EQ(cobs_reader.set_config(config), ERROR_PROCESS_NOT_FINISHED);
+    cobs_reader.set_fst_state(SERVICE_BYTE);
+
+    cobs_reader.set_service_byte_offset(config.depth + 1);
+    EXPECT_EQ(cobs_reader.set_config(config), ERROR_PROCESS_NOT_FINISHED);
+    cobs_reader.set_service_byte_offset(config.depth);
+
+    config.depth = 1;
+    EXPECT_EQ(cobs_reader.set_config(config), ERROR_COBS_DEPTH);
 }
 
-TEST(cobs_pipelines_tests, cobs_with_sequence_replacement_test) {
-    cobs_config_t config = {.delimiter = 0, .size_of_the_sequence_to_be_replaced = 2};
-    COBSSRWriter cobs_writer;
-    cobs_writer.set_config(config);
-    COBSSRReader cobs_reader;
-    cobs_reader.set_config(config);
 
-    std::vector<uint8_t> data = {0x00, 0x00, 0x00, 0x01};
-    std::vector<uint8_t> correct_encoded = {128, 0x01, 0x02, 0x01, 0x00};
-    start_test_writer(cobs_writer, data, correct_encoded);
-    start_test_reader(cobs_reader,correct_encoded, data);
-}
 
-TEST(cobs_pipelines_tests, cobs_with_zero_pair_elimination_article_test) {
-    COBSZPEWriter cobs_writer;
-    COBSZPEReader cobs_reader;
 
-    std::vector<uint8_t> data = {0x45, 0x00, 0x00, 0x2C, 0x4C, 0x79, 0x00, 0x00, 0x40, 0x06, 0x4F, 0x37};
-    ;
-    std::vector<uint8_t> correct_encoded = {0xE2, 0x45, 0xE4, 0x2C, 0x4C, 0x79, 0x05, 0x40, 0x06, 0x4F, 0x37, 0x00};
-    start_test_writer(cobs_writer, data, correct_encoded, true);
-    start_test_reader(cobs_reader, correct_encoded, data, true);
-}
-
-TEST(cobs_pipelines_tests, cobs_with_zero_pair_elimination_full_test) {
-    COBSZPEWriter cobs_writer;
-    COBSZPEReader cobs_reader;
-
-    std::vector<uint8_t> data = {
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0x45, 0x00, 0x00, 0x2C, 0x4C, 0x79, 0x00, 0x00, 0x40, 0x06, 0x4F, 0x37};
-
-    std::vector<uint8_t> correct_encoded = {
-        0xE0, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-        0xAA, 0xAA, 0xAA, 0xE2, 0x45, 0xE4, 0x2C, 0x4C, 0x79, 0x05, 0x40, 0x06, 0x4F, 0x37, 0x00};
-
-    start_test_writer(cobs_writer, data, correct_encoded, true);
-    start_test_reader(cobs_reader, correct_encoded, data, true);
-}

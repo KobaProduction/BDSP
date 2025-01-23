@@ -56,6 +56,9 @@ set(sources ${utils_sources}
         abstract_stream_tests.cpp
         abstract_writer_tests.cpp
         cobs_tests.cpp
+        cobs_default_tests.cpp
+        cobs_sr_tests.cpp
+        cobs_zpe_tests.cpp
         ppp_tests.cpp
         bdsp_tests.cpp
         bdsp_other_tests.cpp
