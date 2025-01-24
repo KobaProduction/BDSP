@@ -1,5 +1,4 @@
 #include "BDSP/streams/abstract/reader.h"
-#include "BDSP/streams/COBS/reader.h"
 
 using namespace BDSP::streams;
 using namespace BDSP::streams::ABS;
