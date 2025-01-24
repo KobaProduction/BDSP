@@ -1,5 +1,5 @@
-#ifndef BDSP_STREAMS_ABSTRACT_ENCODER_H
-#define BDSP_STREAMS_ABSTRACT_ENCODER_H
+#ifndef BDSP_STREAMS_ABSTRACT_WRITER_H
+#define BDSP_STREAMS_ABSTRACT_WRITER_H
 
 #include <stdint.h>
 
@@ -27,4 +27,4 @@ public:
 };
 } // namespace BDSP::streams::ABS
 
-#endif // BDSP_STREAMS_ABSTRACT_ENCODER_H
+#endif // BDSP_STREAMS_ABSTRACT_WRITER_H

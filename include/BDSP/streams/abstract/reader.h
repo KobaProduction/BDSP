@@ -1,5 +1,5 @@
-#ifndef BDSP_STREAMS_ABSTRACT_DECODER_H
-#define BDSP_STREAMS_ABSTRACT_DECODER_H
+#ifndef BDSP_STREAMS_ABSTRACT_READER_H
+#define BDSP_STREAMS_ABSTRACT_READER_H
 
 #include <stdint.h>
 
@@ -27,4 +27,4 @@ public:
 };
 } // namespace BDSP::streams::ABS
 
-#endif // BDSP_STREAMS_ABSTRACT_DECODER_H
+#endif // BDSP_STREAMS_ABSTRACT_READER_H

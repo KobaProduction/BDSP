@@ -1,5 +1,5 @@
-#ifndef BDSP_STREAMS_PPP_ENCODER_H
-#define BDSP_STREAMS_PPP_ENCODER_H
+#ifndef BDSP_STREAMS_PPP_WRITER_H
+#define BDSP_STREAMS_PPP_WRITER_H
 
 #include <stdint.h>
 
@@ -19,4 +19,4 @@ namespace BDSP::streams::PPP {
     };
 }
 
-#endif //BDSP_STREAMS_PPP_ENCODER_H
+#endif // BDSP_STREAMS_PPP_WRITER_H

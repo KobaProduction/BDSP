@@ -1,5 +1,5 @@
-#ifndef BDSP_STREAMS_COBS_ENCODER_H
-#define BDSP_STREAMS_COBS_ENCODER_H
+#ifndef BDSP_STREAMS_COBS_WRITER_H
+#define BDSP_STREAMS_COBS_WRITER_H
 
 #include "BDSP/streams/COBS/types.h"
 #include "BDSP/streams/abstract/writer.h"
@@ -68,4 +68,4 @@ public:
 
 } // namespace BDSP::streams::COBS
 
-#endif // BDSP_STREAMS_COBS_ENCODER_H
+#endif // BDSP_STREAMS_COBS_WRITER_H

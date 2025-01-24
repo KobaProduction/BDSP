@@ -1,5 +1,5 @@
-#ifndef BDSP_STREAMS_ABS_STREAM_H
-#define BDSP_STREAMS_ABS_STREAM_H
+#ifndef BDSP_STREAMS_ABSTRACT_STREAM_H
+#define BDSP_STREAMS_ABSTRACT_STREAM_H
 
 namespace BDSP::streams::ABS {
 
@@ -20,4 +20,4 @@ protected:
 };
 } // namespace BDSP::streams::ABS
 
-#endif // BDSP_STREAMS_ABS_STREAM_H
+#endif // BDSP_STREAMS_ABSTRACT_STREAM_H

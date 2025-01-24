@@ -1,5 +1,5 @@
-#ifndef BDSP_STREAMS_COBS_DECODER_H
-#define BDSP_STREAMS_COBS_DECODER_H
+#ifndef BDSP_STREAMS_COBS_READER_H
+#define BDSP_STREAMS_COBS_READER_H
 
 #include "BDSP/streams/COBS/types.h"
 #include "BDSP/streams/abstract/reader.h"
@@ -44,4 +44,4 @@ public:
 
 } // namespace BDSP::streams::COBS
 
-#endif // BDSP_STREAMS_COBS_DECODER_H
+#endif // BDSP_STREAMS_COBS_READER_H

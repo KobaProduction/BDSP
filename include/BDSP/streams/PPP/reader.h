@@ -1,5 +1,5 @@
-#ifndef BDSP_STREAMS_PPP_DECODER_H
-#define BDSP_STREAMS_PPP_DECODER_H
+#ifndef BDSP_STREAMS_PPP_READER_H
+#define BDSP_STREAMS_PPP_READER_H
 
 #include <stdint.h>
 
@@ -19,4 +19,4 @@ namespace BDSP::streams::PPP {
         streams::read_status_t _process_byte(uint8_t byte) override;
     };
 }
-#endif //BDSP_STREAMS_PPP_DECODER_H
+#endif // BDSP_STREAMS_PPP_READER_H
