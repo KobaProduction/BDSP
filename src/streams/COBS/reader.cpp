@@ -5,11 +5,11 @@ using namespace BDSP::streams;
 using namespace BDSP::streams::COBS;
 using namespace BDSP::streams::COBS::core;
 
-uint8_t COBSReaderCore::_get_converted_swap_byte_offset(uint8_t raw_offset) {
+uint8_t COBSReader::_get_converted_swap_byte_offset(uint8_t raw_offset) {
     return _cfg.delimiter not_eq 0x00 and raw_offset == 0x00 ? _cfg.delimiter : raw_offset;
 }
 
-read_status_t COBSReaderCore::_process_byte(uint8_t byte) {
+read_status_t COBSReader::_process_byte(uint8_t byte) {
     read_status_t status = READ_OK;
 
     if (byte == _cfg.delimiter) {
@@ -45,12 +45,12 @@ read_status_t COBSReaderCore::_process_byte(uint8_t byte) {
     return status;
 }
 
-read_status_t COBSSRReaderCore::_process_byte(uint8_t byte) {
+read_status_t COBSSRReader::_process_byte(uint8_t byte) {
     if (_fsm_state == REPLACEMENT_SEQUENCE and byte == _cfg.delimiter) {
         return READ_ERROR;
     }
 
-    read_status_t status = COBSReaderCore::_process_byte(byte);
+    read_status_t status = COBSReader::_process_byte(byte);
 
     if (_next_swap_byte_is_place_of_the_replaced_sequence and status == READ_OK and _fsm_state == SWAP_BYTE) {
         _fsm_state = REPLACEMENT_SEQUENCE;
@@ -59,18 +59,18 @@ read_status_t COBSSRReaderCore::_process_byte(uint8_t byte) {
     return status;
 }
 
-void COBSReaderCore::_reset() {
+void COBSReader::_reset() {
     _fsm_state = SERVICE_BYTE;
     _service_byte_offset = _cfg.depth;
 }
 
-read_status_t COBSReaderCore::_set_swap_byte_offset(uint8_t offset) {
+read_status_t COBSReader::_set_swap_byte_offset(uint8_t offset) {
     _swap_byte_offset = _get_converted_swap_byte_offset(offset);
     _service_byte_offset = _cfg.depth;
     return _swap_byte_offset > _cfg.depth ? READ_ERROR : READ_OK;
 }
 
-read_status_t COBSSRReaderCore::_set_swap_byte_offset(uint8_t offset) {
+read_status_t COBSSRReader::_set_swap_byte_offset(uint8_t offset) {
     if (_fsm_state == REPLACEMENT_SEQUENCE) {
         for (int i = 0; i < _cfg.size_of_the_sequence_to_be_replaced; ++i) {
             _handler(_cfg.byte_of_the_sequence_to_be_replaced, READ_OK);
@@ -90,11 +90,11 @@ read_status_t COBSSRReaderCore::_set_swap_byte_offset(uint8_t offset) {
     return _swap_byte_offset > _cfg.depth ? READ_ERROR : READ_OK;
 }
 
-COBS::cobs_config_t COBSReaderCore::get_config() {
+COBS::cobs_config_t COBSReader::get_config() {
     return _cfg;
 }
 
-set_config_status COBSReaderCore::set_config(cobs_config_t config) {
+set_config_status COBSReader::set_config(cobs_config_t config) {
     _set_ready_state(false);
 
     set_config_status status = _config_checker(config);
@@ -116,31 +116,23 @@ set_config_status COBSReaderCore::set_config(cobs_config_t config) {
     _set_ready_state(true);
     return status;
 }
-COBSReaderCore::COBSReaderCore() {
-    _config_checker = cobs_default_config_checker;
-}
-
-COBSSRReaderCore::COBSSRReaderCore() {
-    _config_checker = cobs_sr_config_checker;
-    _sequence_replace_length_threshold = 127;
-}
-
-COBSZPEReaderCore::COBSZPEReaderCore() {
-    _config_checker = cobs_zpe_config_checker;
-    _sequence_replace_length_threshold = 224;
-}
-
 COBSReader::COBSReader() {
+    _config_checker = cobs_default_config_checker;
     _cfg = {'\0', 255};
+    _service_byte_offset = _cfg.depth;
     _reset();
 }
 
 COBSSRReader::COBSSRReader() {
+    _config_checker = cobs_sr_config_checker;
+    _sequence_replace_length_threshold = 127;
     _cfg = {'\0', 127, 2};
-    _reset();
+    _service_byte_offset = _cfg.depth;
 }
 
 COBSZPEReader::COBSZPEReader() {
+    _config_checker = cobs_zpe_config_checker;
+    _sequence_replace_length_threshold = 224;
     _cfg = {'\0', 224, 2};
-    _reset();
+    _service_byte_offset = _cfg.depth;
 }

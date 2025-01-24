@@ -1,4 +1,5 @@
 #include "BDSP/streams/abstract/reader.h"
+#include "BDSP/streams/COBS/reader.h"
 
 using namespace BDSP::streams;
 using namespace BDSP::streams::ABS;
@@ -48,3 +49,4 @@ void AbstractReader::set_stream_data_handler(stream_data_handler_t handler, void
     _data_handler_context = context_ptr;
     _set_handler_state(_data_handler not_eq nullptr);
 }
+

@@ -113,12 +113,8 @@ TEST(cobs_tests, cobs_writer_set_configuration_test) {
 }
 
 TEST(cobs_tests, cobs_reader_set_configuration_test) {
-    class COBSReaderTest : public COBSReaderCore {
+    class COBSReaderTest : public COBSReader {
     public:
-        COBSReaderTest() {
-            _cfg = {'\0', 255};
-            _reset();
-        }
 
         void set_fst_state(fsm_state_t state) {
             _fsm_state = state;

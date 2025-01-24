@@ -19,14 +19,13 @@ TEST(cobs_zpe_tests, cobs_zpe_writer_set_configuration_test) {
         }
     };
 
-    class COBSZPEReaderCoreTest: public COBSZPEReaderCore {
+    class COBSZPEReaderCoreTest: public COBSZPEReader {
     public:
         void set_fst_state(fsm_state_t state) { _fsm_state = state; }
     };
 
     COBSZPEWriterCoreTest cobs_writer;
     COBSZPEReaderCoreTest cobs_reader;
-    cobs_reader.reset_read_state(false);
 
     cobs_config_t config = {.delimiter = '\0',
                             .depth = 224,
