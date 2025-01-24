@@ -14,7 +14,7 @@ protected:
     BDSP::core::bdsp_memory_allocator_t _malloc = malloc;
     BDSP::core::bdsp_memory_cleaner_t _free = free;
     cobs_config_t _cfg{};
-    set_config_status (*_config_checker)(cobs_config_t config){};
+    set_cobs_config_status (*_config_checker)(cobs_config_t config){};
     uint8_t *_buffer_ptr = nullptr;
     uint8_t _buffer_position = 1;
 
@@ -25,7 +25,7 @@ protected:
 
 public:
     cobs_config_t get_config();
-    virtual set_config_status set_config(cobs_config_t config);
+    virtual set_cobs_config_status set_config(cobs_config_t config);
     COBSWriterCore();
     ~COBSWriterCore();
 };
@@ -39,7 +39,7 @@ protected:
     void _reset_elimination_sequence();
 
 public:
-    set_config_status set_config(cobs_config_t config) override;
+    set_cobs_config_status set_config(cobs_config_t config) override;
     explicit COBSSRWriterCore();
 };
 

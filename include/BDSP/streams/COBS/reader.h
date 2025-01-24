@@ -9,7 +9,7 @@ namespace BDSP::streams::COBS {
 class COBSReader: public ABS::AbstractReader {
 protected:
     cobs_config_t _cfg{};
-    set_config_status (*_config_checker)(cobs_config_t config){};
+    set_cobs_config_status (*_config_checker)(cobs_config_t config){};
     core::fsm_state_t _fsm_state = core::SERVICE_BYTE;
     uint8_t _service_byte_offset = _cfg.depth;
     uint8_t _swap_byte_offset{};
@@ -21,7 +21,7 @@ protected:
 
 public:
     cobs_config_t get_config();
-    set_config_status set_config(cobs_config_t config);
+    set_cobs_config_status set_config(cobs_config_t config);
     explicit COBSReader();
 };
 

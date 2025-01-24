@@ -16,7 +16,7 @@ struct cobs_config_t {
     uint8_t byte_of_the_sequence_to_be_replaced = '\0';
 };
 
-enum set_config_status {
+enum set_cobs_config_status {
     /**
      * Returned in case of successful configuration installation.
      */

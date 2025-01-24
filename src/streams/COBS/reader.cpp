@@ -94,10 +94,10 @@ COBS::cobs_config_t COBSReader::get_config() {
     return _cfg;
 }
 
-set_config_status COBSReader::set_config(cobs_config_t config) {
+set_cobs_config_status COBSReader::set_config(cobs_config_t config) {
     _set_ready_state(false);
 
-    set_config_status status = _config_checker(config);
+    set_cobs_config_status status = _config_checker(config);
 
     if (status not_eq SET_OK) {
         return status;

@@ -86,10 +86,10 @@ COBS::cobs_config_t COBSWriterCore::get_config() {
     return _cfg;
 }
 
-set_config_status COBSWriterCore::set_config(cobs_config_t config) {
+set_cobs_config_status COBSWriterCore::set_config(cobs_config_t config) {
     _set_ready_state(false);
 
-    set_config_status status = _config_checker(config);
+    set_cobs_config_status status = _config_checker(config);
     if (status not_eq SET_OK) {
         return status;
     }
@@ -119,8 +119,7 @@ set_config_status COBSWriterCore::set_config(cobs_config_t config) {
     return status;
 }
 
-
-set_config_status COBSSRWriterCore::set_config(COBS::cobs_config_t config) {
+set_cobs_config_status COBSSRWriterCore::set_config(COBS::cobs_config_t config) {
     _set_ready_state(false);
     if (_current_size_of_the_sequence_to_be_replaced not_eq 0) {
         return ERROR_PROCESS_NOT_FINISHED;
