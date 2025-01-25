@@ -3,20 +3,27 @@
 
 #include <stdint.h>
 
+#include "BDSP/streams/PPP/types.h"
 #include "BDSP/streams/abstract/writer.h"
 
 namespace BDSP::streams::PPP {
 
-    class PPPWriter final : public ABS::AbstractWriter {
-    protected:
-        uint8_t _escape_byte = 0x7D;
-        uint8_t _end_byte = 0x7E;
-        uint8_t _escape_mask = 0x20;
+namespace core {
+class PPPWriterCore: public ABS::AbstractWriter {
+protected:
+    ppp_config_t _cfg;
 
-        void _process_byte(uint8_t byte) override;
+    void _finish() override;
+    void _process_byte(uint8_t byte) override;
 
-        void _finish() override;
-    };
-}
+public:
+    ppp_config_t get_config();
+    set_ppp_config_status set_config(ppp_config_t config);
+};
+} // namespace core
+
+class PPPWriter final: public core::PPPWriterCore { };
+
+} // namespace BDSP::streams::PPP
 
 #endif // BDSP_STREAMS_PPP_WRITER_H
