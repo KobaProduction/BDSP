@@ -42,6 +42,7 @@ TEST(ppp_pipelines_tests, set_config_test) {
     config.escape_byte = config.end_byte;
 
     EXPECT_EQ(reader.set_config(config), ERROR_END_AND_ESCAPE_BYTES_IS_EQUALS);
+    EXPECT_EQ(writer.set_config(config), ERROR_END_AND_ESCAPE_BYTES_IS_EQUALS);
 }
 
 TEST(ppp_pipelines_tests, encoding_test) {
