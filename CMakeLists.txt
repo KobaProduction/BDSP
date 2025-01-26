@@ -62,7 +62,6 @@ set(headers
         include/BDSP/BDSP.h
         include/BDSP/types.h
 
-        include/BDSP/packet.h
         include/BDSP/mixins.h
         include/BDSP/receiver.h
         include/BDSP/transceiver.h
@@ -86,8 +85,6 @@ set(headers
 )
 
 set(sources
-
-        src/packet.cpp
         src/mixins.cpp
         src/receiver.cpp
         src/transmitter.cpp

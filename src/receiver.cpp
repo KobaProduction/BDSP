@@ -7,17 +7,20 @@ using namespace BDSP::streams;
 using namespace BDSP::utils;
 
 BDSPReceiver::BDSPReceiver() {
-    _error_handler = [](receiver_error_t error, void *context) {};
+    _error_handler = [](receiver_error_t error, void *context) { };
 }
 
 BDSPReceiver::~BDSPReceiver() {
-    delete _raw_packet;
+    _reset();
+    //    free(_raw_packet.data_ptr);
 }
 
 void BDSPReceiver::set_reader(streams::IReader *reader_ptr) {
     _reader = reader_ptr;
     // #todo error nullptr
-    if (not reader_ptr) return;
+    if (not reader_ptr) {
+        return;
+    }
     stream_data_handler_t callback = [](uint8_t byte, read_status_t read_state, void *context) {
         reinterpret_cast<BDSPReceiver *>(context)->_parse_packet_byte(byte, read_state);
     };
@@ -30,89 +33,115 @@ void BDSPReceiver::set_packet_handler(packet_handler_t packet_handler, void *con
     _packet_handler_context = context;
 }
 
-void BDSPReceiver::set_error_handler(receiver_error_handler_t error_handler, void *error_handler_context_ptr) {
-    // #todo error nullptr
-    _error_handler = error_handler;
-    _error_handler_context = error_handler_context_ptr;
-}
+// void BDSPReceiver::set_error_handler(receiver_error_handler_t error_handler, void *error_handler_context_ptr) {
+//     // #todo error nullptr
+//     _error_handler = error_handler;
+//     _error_handler_context = error_handler_context_ptr;
+// }
 
 status_t BDSPReceiver::parse(uint8_t *buffer_ptr, size_t size) {
-    if (not _reader) return BDSP_CONFIG_NOT_INSTALLED;
+    if (not _reader)
+        return BDSP_CONFIG_NOT_INSTALLED;
     _reader->read(buffer_ptr, size);
-    return PARSE_OK;
+    return BDSP_PARSE_OK;
 }
 
 status_t BDSPReceiver::parse(uint8_t &byte) {
-    if (not _reader) return BDSP_CONFIG_NOT_INSTALLED;
+    if (not _reader)
+        return BDSP_CONFIG_NOT_INSTALLED;
     return parse(&byte, 1);
 }
 
 void BDSPReceiver::_parse_packet_byte(uint8_t byte, read_status_t decode_status) {
-    if (decode_status == READ_ERROR) {
-        _error_handler(ERROR_DECODING, _error_handler_context);
-        return _reset();
+    if (decode_status == STREAM_READ_ERROR) {
+        return _handle_error(ERROR_STREAM_READING);
     }
 
-    if (_fsm_state not_eq PACKET_CHECKSUM and _fsm_state not_eq PACKET_ID) {
-        _packet_checksum = crc8(&byte, 1, _packet_checksum);
+    if (decode_status == STREAM_READ_END and _fsm_state not_eq WAIT_END) {
+        _handle_error(ERROR_STREAM_READING);
+        _reader->reset_read_state(false);
+        return;
     }
 
     switch (_fsm_state) {
-        case PACKET_ID:
-            _raw_packet = new Packet(byte, 0);
-            _packet_checksum = crc8(&byte, 1);
-            _fsm_state = SIZE_A;
-            break;
-        case SIZE_A:
-            _raw_packet->size = byte << 8;
-            _fsm_state = SIZE_B;
-            break;
-        case SIZE_B:
-            _raw_packet->size += byte;
-            if (not _raw_packet->size or _raw_packet->size > _max_packet_size) {
-                _error_handler(EXCEEDING_THE_MAXIMUM_PACKET_SIZE, _error_handler_context);
-                return _reset();
+    case PACKET_HEADER:
+        _packet_header = *reinterpret_cast<bdsp_packet_v1_header *>(&byte);
+        if (_packet_header.unsupported_protocol_version) {
+            return _handle_error(UNSUPPORTED_PROTOCOL);
+        }
+        _raw_packet = {0, nullptr};
+        break;
+    case PACKET_SIZE_A: _raw_packet.size = byte; break;
+    case PACKET_SIZE_B: _raw_packet.size += byte << 8; break;
+    case PACKET_DATA:
+        _raw_packet.data_ptr[_byte_received++] = byte;
+        if (_byte_received == _raw_packet.size) {
+            _fsm_state = PACKET_CHECKSUM;
+        }
+        break;
+    case PACKET_CHECKSUM:
+        if (_get_checksum() not_eq byte) {
+            return _handle_error(CHECKSUM_ERROR);
+        }
+        _fsm_state = WAIT_END;
+        break;
+    case WAIT_END:
+        if (decode_status == STREAM_READ_END) {
+            bdsp_packet_context_t packet_context;
+            packet_context.packet_id = _packet_header.packet_id;
+            packet_context.packet = _raw_packet;
+            _packet_handler(packet_context, _packet_handler_context);
+            if (not packet_context.need_clear) {
+                free(_raw_packet.data_ptr);
+                _raw_packet.data_ptr = nullptr;
             }
-            _raw_packet->create_buffer();
-            if (not _raw_packet->data_ptr) {
-                _error_handler(NOT_ENOUGH_RAM_FOR_PACKET, _error_handler_context);
-                return _reset();
-            }
-            _fsm_state = PACKET_DATA;
-            break;
-        case PACKET_DATA:
-            _raw_packet->data_ptr[_byte_received++] = byte;
-            if (_byte_received == _raw_packet->size) {
-                _fsm_state = PACKET_CHECKSUM;
-            }
-            break;
-        case PACKET_CHECKSUM:
-            if (_packet_checksum not_eq byte) {
-                _error_handler(PACKET_CHECKSUM_DOES_NOT_MATCH, _error_handler_context);
-                return _reset();
-            }
-            _fsm_state = WAIT_END;
-            break;
-        case WAIT_END:
-            if (decode_status == READ_END) {
-                _packet_handler(*_raw_packet, _packet_handler_context);
-                delete _raw_packet;
-                _raw_packet = nullptr;
-            } else {
-                _error_handler(ERROR_DECODING, _error_handler_context);
-            }
-            _reset();
-            break;
+            return _reset();
+        }
+        return _handle_error(ERROR_STREAM_READING);
+    }
+
+    if ((_fsm_state == PACKET_SIZE_A and not _packet_header.two_bytes_for_packet_size_flag) or
+        _fsm_state == PACKET_SIZE_B) {
+        if (not _raw_packet.size or _raw_packet.size > _max_packet_size) {
+            return _handle_error(EXCEEDING_THE_MAXIMUM_PACKET_SIZE);
+        }
+        _raw_packet.data_ptr = static_cast<uint8_t *>(malloc(_raw_packet.size));
+        if (not _raw_packet.data_ptr) {
+            return _handle_error(NOT_ENOUGH_RAM_FOR_PACKET);
+        }
+        _fsm_state = PACKET_DATA;
+    } else if (_fsm_state == PACKET_SIZE_A) {
+        _fsm_state = PACKET_SIZE_B;
+    } else if (_fsm_state == PACKET_HEADER) {
+        _fsm_state = PACKET_SIZE_A;
     }
 }
 
 void BDSPReceiver::_reset() {
     _reader->reset_read_state(true);
-    _fsm_state = PACKET_ID;
+    _fsm_state = PACKET_HEADER;
     _byte_received = 0;
-    if (_raw_packet) {
-        delete _raw_packet;
-        _raw_packet = nullptr;
+    if (_raw_packet.data_ptr) {
+        free(_raw_packet.data_ptr);
+        _raw_packet.data_ptr = nullptr;
     }
 }
 
+uint8_t BDSPReceiver::_get_checksum() {
+    uint8_t checksum = crc8(reinterpret_cast<uint8_t *>(&_packet_header), 1);
+    uint8_t size = _raw_packet.size;
+    checksum = crc8(&size, 1, checksum);
+    if (_packet_header.two_bytes_for_packet_size_flag) {
+        size = _raw_packet.size >> 8;
+        checksum = crc8(&size, 1, checksum);
+    }
+    checksum = crc8(_raw_packet.data_ptr, _raw_packet.size, checksum);
+    return checksum;
+}
+
+void BDSPReceiver::_handle_error(receiver_error_t error) {
+    if (_error_handler) {
+        _error_handler(error, _error_handler_context);
+    }
+    _reset();
+}
