@@ -1,5 +1,6 @@
 #include "show.h"
 
+using namespace BDSP;
 using namespace BDSP::streams;
 
 void show_byte(uint8_t byte, bool use_hex) {
@@ -29,8 +30,8 @@ void show_data(std::vector<uint8_t> &data, bool use_hex) {
     show_data(data.data(), data.size(), use_hex);
 }
 
-void show_packet(BDSP::Packet &packet, bool use_hex) {
-    std::cout << "[id=" << uint32_t(packet.id) << "] Packet(size=" << packet.size << "): ";
+void show_packet(uint8_t packet_id, bdsp_packet_t &packet, bool use_hex) {
+    std::cout << "[id=" << uint32_t(packet_id) << "] Packet(size=" << packet.size << "): ";
     show_data(packet.data_ptr, packet.size, use_hex);
 }
 
@@ -46,15 +47,9 @@ void show_status(read_status_t status) {
 
 void show_status(write_status_t status) {
     switch (status) {
-        case WRITE_OK:
-            std::cout << "WRITE_OK";
-            break;
-        case WRITE_FINISH:
-            std::cout << "WRITE_FINISH";
-            break;
-        case UNKNOWN_WRITER_ERROR:
-            std::cout << "UNKNOWN_WRITER_ERROR";
-            break;
+    case BDSP_WRITE_OK: std::cout << "STREAM_WRITE_OK"; break;
+    case STREAM_WRITE_END: std::cout << "STREAM_WRITE_END"; break;
+    case ERROR_WRITE_STREAM_NOT_READY: std::cout << "ERROR_WRITE_STREAM_NOT_READY"; break;
     }
     std::cout << std::endl;
 }

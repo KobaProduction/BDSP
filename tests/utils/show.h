@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#include <BDSP/packet.h>
+#include <BDSP/types.h>
 #include <BDSP/streams/types.h>
 
 void show_byte(uint8_t byte, bool use_hex = false);
@@ -14,7 +14,7 @@ void show_data(uint8_t *buf, size_t size, bool use_hex = false);
 
 void show_data(std::vector<uint8_t> &data, bool use_hex = false);
 
-void show_packet(BDSP::Packet &packet, bool use_hex = false);
+void show_packet(BDSP::bdsp_packet_t &packet, bool use_hex = false);
 
 void show_status(BDSP::streams::read_status_t status);
 
