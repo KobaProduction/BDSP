@@ -36,18 +36,10 @@ void show_packet(BDSP::Packet &packet, bool use_hex) {
 
 void show_status(read_status_t status) {
     switch (status) {
-        case READ_OK:
-            std::cout << "READ_OK";
-            break;
-        case READ_END:
-            std::cout << "READ_END";
-            break;
-        case READ_ERROR:
-            std::cout << "READ_ERROR";
-            break;
-        case UNKNOWN_READER_ERROR:
-            std::cout << "UNKNOWN_READER_ERROR";
-            break;
+    case STREAM_READ_OK: std::cout << "STREAM_READ_OK"; break;
+    case STREAM_READ_END: std::cout << "STREAM_READ_END"; break;
+    case STREAM_READ_ERROR: std::cout << "STREAM_READ_ERROR"; break;
+    case ERROR_READ_STREAM_NOT_READY: std::cout << "ERROR_READ_STREAM_NOT_READY"; break;
     }
     std::cout << std::endl;
 }

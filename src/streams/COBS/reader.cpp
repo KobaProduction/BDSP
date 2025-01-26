@@ -10,15 +10,15 @@ uint8_t COBSReader::_get_converted_swap_byte_offset(uint8_t raw_offset) {
 }
 
 read_status_t COBSReader::_process_byte(uint8_t byte) {
-    read_status_t status = READ_OK;
+    read_status_t status = STREAM_READ_OK;
 
     if (byte == _cfg.delimiter) {
-        return _fsm_state not_eq REGULAR_BYTE ? READ_END : READ_ERROR;
+        return _fsm_state not_eq REGULAR_BYTE ? STREAM_READ_END : STREAM_READ_ERROR;
     }
 
     if (_fsm_state not_eq REGULAR_BYTE) {
         status = _set_swap_byte_offset(byte);
-        if (status == READ_ERROR) {
+        if (status == STREAM_READ_ERROR) {
             return status;
         }
         if (_fsm_state == SWAP_BYTE) {
@@ -47,12 +47,12 @@ read_status_t COBSReader::_process_byte(uint8_t byte) {
 
 read_status_t COBSSRReader::_process_byte(uint8_t byte) {
     if (_fsm_state == REPLACEMENT_SEQUENCE and byte == _cfg.delimiter) {
-        return READ_ERROR;
+        return STREAM_READ_ERROR;
     }
 
     read_status_t status = COBSReader::_process_byte(byte);
 
-    if (_next_swap_byte_is_place_of_the_replaced_sequence and status == READ_OK and _fsm_state == SWAP_BYTE) {
+    if (_next_swap_byte_is_place_of_the_replaced_sequence and status == STREAM_READ_OK and _fsm_state == SWAP_BYTE) {
         _fsm_state = REPLACEMENT_SEQUENCE;
     }
 
@@ -67,13 +67,13 @@ void COBSReader::_reset() {
 read_status_t COBSReader::_set_swap_byte_offset(uint8_t offset) {
     _swap_byte_offset = _get_converted_swap_byte_offset(offset);
     _service_byte_offset = _cfg.depth;
-    return _swap_byte_offset > _cfg.depth ? READ_ERROR : READ_OK;
+    return _swap_byte_offset > _cfg.depth ? STREAM_READ_ERROR : STREAM_READ_OK;
 }
 
 read_status_t COBSSRReader::_set_swap_byte_offset(uint8_t offset) {
     if (_fsm_state == REPLACEMENT_SEQUENCE) {
         for (int i = 0; i < _cfg.size_of_the_sequence_to_be_replaced; ++i) {
-            _handler(_cfg.byte_of_the_sequence_to_be_replaced, READ_OK);
+            _handler(_cfg.byte_of_the_sequence_to_be_replaced, STREAM_READ_OK);
         }
     }
 
@@ -87,7 +87,7 @@ read_status_t COBSSRReader::_set_swap_byte_offset(uint8_t offset) {
         _next_swap_byte_is_place_of_the_replaced_sequence = false;
     }
 
-    return _swap_byte_offset > _cfg.depth ? READ_ERROR : READ_OK;
+    return _swap_byte_offset > _cfg.depth ? STREAM_READ_ERROR : STREAM_READ_OK;
 }
 
 COBS::cobs_config_t COBSReader::get_config() {

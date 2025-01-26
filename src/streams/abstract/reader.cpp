@@ -16,22 +16,22 @@ bool AbstractReader::get_ready_status() {
 
 read_status_t AbstractReader::read(uint8_t byte) {
     if (_state not_eq READY) {
-        return UNKNOWN_READER_ERROR;
+        return ERROR_READ_STREAM_NOT_READY;
     }
     read_status_t status = _process_byte(byte);
-    if (status not_eq READ_OK) {
+    if (status not_eq STREAM_READ_OK) {
         _data_handler(byte, status, _data_handler_context);
-        reset_read_state(status == READ_ERROR);
+        reset_read_state(status == STREAM_READ_ERROR);
     }
     return status;
 }
 
 read_status_t AbstractReader::read(uint8_t *buffer_ptr, size_t size) {
-    read_status_t status = read_status_t::READ_OK;
+    read_status_t status = read_status_t::STREAM_READ_OK;
     for (size_t i = 0; i < size; ++i) {
         switch (read(buffer_ptr[i])) {
-        case UNKNOWN_READER_ERROR: return UNKNOWN_READER_ERROR;
-        case READ_ERROR: status = READ_ERROR;
+        case ERROR_READ_STREAM_NOT_READY: return ERROR_READ_STREAM_NOT_READY;
+        case STREAM_READ_ERROR: status = STREAM_READ_ERROR;
         default: break;
         }
     }

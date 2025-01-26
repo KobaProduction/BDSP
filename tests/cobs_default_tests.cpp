@@ -32,16 +32,16 @@ TEST(cobs_default_tests, check_reader_errors_test) {
 
     cobs_reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx) { }, nullptr);
 
-    EXPECT_EQ(cobs_reader.read(config.delimiter + 2), READ_OK);
-    EXPECT_EQ(cobs_reader.read(config.delimiter), READ_ERROR);
+    EXPECT_EQ(cobs_reader.read(config.delimiter + 2), STREAM_READ_OK);
+    EXPECT_EQ(cobs_reader.read(config.delimiter), STREAM_READ_ERROR);
 
     config.delimiter = 1;
     config.depth = 16;
 
     EXPECT_EQ(cobs_reader.set_config(config), SET_OK);
 
-    EXPECT_EQ(cobs_reader.read(0), READ_OK);
-    EXPECT_EQ(cobs_reader.read(255), READ_ERROR);
+    EXPECT_EQ(cobs_reader.read(0), STREAM_READ_OK);
+    EXPECT_EQ(cobs_reader.read(255), STREAM_READ_ERROR);
 }
 
 TEST(cobs_default_tests, encoding_depth_test) {

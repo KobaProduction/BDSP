@@ -7,11 +7,11 @@ using namespace BDSP::streams;
 
 class SimpleReader: public ABS::AbstractReader {
     read_status_t _process_byte(uint8_t byte) override {
-        read_status_t status = READ_OK;
+        read_status_t status = STREAM_READ_OK;
         if (byte == error_byte)
-            return READ_ERROR;
+            return STREAM_READ_ERROR;
         if (byte == end_byte)
-            return READ_END;
+            return STREAM_READ_END;
         _handler(byte, status);
         byte_counter++;
         return status;
@@ -29,19 +29,19 @@ public:
 TEST(abstract_reader_tests, abstract_reader_errors_test) {
     auto reader = SimpleReader();
     auto status = reader.read(0x00);
-    EXPECT_EQ(status, UNKNOWN_READER_ERROR);
+    EXPECT_EQ(status, ERROR_READ_STREAM_NOT_READY);
 
     status = reader.read(&reader.error_byte, 1);
-    EXPECT_EQ(status, UNKNOWN_READER_ERROR);
+    EXPECT_EQ(status, ERROR_READ_STREAM_NOT_READY);
 
-    reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx) { EXPECT_EQ(status, READ_ERROR); },
+    reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx) { EXPECT_EQ(status, STREAM_READ_ERROR); },
                                    nullptr);
 
     status = reader.read(reader.error_byte);
-    EXPECT_EQ(status, READ_ERROR);
+    EXPECT_EQ(status, STREAM_READ_ERROR);
 
     status = reader.read(&reader.error_byte, 1);
-    EXPECT_EQ(status, READ_ERROR);
+    EXPECT_EQ(status, STREAM_READ_ERROR);
 }
 
 TEST(abstract_reader_tests, abstract_reader_normal_using_test) {
@@ -51,7 +51,7 @@ TEST(abstract_reader_tests, abstract_reader_normal_using_test) {
 
     auto normal_handler = [](uint8_t byte, read_status_t status, void *ctx) {
         EXPECT_EQ(byte, 0x00);
-        EXPECT_EQ(status, READ_OK);
+        EXPECT_EQ(status, STREAM_READ_OK);
         *reinterpret_cast<bool *>(ctx) = true;
     };
 
@@ -60,7 +60,7 @@ TEST(abstract_reader_tests, abstract_reader_normal_using_test) {
     EXPECT_EQ(reader.get_ready_status(), true);
 
     auto status = reader.read(0x00);
-    EXPECT_EQ(status, READ_OK);
+    EXPECT_EQ(status, STREAM_READ_OK);
     EXPECT_EQ(handler_used, true);
 
     EXPECT_EQ(reader.byte_counter, 1);
@@ -69,27 +69,27 @@ TEST(abstract_reader_tests, abstract_reader_normal_using_test) {
 
     std::vector<uint8_t> data = {0x00, 0x00, 0x00};
     status = reader.read(data.data(), data.size());
-    EXPECT_EQ(status, READ_OK);
+    EXPECT_EQ(status, STREAM_READ_OK);
     EXPECT_EQ(reader.byte_counter, data.size());
 
     handler_used = false;
     reader.set_stream_data_handler(
         [](uint8_t byte, read_status_t status, void *ctx) {
             *reinterpret_cast<bool *>(ctx) = true;
-            EXPECT_EQ(status, READ_END);
+            EXPECT_EQ(status, STREAM_READ_END);
         },
         &handler_used);
 
     status = reader.read(reader.end_byte);
     EXPECT_EQ(handler_used, true);
-    EXPECT_EQ(status, READ_END);
+    EXPECT_EQ(status, STREAM_READ_END);
     EXPECT_EQ(reader.byte_counter, 0);
 
     handler_used = false;
     reader.set_stream_data_handler(normal_handler, &handler_used);
     status = reader.read(0x00);
     EXPECT_EQ(handler_used, true);
-    EXPECT_EQ(status, READ_OK);
+    EXPECT_EQ(status, STREAM_READ_OK);
 }
 
 TEST(abstract_reader_tests, abstract_reader_read_correct_test) {
@@ -115,9 +115,9 @@ TEST(abstract_reader_tests, abstract_reader_read_correct_test) {
     ctx.reader.set_stream_data_handler(
         [](uint8_t byte, read_status_t status, void *ctx) {
             auto &context = *reinterpret_cast<Context *>(ctx);
-            if (status == READ_OK) {
+            if (status == STREAM_READ_OK) {
                 context.read_buffer.push_back(byte);
-            } else if (status == READ_END) {
+            } else if (status == STREAM_READ_END) {
                 context.number_of_end_reads++;
                 EXPECT_EQ(byte, context.reader.end_byte);
                 EXPECT_EQ(is_equals(context.read_buffer, context.correct), true);
@@ -132,7 +132,7 @@ TEST(abstract_reader_tests, abstract_reader_read_correct_test) {
     ctx.write_buffer.insert(ctx.write_buffer.end(), ctx.correct.begin(), ctx.correct.end());
     ctx.write_buffer.push_back(ctx.reader.end_byte);
     auto status = ctx.reader.read(ctx.write_buffer.data(), ctx.write_buffer.size());
-    EXPECT_EQ(status, READ_OK);
+    EXPECT_EQ(status, STREAM_READ_OK);
     EXPECT_EQ(ctx.number_of_end_reads, 2);
 }
 
@@ -152,12 +152,12 @@ TEST(abstract_reader_tests, abstract_reader_read_errors_test) {
     ctx.reader.set_stream_data_handler(
         [](uint8_t byte, read_status_t status, void *ctx) {
             auto &context = *reinterpret_cast<Context *>(ctx);
-            if (status == READ_OK) {
+            if (status == STREAM_READ_OK) {
                 context.read_buffer.push_back(byte);
-            } else if (status == READ_END) {
+            } else if (status == STREAM_READ_END) {
                 context.number_of_end_reads++;
                 EXPECT_EQ(byte, context.reader.end_byte);
-            } else if (status == READ_ERROR) {
+            } else if (status == STREAM_READ_ERROR) {
                 EXPECT_EQ(context.number_of_error_reads, 0);
                 context.number_of_error_reads++;
                 EXPECT_EQ(context.reader.byte_counter, 2);
@@ -170,7 +170,7 @@ TEST(abstract_reader_tests, abstract_reader_read_errors_test) {
         &ctx);
 
     auto status = ctx.reader.read(ctx.write_buffer.data(), ctx.write_buffer.size());
-    EXPECT_EQ(status, READ_ERROR);
+    EXPECT_EQ(status, STREAM_READ_ERROR);
 
     EXPECT_EQ(ctx.read_buffer.size(), 0);
 
@@ -183,7 +183,7 @@ TEST(abstract_reader_tests, abstract_reader_read_errors_test) {
 
     ctx.number_of_error_reads = 0;
     status = ctx.reader.read(ctx.write_buffer.data(), ctx.write_buffer.size());
-    EXPECT_EQ(status, READ_ERROR);
+    EXPECT_EQ(status, STREAM_READ_ERROR);
     EXPECT_EQ(is_equals(ctx.read_buffer, new_correct), true);
     EXPECT_EQ(ctx.number_of_end_reads, 2);
 }

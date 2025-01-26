@@ -50,12 +50,12 @@ TEST(cobs_sr_tests, check_reader_errors_test) {
     //
     cobs_reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx) { }, nullptr);
 
-    EXPECT_EQ(cobs_reader.read(128), READ_OK);
-    EXPECT_EQ(cobs_reader.read(config.delimiter), READ_ERROR);
+    EXPECT_EQ(cobs_reader.read(128), STREAM_READ_OK);
+    EXPECT_EQ(cobs_reader.read(config.delimiter), STREAM_READ_ERROR);
     cobs_reader.reset_read_state(false);
 
-    EXPECT_EQ(cobs_reader.read(128), READ_OK);
-    EXPECT_EQ(cobs_reader.read(config.depth * 2 + 1), READ_ERROR);
+    EXPECT_EQ(cobs_reader.read(128), STREAM_READ_OK);
+    EXPECT_EQ(cobs_reader.read(config.depth * 2 + 1), STREAM_READ_ERROR);
 }
 
 TEST(cobs_sr_tests, writer_reset_elimination_sequence_test) {

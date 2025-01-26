@@ -35,7 +35,7 @@ TEST(ppp_pipelines_tests, set_config_test) {
 
     reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx) { }, nullptr);
 
-    EXPECT_EQ(reader.read(config.escape_byte), READ_OK);
+    EXPECT_EQ(reader.read(config.escape_byte), STREAM_READ_OK);
     EXPECT_EQ(reader.set_config(config), ERROR_PROCESS_NOT_FINISHED);
     reader.reset_read_state(false);
 
@@ -62,10 +62,10 @@ TEST(ppp_pipelines_tests, decoding_errors_test) {
 
     reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx) { }, nullptr);
 
-    EXPECT_EQ(reader.read(config.escape_byte), READ_OK);
-    EXPECT_EQ(reader.read(config.end_byte), READ_ERROR);
+    EXPECT_EQ(reader.read(config.escape_byte), STREAM_READ_OK);
+    EXPECT_EQ(reader.read(config.end_byte), STREAM_READ_ERROR);
     reader.reset_read_state(false);
 
-    EXPECT_EQ(reader.read(config.escape_byte), READ_OK);
-    EXPECT_EQ(reader.read(0), READ_ERROR);
+    EXPECT_EQ(reader.read(config.escape_byte), STREAM_READ_OK);
+    EXPECT_EQ(reader.read(0), STREAM_READ_ERROR);
 }

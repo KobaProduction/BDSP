@@ -45,12 +45,12 @@ int main() {
                 return;
             }
             switch (status) {
-            case READ_OK: reinterpret_cast<Context *>(ctx_ptr)->read_buffer.push_back(byte); break;
-            case READ_END:
+            case STREAM_READ_OK: reinterpret_cast<Context *>(ctx_ptr)->read_buffer.push_back(byte); break;
+            case STREAM_READ_END:
                 //                std::cout << "end" << std::endl;
                 break;
-            case READ_ERROR:
-            case UNKNOWN_READER_ERROR: std::cout << "Symbol: " << uint32_t(byte) << " - ERROR"; break;
+            case STREAM_READ_ERROR:
+            case ERROR_READ_STREAM_NOT_READY: std::cout << "Symbol: " << uint32_t(byte) << " - ERROR"; break;
             }
         },
         &context);

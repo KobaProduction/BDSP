@@ -38,7 +38,7 @@ void start_test_writer(
 
     auto status = writer.write(current.data(), current.size());
     writer.finish();
-    if (status not_eq BDSP::streams::WRITE_OK) {
+    if (status not_eq BDSP::streams::STREAM_WRITE_OK) {
         show_status(status);
         FAIL() << "Incorrect state";
     }
@@ -66,10 +66,10 @@ void start_test_reader(
         auto context = reinterpret_cast<Context *>(ctx_ptr);
         ASSERT_FALSE(context->is_ended);
         switch (status) {
-            case READ_OK:
+            case STREAM_READ_OK:
                 context->read_buffer.push_back(byte);
                 break;
-            case READ_END:
+            case STREAM_READ_END:
                 context->is_ended = true;
                 break;
             default:
