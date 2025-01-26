@@ -12,7 +12,7 @@ using namespace BDSP::streams;
 TEST(bdsp_tests, bdsp_full_test) {
     struct Context {
         std::vector<uint8_t> data;
-        Packet *packet_ptr = nullptr;
+        bdsp_packet_t *packet_ptr = nullptr;
 
         BDSPTransceiver transceiver;
         COBS::COBSWriter writer;
@@ -26,14 +26,15 @@ TEST(bdsp_tests, bdsp_full_test) {
         reinterpret_cast<Context *>(ctx)->transceiver.parse(byte);
     }, &ctx);
 
-    ctx.transceiver.set_packet_handler([] (Packet &packet, void *ctx) {
-        ASSERT_TRUE(is_equals(packet.data_ptr, packet.size, reinterpret_cast<Context*>(ctx)->data));
+    ctx.transceiver.set_packet_handler([] (bdsp_packet_context_t &packet_context, void *ctx) {
+        auto correct_data = reinterpret_cast<Context*>(ctx)->data;
+        ASSERT_TRUE(is_equals(packet_context.packet.data_ptr, packet_context.packet.size, correct_data));
     }, &ctx);
 
 
     for (int i = 0; i < 10; ++i) ctx.data.push_back(i);
-    Packet packet(0, ctx.data.size(), ctx.data.data());
+    bdsp_packet_t packet = {static_cast<uint16_t>(ctx.data.size()), ctx.data.data()};
     ctx.packet_ptr = &packet;
 
-    ctx.transceiver.send_packet(packet);
+    ctx.transceiver.send_packet(0, packet);
 }
