@@ -11,8 +11,8 @@ namespace core {
 
 class COBSWriterCore: public ABS::AbstractWriter {
 protected:
-    BDSP::core::bdsp_memory_allocator_t _malloc = malloc;
-    BDSP::core::bdsp_memory_cleaner_t _free = free;
+    BDSP::core::bdsp_memory_allocator_t _malloc{};
+    BDSP::core::bdsp_memory_cleaner_t _free{};
     cobs_config_t _cfg{};
     set_cobs_config_status (*_config_checker)(cobs_config_t config){};
     uint8_t *_buffer_ptr = nullptr;
