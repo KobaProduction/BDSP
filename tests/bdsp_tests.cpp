@@ -13,7 +13,7 @@ TEST(bdsp_tests, bdsp_full_test) {
     struct Context {
         std::vector<uint8_t> data;
         bdsp_packet_t *packet_ptr = nullptr;
-
+        bool is_packet_got = false;
         BDSPTransceiver transceiver;
         COBS::COBSWriter writer;
         COBS::COBSReader reader;
@@ -27,8 +27,14 @@ TEST(bdsp_tests, bdsp_full_test) {
     }, &ctx);
 
     ctx.transceiver.set_packet_handler([] (bdsp_packet_context_t &packet_context, void *ctx) {
-        auto correct_data = reinterpret_cast<Context*>(ctx)->data;
-        ASSERT_TRUE(is_equals(packet_context.packet.data_ptr, packet_context.packet.size, correct_data));
+        auto *context = reinterpret_cast<Context*>(ctx);
+        auto correct_data = context->data;
+        bool equals = is_equals(packet_context.packet.data_ptr, packet_context.packet.size, correct_data);
+        if (equals) {
+            context->is_packet_got = true;
+        }
+        ASSERT_TRUE(equals);
+
     }, &ctx);
 
 
@@ -37,4 +43,5 @@ TEST(bdsp_tests, bdsp_full_test) {
     ctx.packet_ptr = &packet;
 
     ctx.transceiver.send_packet(0, packet);
+    ASSERT_TRUE(ctx.is_packet_got);
 }
