@@ -82,6 +82,8 @@ set(headers
         include/BDSP/streams/PPP/reader.h
         include/BDSP/streams/PPP/types.h
         include/BDSP/streams/PPP/writer.h
+
+        include/BDSP/checksums/crc8.h
 )
 
 set(sources
@@ -101,7 +103,7 @@ set(sources
         src/streams/PPP/reader.cpp
         src/streams/PPP/writer.cpp
 
-        src/checksums/crc/crc8.cpp
+        src/checksums/crc8.cpp
 )
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 

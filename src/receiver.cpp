@@ -1,5 +1,5 @@
 #include "BDSP/receiver.h"
-#include "BDSP/checksums/crc/crc8.h"
+#include "BDSP/checksums/crc8.h"
 
 using namespace BDSP;
 using namespace BDSP::core;

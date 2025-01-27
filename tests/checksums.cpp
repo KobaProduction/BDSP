@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <gtest/gtest.h>
 
-#include <BDSP/checksums/crc/crc8.h>
+#include "BDSP/checksums/crc8.h"
 
 using namespace BDSP::utils;
 

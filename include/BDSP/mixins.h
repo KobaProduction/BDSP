@@ -1,8 +1,8 @@
 #ifndef BDSP_MIXINS_H
 #define BDSP_MIXINS_H
 
+#include "BDSP/checksums/crc8.h"
 #include "BDSP/types.h"
-#include "BDSP/checksums/crc/crc8.h"
 
 #define DEFAULT_BDSP_MAX_PACKET_SIZE 65535
 
