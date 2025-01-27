@@ -3,7 +3,7 @@
 
 using namespace BDSP;
 using namespace BDSP::streams;
-using namespace BDSP::utils;
+using namespace BDSP::checksums;
 
 void BDSPTransmitter::set_writer(streams::IWriter *writer_ptr) {
     // todo statuses

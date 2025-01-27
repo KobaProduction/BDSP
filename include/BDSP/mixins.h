@@ -23,7 +23,7 @@ typedef uint8_t (*checksum_function_t)(const uint8_t *data_ptr, size_t size, uin
 enum set_checksum_function_status_t { SET_CHECKSUM_FUNCTION_OK, CHECKSUM_FUNCTION_NULL_POINTER_ERROR };
 
 class BDSPV1ChecksumMixin {
-    checksum_function_t _checksum_function = BDSP::utils::crc8_nrsc5;
+    checksum_function_t _checksum_function = BDSP::checksums::crc8_nrsc5;
 
 public:
     set_checksum_function_status_t set_checksum_function(checksum_function_t _checksum_function);

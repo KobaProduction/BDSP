@@ -4,7 +4,7 @@
 
 #include "BDSP/checksums/crc8.h"
 
-using namespace BDSP::utils;
+using namespace BDSP::checksums;
 
 TEST(checksums_tests, crc8_nrsc5_full_test) {
     std::string data = "BDSP (Binary Data Separation Protocol)";

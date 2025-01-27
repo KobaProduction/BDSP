@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-namespace BDSP::utils {
+namespace BDSP::checksums {
     /**
      * Varieties of checksum function CRC-8/NRSC-5
      *
