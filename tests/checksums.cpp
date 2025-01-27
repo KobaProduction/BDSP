@@ -17,3 +17,8 @@ TEST(checksums_tests, crc8_nrsc5_segments_test) {
     data = " Separation Protocol)";
     EXPECT_EQ(crc8_nrsc5(reinterpret_cast<uint8_t *>(data.data()), data.size(), crc), 0x1E);
 }
+
+TEST(checksums_tests, crc8_lte_full_test) {
+    std::string data = "BDSP (Binary Data Separation Protocol)";
+    EXPECT_EQ(crc8_lte(reinterpret_cast<uint8_t *>(data.data()), data.size()), 0x0A);
+}
