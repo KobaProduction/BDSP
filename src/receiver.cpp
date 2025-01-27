@@ -40,15 +40,14 @@ void BDSPReceiver::set_packet_handler(packet_handler_t packet_handler, void *con
 // }
 
 status_t BDSPReceiver::parse(uint8_t *buffer_ptr, size_t size) {
-    if (not _reader)
+    if (not _reader) {
         return BDSP_CONFIG_NOT_INSTALLED;
+    }
     _reader->read(buffer_ptr, size);
     return BDSP_PARSE_OK;
 }
 
 status_t BDSPReceiver::parse(uint8_t &byte) {
-    if (not _reader)
-        return BDSP_CONFIG_NOT_INSTALLED;
     return parse(&byte, 1);
 }
 
@@ -80,7 +79,7 @@ void BDSPReceiver::_parse_packet_byte(uint8_t byte, read_status_t decode_status)
         }
         break;
     case PACKET_CHECKSUM:
-        if (_get_checksum() not_eq byte) {
+        if (_calc_checksum(_packet_header, _raw_packet.data_ptr, _raw_packet.size) not_eq byte) {
             return _handle_error(CHECKSUM_ERROR);
         }
         _fsm_state = WAIT_END;
@@ -125,18 +124,6 @@ void BDSPReceiver::_reset() {
         free(_raw_packet.data_ptr);
         _raw_packet.data_ptr = nullptr;
     }
-}
-
-uint8_t BDSPReceiver::_get_checksum() {
-    uint8_t checksum = crc8(reinterpret_cast<uint8_t *>(&_packet_header), 1);
-    uint8_t size = _raw_packet.size;
-    checksum = crc8(&size, 1, checksum);
-    if (_packet_header.two_bytes_for_packet_size_flag) {
-        size = _raw_packet.size >> 8;
-        checksum = crc8(&size, 1, checksum);
-    }
-    checksum = crc8(_raw_packet.data_ptr, _raw_packet.size, checksum);
-    return checksum;
 }
 
 void BDSPReceiver::_handle_error(receiver_error_t error) {
