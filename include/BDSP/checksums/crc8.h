@@ -13,6 +13,6 @@ namespace BDSP::utils {
      * @param base is used to continue the calculation when it occurs in parts. Submit to Base the past value of the control amount..
      * @return crs8 sum value.
      */
-    uint8_t crc8(const uint8_t *data_ptr, size_t size, uint8_t base = 0xff);
+    uint8_t crc8_nrsc5(const uint8_t *data_ptr, size_t size, uint8_t base = 0xff);
 }
 #endif //BDSP_CHECKSUMS_CRC_CRC8_H

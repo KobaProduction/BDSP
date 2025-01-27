@@ -3,7 +3,7 @@
 using namespace BDSP;
 using namespace BDSP::utils;
 
-uint8_t utils::crc8(const uint8_t *data_ptr, size_t size, uint8_t base) {
+uint8_t utils::crc8_nrsc5(const uint8_t *data_ptr, size_t size, uint8_t base) {
     uint8_t crc = base;
     size_t i, j;
     for (i = 0; i < size; i++) {
