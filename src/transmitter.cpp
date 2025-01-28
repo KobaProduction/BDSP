@@ -34,25 +34,23 @@ status_t BDSPTransmitter::send_packet(uint8_t packet_id, bdsp_packet_t &packet, 
                                           .service_packet_flag = false,
                                           .packet_id = packet_id};
 
-    uint8_t checksum;
-
-    if (use_crc) {
-        checksum = _calc_checksum(header, packet.data_ptr, packet.size);
-    }
+    uint8_t checksum = _calc_checksum(header, packet.data_ptr, packet.size);
 
     _writer->write(reinterpret_cast<uint8_t *>(&header), 1);
 
     uint8_t size_byte = packet.size;
 
-    _writer->write(&size_byte, 1);
-
     if (header.two_bytes_for_packet_size_flag) {
+        size_byte = packet.size >> 8;
         _writer->write(&size_byte, 1);
     }
 
+    size_byte = packet.size;
+    _writer->write(&size_byte, 1);
+
     _writer->write(packet.data_ptr, packet.size);
 
-    if (use_crc) {
+    if (header.crc_flag) {
         _writer->write(checksum);
     }
 

@@ -38,7 +38,7 @@ TEST(bdsp_tests, bdsp_full_test) {
     }, &ctx);
 
 
-    for (int i = 0; i < 10; ++i) ctx.data.push_back(i);
+    for (int i = 0; i < 500; ++i) ctx.data.push_back(i);
     bdsp_packet_t packet = {static_cast<uint16_t>(ctx.data.size()), ctx.data.data()};
     ctx.packet_ptr = &packet;
 

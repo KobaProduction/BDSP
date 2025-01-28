@@ -71,7 +71,7 @@ void BDSPReceiver::_parse_packet_byte(uint8_t byte, read_status_t decode_status)
         _raw_packet = {0, nullptr};
         break;
     case PACKET_SIZE_A: _raw_packet.size = byte; break;
-    case PACKET_SIZE_B: _raw_packet.size += byte << 8; break;
+    case PACKET_SIZE_B: _raw_packet.size = (_raw_packet.size << 8) + byte; break;
     case PACKET_DATA:
         _raw_packet.data_ptr[_byte_received++] = byte;
         if (_byte_received == _raw_packet.size) {
