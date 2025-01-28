@@ -10,7 +10,10 @@ set_max_packet_size_status_t MaxPacketSizeMixin::set_max_packet_size(uint16_t ma
     return MAX_PACKET_SIZE_SET;
 }
 
-uint8_t BDSPV1ChecksumMixin::_calc_checksum(bdsp_packet_v1_header header, uint8_t *data_ptr, uint16_t size) {
+uint8_t BDSPV1ChecksumMixin::_calc_checksum(bdsp_packet_v1_header header, uint8_t *data_ptr, uint16_t size) noexcept {
+    if (not header.crc_flag) {
+        return 0;
+    }
     uint8_t checksum = _checksum_function(reinterpret_cast<uint8_t *>(&header), 1, 255);
 
     uint8_t size_byte = size;

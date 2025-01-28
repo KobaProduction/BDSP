@@ -29,7 +29,7 @@ public:
     set_checksum_function_status_t set_checksum_function(checksum_function_t _checksum_function);
 
 protected:
-    uint8_t _calc_checksum(bdsp_packet_v1_header header, uint8_t *data_ptr, uint16_t size);
+    uint8_t _calc_checksum(bdsp_packet_v1_header header, uint8_t *data_ptr, uint16_t size) noexcept;
 };
 
 } // namespace BDSP::core
