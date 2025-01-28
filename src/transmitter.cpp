@@ -2,20 +2,21 @@
 #include "BDSP/checksums/crc8.h"
 
 using namespace BDSP;
+using namespace BDSP::core;
 using namespace BDSP::streams;
 using namespace BDSP::checksums;
 
-void BDSPTransmitter::set_writer(streams::IWriter *writer_ptr) {
+void BDSPV1TransmitterCore::set_writer(streams::IWriter *writer_ptr) {
     // todo statuses
     _writer = writer_ptr;
 }
 
-status_t BDSPTransmitter::send_data(uint8_t packet_id, uint8_t *buffer_ptr, size_t size) {
+status_t BDSPV1TransmitterCore::send_data(uint8_t packet_id, uint8_t *buffer_ptr, size_t size) {
     bdsp_packet_t packet = {static_cast<uint16_t>(size), buffer_ptr};
     return send_packet(packet_id, packet);
 }
 
-status_t BDSPTransmitter::send_packet(uint8_t packet_id, bdsp_packet_t &packet, bool use_crc) {
+status_t BDSPV1TransmitterCore::send_packet(uint8_t packet_id, bdsp_packet_t &packet, bool use_crc) {
     if (not _writer) {
         return BDSP_CONFIG_NOT_INSTALLED;
     }
