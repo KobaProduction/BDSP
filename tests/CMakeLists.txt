@@ -51,17 +51,17 @@ set(utils_sources
 )
 
 set(sources ${utils_sources}
-        checksums.cpp
-        abstract_reader_tests.cpp
-        abstract_stream_tests.cpp
-        abstract_writer_tests.cpp
-        cobs_tests.cpp
-        cobs_default_tests.cpp
-        cobs_sr_tests.cpp
-        cobs_zpe_tests.cpp
-        ppp_tests.cpp
-        bdsp_tests.cpp
-        bdsp_other_tests.cpp
+        BDSP/checksums/checksums.cpp
+        BDSP/streams/abstract_reader_tests.cpp
+        BDSP/streams/abstract_stream_tests.cpp
+        BDSP/streams/abstract_writer_tests.cpp
+        BDSP/streams/cobs_tests.cpp
+        BDSP/streams/cobs_default_tests.cpp
+        BDSP/streams/cobs_sr_tests.cpp
+        BDSP/streams/cobs_zpe_tests.cpp
+        BDSP/streams/ppp_tests.cpp
+        BDSP/bdsp_tests.cpp
+        BDSP/bdsp_core_tests.cpp
 )
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 

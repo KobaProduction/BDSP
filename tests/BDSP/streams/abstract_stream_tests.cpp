@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <BDSP/streams/abstract/stream.h>
+#include "BDSP/streams/abstract/stream.h"
 
 using namespace BDSP::streams::ABS;
 

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "utils/testing.h"
-#include <BDSP/streams/abstract/reader.h>
+#include "../../utils/testing.h"
+#include "BDSP/streams/abstract/reader.h"
 
 using namespace BDSP::streams;
 

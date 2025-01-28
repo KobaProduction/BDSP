@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 
-#include <BDSP/transceiver.h>
-#include <BDSP/streams/COBS/writer.h>
-#include <BDSP/streams/COBS/reader.h>
+#include "BDSP/streams/COBS/reader.h"
+#include "BDSP/streams/COBS/writer.h"
+#include "BDSP/transceiver.h"
 
-#include "utils/testing.h"
+#include "../utils/testing.h"
 
 using namespace BDSP;
 using namespace BDSP::streams;

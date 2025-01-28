@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
 #include <vector>
 
-#include <BDSP/streams/PPP/checkers.h>
-#include <BDSP/streams/PPP/reader.h>
-#include <BDSP/streams/PPP/writer.h>
+#include "BDSP/streams/PPP/checkers.h"
+#include "BDSP/streams/PPP/reader.h"
+#include "BDSP/streams/PPP/writer.h"
 
-#include "utils/testing.h"
+#include "../../utils/testing.h"
 
 using namespace BDSP::streams;
 using namespace BDSP::streams::PPP;

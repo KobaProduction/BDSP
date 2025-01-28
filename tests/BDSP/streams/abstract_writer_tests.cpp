@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "utils/testing.h"
-#include <BDSP/streams/abstract/writer.h>
+#include "../../utils/testing.h"
+#include "BDSP/streams/abstract/writer.h"
 
 using namespace BDSP::streams;
 

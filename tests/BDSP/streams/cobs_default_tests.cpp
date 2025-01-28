@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
 
-#include <BDSP/streams/COBS/reader.h>
-#include <BDSP/streams/COBS/writer.h>
+#include "BDSP/streams/COBS/reader.h"
+#include "BDSP/streams/COBS/writer.h"
 
-#include "utils/cobs.h"
-#include "utils/show.h"
-#include "utils/testing.h"
+#include "../../utils/cobs.h"
+#include "../../utils/show.h"
+#include "../../utils/testing.h"
 
 using namespace BDSP::streams;
 using namespace BDSP::streams::COBS;
