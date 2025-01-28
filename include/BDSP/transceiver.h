@@ -5,7 +5,7 @@
 #include "BDSP/transmitter.h"
 
 namespace BDSP {
-class BDSPTransceiver: public core::BDSPV1TransmitterCore, public BDSPReceiver { };
+class BDSPTransceiver: public core::BDSPV1TransmitterCore, public core::BDSPV1Receiver { };
 } // namespace BDSP
 
 #endif // BDSP_TRANSCEIVER_H

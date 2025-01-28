@@ -6,40 +6,40 @@ using namespace BDSP::core;
 using namespace BDSP::streams;
 using namespace BDSP::checksums;
 
-BDSPReceiver::BDSPReceiver() {
+BDSPV1Receiver::BDSPV1Receiver() {
     _error_handler = [](receiver_error_t error, void *context) { };
 }
 
-BDSPReceiver::~BDSPReceiver() {
+BDSPV1Receiver::~BDSPV1Receiver() {
     _reset();
     //    free(_raw_packet.data_ptr);
 }
 
-void BDSPReceiver::set_reader(streams::IReader *reader_ptr) {
+void BDSPV1Receiver::set_reader(streams::IReader *reader_ptr) {
     _reader = reader_ptr;
     // #todo error nullptr
     if (not reader_ptr) {
         return;
     }
     stream_data_handler_t callback = [](uint8_t byte, read_status_t read_state, void *context) {
-        reinterpret_cast<BDSPReceiver *>(context)->_parse_packet_byte(byte, read_state);
+        reinterpret_cast<BDSPV1Receiver *>(context)->_parse_packet_byte(byte, read_state);
     };
     _reader->set_stream_data_handler(callback, this);
 }
 
-void BDSPReceiver::set_packet_handler(packet_handler_t packet_handler, void *context) {
+void BDSPV1Receiver::set_packet_handler(packet_handler_t packet_handler, void *context) {
     // #todo error nullptr
     _packet_handler = packet_handler;
     _packet_handler_context = context;
 }
 
-// void BDSPReceiver::set_error_handler(receiver_error_handler_t error_handler, void *error_handler_context_ptr) {
+// void BDSPV1Receiver::set_error_handler(receiver_error_handler_t error_handler, void *error_handler_context_ptr) {
 //     // #todo error nullptr
 //     _error_handler = error_handler;
 //     _error_handler_context = error_handler_context_ptr;
 // }
 
-status_t BDSPReceiver::parse(uint8_t *buffer_ptr, size_t size) {
+status_t BDSPV1Receiver::parse(uint8_t *buffer_ptr, size_t size) {
     if (not _reader) {
         return BDSP_CONFIG_NOT_INSTALLED;
     }
@@ -47,11 +47,11 @@ status_t BDSPReceiver::parse(uint8_t *buffer_ptr, size_t size) {
     return BDSP_PARSE_OK;
 }
 
-status_t BDSPReceiver::parse(uint8_t &byte) {
+status_t BDSPV1Receiver::parse(uint8_t &byte) {
     return parse(&byte, 1);
 }
 
-void BDSPReceiver::_parse_packet_byte(uint8_t byte, read_status_t decode_status) {
+void BDSPV1Receiver::_parse_packet_byte(uint8_t byte, read_status_t decode_status) {
     if (decode_status == STREAM_READ_ERROR) {
         return _handle_error(ERROR_STREAM_READING);
     }
@@ -116,7 +116,7 @@ void BDSPReceiver::_parse_packet_byte(uint8_t byte, read_status_t decode_status)
     }
 }
 
-void BDSPReceiver::_reset() {
+void BDSPV1Receiver::_reset() {
     _reader->reset_read_state(true);
     _fsm_state = PACKET_HEADER;
     _byte_received = 0;
@@ -126,7 +126,7 @@ void BDSPReceiver::_reset() {
     }
 }
 
-void BDSPReceiver::_handle_error(receiver_error_t error) {
+void BDSPV1Receiver::_handle_error(receiver_error_t error) {
     if (_error_handler) {
         _error_handler(error, _error_handler_context);
     }
