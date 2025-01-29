@@ -29,10 +29,10 @@ TEST(bdsp_core_tests, bdsp_v1_checksum_mixin_test) {
 
     bdsp_packet_v1_header header{};
 
-    header.unsupported_protocol_version = false;
-    header.two_bytes_for_packet_size_flag = false;
-    header.crc_flag = true;
-    header.service_packet_flag = false;
+    header.is_unsupported_protocol_version = false;
+    header.is_two_bytes_for_packet_size = false;
+    header.is_checksum_used = true;
+    header.is_service_packet = false;
     header.packet_id = 1;
 
 
@@ -45,10 +45,10 @@ TEST(bdsp_core_tests, bdsp_v1_checksum_mixin_test) {
     data_size = 300;
     data = new uint8_t[data_size];
     for (int i = 0; i < data_size; ++i) data[i] = 0xAA;
-    header.two_bytes_for_packet_size_flag = true;
+    header.is_two_bytes_for_packet_size = true;
     EXPECT_EQ(tester.calc(header, data, data_size), 0x45);
     delete [] data;
 
-    header.crc_flag = false;
+    header.is_checksum_used = false;
     EXPECT_EQ(tester.calc(header, data, 1), 0);
 }

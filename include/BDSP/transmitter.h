@@ -13,9 +13,9 @@ namespace core {
         // todo rename to set_stream_writer
         void set_writer(streams::IWriter *writer_ptr);
 
-        status_t send_data(uint8_t packet_id, uint8_t *buffer_ptr, size_t size);
+        status_t send_data(uint8_t packet_id, uint8_t *buffer_ptr, size_t size, bool use_crc = true);
 
-        status_t send_packet(uint8_t packet_id, bdsp_packet_t &packet, bool use_crc = true);
+        status_t send_packet(bdsp_packet_context_t &packet_context, bool use_crc = true);
 
         // todo transaction
 

@@ -12,7 +12,7 @@ using namespace BDSP::streams;
 TEST(bdsp_tests, bdsp_full_test) {
     struct Context {
         std::vector<uint8_t> data;
-        bdsp_packet_t *packet_ptr = nullptr;
+        bdsp_packet_context_t *packet_context = nullptr;
         bool is_packet_got = false;
         BDSPTransceiver transceiver;
         COBS::COBSWriter writer;
@@ -29,7 +29,7 @@ TEST(bdsp_tests, bdsp_full_test) {
     ctx.transceiver.set_packet_handler([] (bdsp_packet_context_t &packet_context, void *ctx) {
         auto *context = reinterpret_cast<Context*>(ctx);
         auto correct_data = context->data;
-        bool equals = is_equals(packet_context.packet.data_ptr, packet_context.packet.size, correct_data);
+        bool equals = is_equals(packet_context.data_ptr, packet_context.size, correct_data);
         if (equals) {
             context->is_packet_got = true;
         }
@@ -39,9 +39,9 @@ TEST(bdsp_tests, bdsp_full_test) {
 
 
     for (int i = 0; i < 500; ++i) ctx.data.push_back(i);
-    bdsp_packet_t packet = {static_cast<uint16_t>(ctx.data.size()), ctx.data.data()};
-    ctx.packet_ptr = &packet;
+    bdsp_packet_context_t packet_context = {0, ctx.data.data(), static_cast<uint16_t>(ctx.data.size())};
+    ctx.packet_context = &packet_context;
 
-    ctx.transceiver.send_packet(0, packet);
+    ctx.transceiver.send_packet(packet_context, true);
     ASSERT_TRUE(ctx.is_packet_got);
 }

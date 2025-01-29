@@ -38,7 +38,7 @@ protected:
     void *_error_handler_context = nullptr;
 
     core::bdsp_packet_v1_header _packet_header{};
-    bdsp_packet_t _raw_packet;
+    bdsp_packet_context_t _packet_context;
     core::receiver_fsm_state_t _fsm_state = core::PACKET_HEADER;
     size_t _byte_received = 0;
 };

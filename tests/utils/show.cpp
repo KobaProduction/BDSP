@@ -30,9 +30,9 @@ void show_data(std::vector<uint8_t> &data, bool use_hex) {
     show_data(data.data(), data.size(), use_hex);
 }
 
-void show_packet(uint8_t packet_id, bdsp_packet_t &packet, bool use_hex) {
-    std::cout << "[id=" << uint32_t(packet_id) << "] Packet(size=" << packet.size << "): ";
-    show_data(packet.data_ptr, packet.size, use_hex);
+void show_packet_context(bdsp_packet_context_t &packet_context, bool use_hex) {
+    std::cout << "[id=" << uint32_t(packet_context.packet_id) << "] Packet(size=" << packet_context.size << "): ";
+    show_data(packet_context.data_ptr, packet_context.size, use_hex);
 }
 
 void show_status(read_status_t status) {

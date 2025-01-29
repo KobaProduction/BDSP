@@ -8,23 +8,19 @@ namespace BDSP {
 namespace core {
 
 struct bdsp_packet_v1_header {
-    bool unsupported_protocol_version : 1;
-    bool two_bytes_for_packet_size_flag : 1;
-    bool crc_flag : 1;
-    bool service_packet_flag : 1;
+    bool is_unsupported_protocol_version : 1;
+    bool is_two_bytes_for_packet_size : 1;
+    bool is_checksum_used : 1;
+    bool is_service_packet : 1;
     uint8_t packet_id : 4;
 };
 
 } // namespace core
 
-struct __attribute__((packed)) bdsp_packet_t {
-    uint16_t size = 0;
-    uint8_t *data_ptr = nullptr;
-};
-
 struct bdsp_packet_context_t {
     uint8_t packet_id{};
-    bdsp_packet_t packet;
+    uint8_t *data_ptr = nullptr;
+    uint16_t size = 0;
     bool need_clear{};
 };
 

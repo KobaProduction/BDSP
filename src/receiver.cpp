@@ -65,47 +65,44 @@ void BDSPV1Receiver::_parse_packet_byte(uint8_t byte, read_status_t decode_statu
     switch (_fsm_state) {
     case PACKET_HEADER:
         _packet_header = *reinterpret_cast<bdsp_packet_v1_header *>(&byte);
-        if (_packet_header.unsupported_protocol_version) {
+        if (_packet_header.is_unsupported_protocol_version) {
             return _handle_error(UNSUPPORTED_PROTOCOL);
         }
-        _raw_packet = {0, nullptr};
+        _packet_context = {_packet_header.packet_id, nullptr, 0, false};
         break;
-    case PACKET_SIZE_A: _raw_packet.size = byte; break;
-    case PACKET_SIZE_B: _raw_packet.size = (_raw_packet.size << 8) + byte; break;
+    case PACKET_SIZE_A: _packet_context.size = byte; break;
+    case PACKET_SIZE_B: _packet_context.size = (_packet_context.size << 8) + byte; break;
     case PACKET_DATA:
-        _raw_packet.data_ptr[_byte_received++] = byte;
-        if (_byte_received == _raw_packet.size) {
+        _packet_context.data_ptr[_byte_received++] = byte;
+        if (_byte_received == _packet_context.size) {
             _fsm_state = PACKET_CHECKSUM;
         }
         break;
     case PACKET_CHECKSUM:
-        if (_calc_checksum(_packet_header, _raw_packet.data_ptr, _raw_packet.size) not_eq byte) {
+        if (_calc_checksum(_packet_header, _packet_context.data_ptr, _packet_context.size) not_eq byte) {
             return _handle_error(CHECKSUM_ERROR);
         }
         _fsm_state = WAIT_END;
         break;
     case WAIT_END:
         if (decode_status == STREAM_READ_END) {
-            bdsp_packet_context_t packet_context;
-            packet_context.packet_id = _packet_header.packet_id;
-            packet_context.packet = _raw_packet;
-            _packet_handler(packet_context, _packet_handler_context);
-            if (not packet_context.need_clear) {
-                free(_raw_packet.data_ptr);
-                _raw_packet.data_ptr = nullptr;
+            _packet_handler(_packet_context, _packet_handler_context);
+            if (not _packet_context.need_clear) {
+                free(_packet_context.data_ptr);
+                _packet_context.data_ptr = nullptr;
             }
             return _reset();
         }
         return _handle_error(ERROR_STREAM_READING);
     }
 
-    if ((_fsm_state == PACKET_SIZE_A and not _packet_header.two_bytes_for_packet_size_flag) or
+    if ((_fsm_state == PACKET_SIZE_A and not _packet_header.is_two_bytes_for_packet_size) or
         _fsm_state == PACKET_SIZE_B) {
-        if (not _raw_packet.size or _raw_packet.size > _max_packet_size) {
+        if (not _packet_context.size or _packet_context.size > _max_packet_size) {
             return _handle_error(EXCEEDING_THE_MAXIMUM_PACKET_SIZE);
         }
-        _raw_packet.data_ptr = static_cast<uint8_t *>(malloc(_raw_packet.size));
-        if (not _raw_packet.data_ptr) {
+        _packet_context.data_ptr = static_cast<uint8_t *>(malloc(_packet_context.size));
+        if (not _packet_context.data_ptr) {
             return _handle_error(NOT_ENOUGH_RAM_FOR_PACKET);
         }
         _fsm_state = PACKET_DATA;
@@ -120,9 +117,9 @@ void BDSPV1Receiver::_reset() {
     _reader->reset_read_state(true);
     _fsm_state = PACKET_HEADER;
     _byte_received = 0;
-    if (_raw_packet.data_ptr) {
-        free(_raw_packet.data_ptr);
-        _raw_packet.data_ptr = nullptr;
+    if (_packet_context.data_ptr) {
+        free(_packet_context.data_ptr);
+        _packet_context.data_ptr = nullptr;
     }
 }
 
