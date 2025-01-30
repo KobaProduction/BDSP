@@ -20,7 +20,7 @@ TEST(bdsp_tests, bdsp_full_test) {
     } ctx;
 
     ctx.transceiver.set_writer(&ctx.writer);
-    ctx.transceiver.set_reader(&ctx.reader);
+    ctx.transceiver.set_stream_reader(&ctx.reader);
 
     ctx.writer.set_stream_writer([](uint8_t byte, void *ctx) {
         reinterpret_cast<Context *>(ctx)->transceiver.parse(byte);
