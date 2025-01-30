@@ -6,50 +6,43 @@ using namespace BDSP::core;
 using namespace BDSP::streams;
 using namespace BDSP::checksums;
 
-BDSPV1Receiver::BDSPV1Receiver() {
-    _error_handler = nullptr;
-}
-
 BDSPV1Receiver::~BDSPV1Receiver() {
-    _reset();
-    //    free(_raw_packet.data_ptr);
+    if (_reader) {
+        _reader->set_stream_data_handler(nullptr, nullptr);
+    }
+    _deallocate_packet_memory();
 }
 
-void BDSPV1Receiver::set_stream_reader(streams::IReader *reader_ptr) {
-    _reader = reader_ptr;
-    // #todo error nullptr
+bdsp_set_stream_reader_status_t BDSPV1Receiver::set_stream_reader(streams::IReader *reader_ptr) {
     if (not reader_ptr) {
-        return;
+        return STREAM_READER_NULL_POINTER_ERROR;
     }
+
     stream_data_handler_t callback = [](uint8_t byte, read_status_t read_state, void *context) {
-        reinterpret_cast<BDSPV1Receiver *>(context)->_parse_packet_byte(byte, read_state);
+        reinterpret_cast<BDSPV1Receiver *>(context)->parse_packet_byte(byte, read_state);
     };
-    _reader->set_stream_data_handler(callback, this);
+
+    reader_ptr->set_stream_data_handler(callback, this);
+
+    if (not reader_ptr->get_ready_status()) {
+        reader_ptr->set_stream_data_handler(nullptr, nullptr);
+        return STREAM_READER_NOT_READY_ERROR;
+    }
+
+    _reader = reader_ptr;
+
+    return SET_STREAM_READER_OK;
 }
 
 void BDSPV1Receiver::set_packet_handler(packet_handler_t packet_handler, void *context) {
-    // #todo error nullptr
     _packet_handler = packet_handler;
     _packet_handler_context = context;
 }
 
-// void BDSPV1Receiver::set_error_handler(receiver_error_handler_t error_handler, void *error_handler_context_ptr) {
-//     // #todo error nullptr
-//     _error_handler = error_handler;
-//     _error_handler_context = error_handler_context_ptr;
-// }
-
-status_t BDSPV1Receiver::parse(uint8_t *buffer_ptr, size_t size) {
-    if (not _reader) {
-        return BDSP_CONFIG_NOT_INSTALLED;
-    }
-    _reader->read(buffer_ptr, size);
-    return BDSP_PARSE_OK;
-}
-
-status_t BDSPV1Receiver::parse(uint8_t &byte) {
-    return parse(&byte, 1);
-}
+ void BDSPV1Receiver::set_error_handler(receiver_error_handler_t error_handler, void *error_handler_context_ptr) {
+     _error_handler = error_handler;
+     _error_handler_context = error_handler_context_ptr;
+ }
 
 void BDSPV1Receiver::_allocate_packet_memory() {
     if (not _packet_context.size or _packet_context.size > _max_packet_size) {
@@ -70,17 +63,17 @@ void BDSPV1Receiver::_handle_error(receiver_error_t error) {
     if (_error_handler) {
         _error_handler(error, _error_handler_context);
     }
-    _reset();
+    _reset(true);
 }
 
-void BDSPV1Receiver::_parse_packet_byte(uint8_t byte, read_status_t decode_status) {
+void BDSPV1Receiver::parse_packet_byte(uint8_t byte, streams::read_status_t decode_status) {
     if (decode_status == STREAM_READ_ERROR) {
         return _handle_error(ERROR_STREAM_READING);
     }
 
     if (decode_status == STREAM_READ_END and _fsm_state not_eq WAIT_END) {
         _handle_error(ERROR_STREAM_READING);
-        _reader->reset_read_state(false);
+        _reset(false);
         return;
     }
 
@@ -96,10 +89,11 @@ void BDSPV1Receiver::_parse_packet_byte(uint8_t byte, read_status_t decode_statu
         if (_packet_header.is_unsupported_protocol_version) {
             return _handle_error(UNSUPPORTED_PROTOCOL);
         }
+
         if (_packet_header.is_service_packet) {
             return _handle_error(UNSUPPORTED_SERVICE_PACKETS);
         }
-        _packet_context = {_packet_header.packet_id, nullptr, 0, false};
+        _packet_context = {_packet_header.packet_id, nullptr, 0, true};
         _fsm_state = PACKET_SIZE_A;
         return;
     case PACKET_CHECKSUM:
@@ -110,11 +104,13 @@ void BDSPV1Receiver::_parse_packet_byte(uint8_t byte, read_status_t decode_statu
         return;
     case WAIT_END:
         if (decode_status == STREAM_READ_END) {
-            _packet_handler(_packet_context, _packet_handler_context);
-            if (not _packet_context.need_clear) {
-                _deallocate_packet_memory();
+            if (_packet_handler) {
+                _packet_handler(_packet_context, _packet_handler_context);
             }
-            return _reset();
+            if (not _packet_context.need_clear) {
+                _packet_context.data_ptr = nullptr;
+            }
+            return _reset(false);
         }
         return _handle_error(ERROR_STREAM_READING);
     case PACKET_SIZE_A:
@@ -134,13 +130,13 @@ void BDSPV1Receiver::_parse_packet_byte(uint8_t byte, read_status_t decode_statu
     }
 }
 
-void BDSPV1Receiver::_reset() {
-    _reader->reset_read_state(true);
+void BDSPV1Receiver::_reset(bool need_wait_delimiter) {
+    if (_reader) {
+        _reader->reset_read_state(need_wait_delimiter);
+    }
     _fsm_state = PACKET_HEADER;
     _received_packet_data_bytes = 0;
     if (_packet_context.data_ptr) {
         _deallocate_packet_memory();
     }
 }
-
-

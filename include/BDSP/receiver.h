@@ -7,33 +7,29 @@
 
 namespace BDSP {
 
+enum bdsp_set_stream_reader_status_t {
+    SET_STREAM_READER_OK,
+    STREAM_READER_NULL_POINTER_ERROR,
+    STREAM_READER_NOT_READY_ERROR
+};
+
 namespace core {
 
 class BDSPV1Receiver: public core::MaxPacketSizeMixin, public core::BDSPV1ChecksumMixin {
 public:
-    BDSPV1Receiver();
-
     ~BDSPV1Receiver();
 
-    void set_stream_reader(streams::IReader *reader_ptr);
+    void parse_packet_byte(uint8_t byte, streams::read_status_t decode_status);
+    void set_error_handler(receiver_error_handler_t error_handler, void *error_handler_context_ptr = nullptr);
+    bdsp_set_stream_reader_status_t set_stream_reader(streams::IReader *reader_ptr);
     void set_packet_handler(packet_handler_t packet_handler, void *context = nullptr);
-
-    //        void set_error_handler(receiver_error_handler_t error_handler, void *error_handler_context_ptr = nullptr);
-
-    status_t parse(uint8_t *buffer_ptr, size_t size);
-
-    status_t parse(uint8_t &byte);
 
 protected:
     void _allocate_packet_memory();
-
     void _deallocate_packet_memory();
-
     void _handle_error(receiver_error_t error);
 
-    void _parse_packet_byte(uint8_t byte, streams::read_status_t decode_status);
-
-    void _reset();
+    void _reset(bool need_wait_delimiter);
 
     core::receiver_fsm_state_t _fsm_state = core::PACKET_HEADER;
     uint16_t _received_packet_data_bytes = 0;
