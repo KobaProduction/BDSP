@@ -33,14 +33,13 @@ protected:
     core::bdsp_packet_v1_header _packet_header{};
     bdsp_packet_context_t _packet_context;
 
-    void _allocate_packet_memory();
     void _deallocate_packet_memory();
-    void _handle_error(receiver_error_t error);
-    void _reset(bool need_wait_delimiter);
+    bdsp_receiver_parse_status_t _cause_error(bdsp_receiver_parse_status_t status);
 
 public:
     ~BDSPV1Receiver();
-    void parse_packet_byte(uint8_t byte, streams::read_status_t decode_status);
+    bdsp_receiver_parse_status_t parse_packet_byte(uint8_t byte, streams::read_status_t stream_status);
+    void reset(bool need_wait_delimiter = false);
     void set_error_handler(receiver_error_handler_t error_handler, void *context = nullptr);
     void set_packet_handler(packet_handler_t packet_handler, void *context = nullptr);
     void set_service_packet_handler(packet_handler_t service_packet_handler, void *context = nullptr);

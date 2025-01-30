@@ -26,7 +26,6 @@ struct bdsp_packet_context_t {
 
 enum status_t {
     BDSP_WRITE_OK,
-    BDSP_PARSE_OK,
     BDSP_CONFIG_NOT_INSTALLED,
     BDSP_EXCESS_SIZE_PACKET, // Data packet size exceeded.
     BDSP_ERROR_PACKET_ID
@@ -39,15 +38,18 @@ typedef void (*bdsp_memory_cleaner_t)(void *);
 
 } // namespace core
 
-enum receiver_error_t {
-    ERROR_STREAM_READING = 1,
-    EXCEEDING_THE_MAXIMUM_PACKET_SIZE,
-    NOT_ENOUGH_RAM_FOR_PACKET,
+enum bdsp_receiver_parse_status_t {
+    RECEIVER_PARSE_OK,
+    PACKET_HANDLER_NOT_SET_ERROR,
+    SERVICE_PACKET_HANDLER_NOT_SET_ERROR,
+    STREAM_READING_ERROR,
+    EXCEEDING_THE_MAXIMUM_PACKET_SIZE_ERROR,
+    NOT_ENOUGH_RAM_FOR_PACKET_ERROR,
     CHECKSUM_ERROR,
-    UNSUPPORTED_PROTOCOL
+    UNSUPPORTED_PROTOCOL_ERROR
 };
 
-typedef void (*receiver_error_handler_t)(receiver_error_t error, void *packet_handler_context);
+typedef void (*receiver_error_handler_t)(bdsp_receiver_parse_status_t error, void *packet_handler_context);
 
 typedef void (*packet_handler_t)(bdsp_packet_context_t &packet_context, void *packet_handler_context);
 } // namespace BDSP
