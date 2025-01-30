@@ -19,7 +19,7 @@ TEST(cobs_zpe_tests, cobs_zpe_writer_set_configuration_test) {
         }
     };
 
-    class COBSZPEReaderCoreTest: public COBSZPEReader {
+    class COBSZPEReaderCoreTest: public COBSZPEReaderCore {
     public:
         void set_fst_state(fsm_state_t state) { _fsm_state = state; }
     };

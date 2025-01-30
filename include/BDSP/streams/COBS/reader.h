@@ -6,7 +6,8 @@
 
 namespace BDSP::streams::COBS {
 
-class COBSReader: public ABS::AbstractReader {
+namespace core {
+class COBSReaderCore: public ABS::AbstractReader {
 protected:
     cobs_config_t _cfg{};
     set_cobs_config_status (*_config_checker)(cobs_config_t config){};
@@ -22,10 +23,10 @@ protected:
 public:
     cobs_config_t get_config();
     set_cobs_config_status set_config(cobs_config_t config);
-    explicit COBSReader();
+    explicit COBSReaderCore();
 };
 
-class COBSSRReader: public COBSReader {
+class COBSSRReaderCore: public COBSReaderCore {
 protected:
     uint8_t _sequence_replace_length_threshold{};
 
@@ -34,13 +35,19 @@ protected:
     read_status_t _set_swap_byte_offset(uint8_t offset) override;
 
 public:
-    explicit COBSSRReader();
+    explicit COBSSRReaderCore();
 };
 
-class COBSZPEReader: public COBSSRReader {
+class COBSZPEReaderCore: public COBSSRReaderCore {
 public:
-    explicit COBSZPEReader();
+    explicit COBSZPEReaderCore();
 };
+}
+class COBSReader final: public core::COBSReaderCore { };
+
+class COBSSRReader final: public core::COBSSRReaderCore { };
+
+class COBSZPEReader final: public core::COBSZPEReaderCore { };
 
 } // namespace BDSP::streams::COBS
 
