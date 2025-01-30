@@ -44,8 +44,7 @@ enum receiver_error_t {
     EXCEEDING_THE_MAXIMUM_PACKET_SIZE,
     NOT_ENOUGH_RAM_FOR_PACKET,
     CHECKSUM_ERROR,
-    UNSUPPORTED_PROTOCOL,
-    UNSUPPORTED_SERVICE_PACKETS,
+    UNSUPPORTED_PROTOCOL
 };
 
 typedef void (*receiver_error_handler_t)(receiver_error_t error, void *packet_handler_context);
