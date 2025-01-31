@@ -19,12 +19,12 @@ TEST(bdsp_tests, bdsp_full_test) {
         COBS::COBSReader reader;
     } ctx;
 
-    ctx.transceiver.set_writer(&ctx.writer);
-    ctx.transceiver.set_stream_reader(&ctx.reader);
-
     ctx.writer.set_stream_writer([](uint8_t byte, void *ctx) {
-        reinterpret_cast<Context *>(ctx)->transceiver.parse(byte);
+        reinterpret_cast<Context *>(ctx)->reader.read(byte);
     }, &ctx);
+
+    ctx.transceiver.set_stream_writer(&ctx.writer);
+    EXPECT_EQ(ctx.transceiver.set_stream_reader(&ctx.reader), SET_STREAM_READER_OK);
 
     ctx.transceiver.set_packet_handler([] (bdsp_packet_context_t &packet_context, void *ctx) {
         auto *context = reinterpret_cast<Context*>(ctx);
@@ -42,6 +42,6 @@ TEST(bdsp_tests, bdsp_full_test) {
     bdsp_packet_context_t packet_context = {0, ctx.data.data(), static_cast<uint16_t>(ctx.data.size())};
     ctx.packet_context = &packet_context;
 
-    ctx.transceiver.send_packet(packet_context, true);
+    EXPECT_EQ(ctx.transceiver.send_packet(packet_context), SEND_PACKET_OK);
     ASSERT_TRUE(ctx.is_packet_got);
 }
