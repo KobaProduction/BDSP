@@ -7,25 +7,29 @@
 
 namespace BDSP {
 
+
+
+enum checksum_usage_state_t { DEFAULT_CHECKSUM, WITHOUT_CHECKSUM, WITH_CHECKSUM };
+
 namespace core {
-    class BDSPV1TransmitterCore: public core::MaxPacketSizeMixin, public core::BDSPV1ChecksumMixin {
-    public:
-        // todo rename to set_stream_writer
-        void set_writer(streams::IWriter *writer_ptr);
+class BDSPV1TransmitterCore: public core::MaxPacketSizeMixin, public core::BDSPV1ChecksumMixin {
+protected:
+    streams::IWriter *_writer = nullptr;
+    bool _checksum_usage_default_state = true;
 
-        status_t send_data(uint8_t packet_id, uint8_t *buffer_ptr, size_t size, bool use_crc = true);
+public:
+    bdsp_transmitter_send_packet_status_t send_data(uint8_t packet_id,
+                                                    uint8_t *buffer_ptr,
+                                                    size_t size,
+                                                    checksum_usage_state_t checksum_state = DEFAULT_CHECKSUM);
+    bdsp_transmitter_send_packet_status_t send_packet(bdsp_packet_context_t &packet_context,
+                                                      checksum_usage_state_t checksum_state = DEFAULT_CHECKSUM);
+    void set_checksum_usage_default_state(bool using_checksum);
+    void set_stream_writer(streams::IWriter *writer_ptr);
+};
+} // namespace core
 
-        status_t send_packet(bdsp_packet_context_t &packet_context, bool use_crc = true);
-
-        // todo transaction
-
-    protected:
-        streams::IWriter *_writer = nullptr;
-    };
-}
-
-
-class BDSPTransmitter final: public core::BDSPV1TransmitterCore {};
+class BDSPTransmitter final: public core::BDSPV1TransmitterCore { };
 
 } // namespace BDSP
 

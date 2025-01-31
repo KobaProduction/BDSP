@@ -6,32 +6,32 @@ using namespace BDSP::core;
 using namespace BDSP::streams;
 using namespace BDSP::checksums;
 
-void BDSPV1TransmitterCore::set_writer(streams::IWriter *writer_ptr) {
-    // todo statuses
-    _writer = writer_ptr;
-}
-
-status_t BDSPV1TransmitterCore::send_data(uint8_t packet_id, uint8_t *buffer_ptr, size_t size, bool use_crc) {
+bdsp_transmitter_send_packet_status_t BDSPV1TransmitterCore::send_data(uint8_t packet_id, uint8_t *buffer_ptr, size_t size,
+                                                                       checksum_usage_state_t checksum_state) {
     bdsp_packet_context_t packet_context = {packet_id, buffer_ptr, static_cast<uint16_t>(size)};
-    return send_packet(packet_context, use_crc);
+    return send_packet(packet_context, checksum_state);
 }
 
-status_t BDSPV1TransmitterCore::send_packet(bdsp_packet_context_t &packet_context, bool use_crc) {
+bdsp_transmitter_send_packet_status_t BDSPV1TransmitterCore::send_packet(bdsp_packet_context_t &packet_context,
+                                                                         checksum_usage_state_t checksum_state) {
     if (not _writer) {
-        return BDSP_CONFIG_NOT_INSTALLED;
+        return STREAM_WRITER_NOT_SET_ERROR;
     }
 
     if (packet_context.size < 1 or packet_context.size > _max_packet_size) {
-        return BDSP_EXCESS_SIZE_PACKET;
+        return MAXIMUM_PACKET_SIZE_EXCEEDING_ERROR;
     }
 
     if (packet_context.packet_id > 15) {
-        return BDSP_ERROR_PACKET_ID;
+        return PACKET_ID_ERROR;
     }
+
+    bool is_need_use_checksum =
+        checksum_state == DEFAULT_CHECKSUM ? _checksum_usage_default_state : checksum_state == WITH_CHECKSUM;
 
     core::bdsp_packet_v1_header header = {.is_unsupported_protocol_version = false,
                                           .is_two_bytes_for_packet_size = packet_context.size > 255,
-                                          .is_checksum_used = use_crc,
+                                          .is_checksum_used = is_need_use_checksum,
                                           .is_service_packet = false,
                                           .packet_id = packet_context.packet_id};
 
@@ -56,5 +56,14 @@ status_t BDSPV1TransmitterCore::send_packet(bdsp_packet_context_t &packet_contex
     }
 
     _writer->finish();
-    return BDSP_WRITE_OK;
+    return SEND_PACKET_OK;
+}
+
+void BDSPV1TransmitterCore::set_checksum_usage_default_state(bool using_checksum) {
+    _checksum_usage_default_state = using_checksum;
+}
+
+void BDSPV1TransmitterCore::set_stream_writer(streams::IWriter *writer_ptr) {
+    // todo statuses
+    _writer = writer_ptr;
 }

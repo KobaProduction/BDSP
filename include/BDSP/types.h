@@ -24,11 +24,11 @@ struct bdsp_packet_context_t {
     bool need_clear{};
 };
 
-enum status_t {
-    BDSP_WRITE_OK,
-    BDSP_CONFIG_NOT_INSTALLED,
-    BDSP_EXCESS_SIZE_PACKET, // Data packet size exceeded.
-    BDSP_ERROR_PACKET_ID
+enum bdsp_transmitter_send_packet_status_t {
+    SEND_PACKET_OK,
+    STREAM_WRITER_NOT_SET_ERROR,
+    MAXIMUM_PACKET_SIZE_EXCEEDING_ERROR,
+    PACKET_ID_ERROR
 };
 
 namespace core {

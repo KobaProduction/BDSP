@@ -5,7 +5,9 @@ using namespace BDSP::streams;
 
 void show_byte(uint8_t byte, bool use_hex) {
     if (use_hex) {
-        if (byte <= 0xF) std::cout << 0;
+        if (byte <= 0xF) {
+            std::cout << 0;
+        }
         std::cout << std::hex << std::uppercase;
     }
     std::cout << static_cast<uint32_t>(byte);
@@ -47,7 +49,7 @@ void show_status(read_status_t status) {
 
 void show_status(write_status_t status) {
     switch (status) {
-    case BDSP_WRITE_OK: std::cout << "STREAM_WRITE_OK"; break;
+    case STREAM_WRITE_OK: std::cout << "STREAM_WRITE_OK"; break;
     case STREAM_WRITE_END: std::cout << "STREAM_WRITE_END"; break;
     case ERROR_WRITE_STREAM_NOT_READY: std::cout << "ERROR_WRITE_STREAM_NOT_READY"; break;
     }
