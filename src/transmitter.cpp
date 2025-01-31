@@ -63,7 +63,11 @@ void BDSPV1TransmitterCore::set_checksum_usage_default_state(bool using_checksum
     _checksum_usage_default_state = using_checksum;
 }
 
-void BDSPV1TransmitterCore::set_stream_writer(streams::IWriter *writer_ptr) {
-    // todo statuses
+set_stream_writer_status_t BDSPV1TransmitterCore::set_stream_writer(streams::IWriter *writer_ptr) {
+    if (writer_ptr and not writer_ptr->get_ready_status()) {
+        return STREAM_WRITER_NOT_READY_ERROR;
+    }
     _writer = writer_ptr;
+
+    return _writer ? SET_STREAM_WRITER_OK : RESET_STREAM_WRITER;
 }

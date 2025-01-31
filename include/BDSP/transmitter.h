@@ -7,7 +7,7 @@
 
 namespace BDSP {
 
-
+enum set_stream_writer_status_t { SET_STREAM_WRITER_OK, RESET_STREAM_WRITER, STREAM_WRITER_NOT_READY_ERROR };
 
 enum checksum_usage_state_t { DEFAULT_CHECKSUM, WITHOUT_CHECKSUM, WITH_CHECKSUM };
 
@@ -25,7 +25,7 @@ public:
     bdsp_transmitter_send_packet_status_t send_packet(bdsp_packet_context_t &packet_context,
                                                       checksum_usage_state_t checksum_state = DEFAULT_CHECKSUM);
     void set_checksum_usage_default_state(bool using_checksum);
-    void set_stream_writer(streams::IWriter *writer_ptr);
+    set_stream_writer_status_t set_stream_writer(streams::IWriter *writer_ptr);
 };
 } // namespace core
 
