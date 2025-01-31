@@ -33,8 +33,6 @@ enum bdsp_transmitter_send_packet_status_t {
 
 namespace core {
 enum receiver_fsm_state_t { PACKET_HEADER, PACKET_SIZE_A, PACKET_SIZE_B, PACKET_DATA, PACKET_CHECKSUM, WAIT_END };
-typedef void *(*bdsp_memory_allocator_t)(size_t);
-typedef void (*bdsp_memory_cleaner_t)(void *);
 
 } // namespace core
 

@@ -2,7 +2,6 @@
 #include "BDSP/streams/COBS/checkers.h"
 #include <stdlib.h>
 
-using namespace BDSP::core;
 using namespace BDSP::streams;
 using namespace BDSP::streams::COBS;
 using namespace BDSP::streams::COBS::core;
