@@ -15,6 +15,8 @@ enum bdsp_set_stream_reader_status_t {
 
 namespace core {
 
+enum receiver_fsm_state_t { PACKET_HEADER, PACKET_SIZE_A, PACKET_SIZE_B, PACKET_DATA, PACKET_CHECKSUM, WAIT_END };
+
 class BDSPV1Receiver: public core::MaxPacketSizeMixin, public core::BDSPV1ChecksumMixin {
 protected:
     core::receiver_fsm_state_t _fsm_state = core::PACKET_HEADER;

@@ -31,11 +31,6 @@ enum bdsp_transmitter_send_packet_status_t {
     PACKET_ID_ERROR
 };
 
-namespace core {
-enum receiver_fsm_state_t { PACKET_HEADER, PACKET_SIZE_A, PACKET_SIZE_B, PACKET_DATA, PACKET_CHECKSUM, WAIT_END };
-
-} // namespace core
-
 enum bdsp_receiver_parse_status_t {
     RECEIVER_PARSE_OK,
     PACKET_HANDLER_NOT_SET_ERROR,
