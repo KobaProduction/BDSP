@@ -7,7 +7,7 @@ namespace BDSP {
 
 namespace core {
 
-struct bdsp_packet_v1_header {
+struct packet_v1_header {
     bool is_unsupported_protocol_version : 1;
     bool is_two_bytes_for_packet_size : 1;
     bool is_checksum_used : 1;

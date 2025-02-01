@@ -17,7 +17,7 @@ TEST(bdsp_core_tests, max_packet_size_mixin_test) {
 TEST(bdsp_core_tests, bdsp_v1_checksum_mixin_test) {
     class ChecksumTester: public BDSPV1ChecksumMixin {
     public:
-        uint8_t calc(bdsp_packet_v1_header header, uint8_t *data_ptr, uint16_t size) {
+        uint8_t calc(packet_v1_header header, uint8_t *data_ptr, uint16_t size) {
             return _calc_checksum(header, data_ptr, size);
         }
     };
@@ -27,7 +27,7 @@ TEST(bdsp_core_tests, bdsp_v1_checksum_mixin_test) {
     EXPECT_EQ(tester.set_checksum_function(nullptr), CHECKSUM_FUNCTION_NULL_POINTER_ERROR);
     EXPECT_EQ(tester.set_checksum_function(BDSP::checksums::crc8_nrsc5), SET_CHECKSUM_FUNCTION_OK);
 
-    bdsp_packet_v1_header header{};
+    packet_v1_header header{};
 
     header.is_unsupported_protocol_version = false;
     header.is_two_bytes_for_packet_size = false;

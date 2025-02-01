@@ -45,7 +45,7 @@ bdsp_receiver_parse_status_t BDSPV1Receiver::parse_packet_byte(uint8_t byte, str
         }
         return RECEIVER_PARSE_OK;
     case PACKET_HEADER:
-        _packet_header = *reinterpret_cast<bdsp_packet_v1_header *>(&byte);
+        _packet_header = *reinterpret_cast<packet_v1_header *>(&byte);
         if (_packet_header.is_unsupported_protocol_version) {
             return _cause_error(UNSUPPORTED_PROTOCOL_ERROR);
         }

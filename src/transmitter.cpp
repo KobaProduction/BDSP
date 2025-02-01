@@ -29,7 +29,7 @@ bdsp_transmitter_send_packet_status_t BDSPV1TransmitterCore::send_packet(bdsp_pa
     bool is_need_use_checksum =
         checksum_state == DEFAULT_CHECKSUM ? _checksum_usage_default_state : checksum_state == WITH_CHECKSUM;
 
-    core::bdsp_packet_v1_header header = {.is_unsupported_protocol_version = false,
+    core::packet_v1_header header = {.is_unsupported_protocol_version = false,
                                           .is_two_bytes_for_packet_size = packet_context.size > 255,
                                           .is_checksum_used = is_need_use_checksum,
                                           .is_service_packet = false,
