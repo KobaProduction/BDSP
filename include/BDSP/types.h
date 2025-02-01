@@ -31,8 +31,8 @@ enum send_packet_status_t {
     PACKET_ID_ERROR
 };
 
-enum bdsp_receiver_parse_status_t {
-    RECEIVER_PARSE_OK,
+enum parse_packet_status_t {
+    PARSE_PACKET_OK,
     PACKET_HANDLER_NOT_SET_ERROR,
     SERVICE_PACKET_HANDLER_NOT_SET_ERROR,
     STREAM_READING_ERROR,
@@ -42,7 +42,7 @@ enum bdsp_receiver_parse_status_t {
     UNSUPPORTED_PROTOCOL_ERROR
 };
 
-typedef void (*receiver_error_handler_t)(bdsp_receiver_parse_status_t error, void *packet_handler_context);
+typedef void (*receiver_error_handler_t)(parse_packet_status_t error, void *packet_handler_context);
 
 typedef void (*packet_handler_t)(packet_context_t &packet_context, void *packet_handler_context);
 } // namespace BDSP

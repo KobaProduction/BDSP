@@ -11,7 +11,7 @@ void BDSPV1Receiver::_deallocate_packet_memory() {
     _packet_context.data_ptr = nullptr;
 }
 
-bdsp_receiver_parse_status_t BDSPV1Receiver::_cause_error(bdsp_receiver_parse_status_t status) {
+parse_packet_status_t BDSPV1Receiver::_cause_error(parse_packet_status_t status) {
     if (_error_handler) {
         _error_handler(status, _error_handler_context);
     }
@@ -26,7 +26,7 @@ BDSPV1Receiver::~BDSPV1Receiver() {
     _deallocate_packet_memory();
 }
 
-bdsp_receiver_parse_status_t BDSPV1Receiver::parse_packet_byte(uint8_t byte, streams::read_status_t stream_status) {
+parse_packet_status_t BDSPV1Receiver::parse_packet_byte(uint8_t byte, streams::read_status_t stream_status) {
     if (stream_status == STREAM_READ_ERROR) {
         return _cause_error(STREAM_READING_ERROR);
     }
@@ -34,7 +34,7 @@ bdsp_receiver_parse_status_t BDSPV1Receiver::parse_packet_byte(uint8_t byte, str
     if (stream_status == STREAM_READ_END and _fsm_state not_eq WAIT_END) {
         _cause_error(STREAM_READING_ERROR);
         reset(false);
-        return RECEIVER_PARSE_OK;
+        return PARSE_PACKET_OK;
     }
 
     switch (_fsm_state) {
@@ -43,7 +43,7 @@ bdsp_receiver_parse_status_t BDSPV1Receiver::parse_packet_byte(uint8_t byte, str
         if (_received_packet_data_bytes == _packet_context.size) {
             _fsm_state = PACKET_CHECKSUM;
         }
-        return RECEIVER_PARSE_OK;
+        return PARSE_PACKET_OK;
     case PACKET_HEADER:
         _packet_header = *reinterpret_cast<packet_v1_header *>(&byte);
         if (_packet_header.is_unsupported_protocol_version) {
@@ -51,13 +51,13 @@ bdsp_receiver_parse_status_t BDSPV1Receiver::parse_packet_byte(uint8_t byte, str
         }
         _packet_context = {_packet_header.packet_id, nullptr, 0, true};
         _fsm_state = PACKET_SIZE_A;
-        return RECEIVER_PARSE_OK;
+        return PARSE_PACKET_OK;
     case PACKET_CHECKSUM:
         if (_calc_checksum(_packet_header, _packet_context.data_ptr, _packet_context.size) not_eq byte) {
             return _cause_error(CHECKSUM_ERROR);
         }
         _fsm_state = WAIT_END;
-        return RECEIVER_PARSE_OK;
+        return PARSE_PACKET_OK;
     case WAIT_END:
         if (stream_status not_eq STREAM_READ_END) {
             return _cause_error(STREAM_READING_ERROR);
@@ -79,12 +79,12 @@ bdsp_receiver_parse_status_t BDSPV1Receiver::parse_packet_byte(uint8_t byte, str
         }
 
         reset(false);
-        return RECEIVER_PARSE_OK;
+        return PARSE_PACKET_OK;
     case PACKET_SIZE_A:
         _packet_context.size = byte;
         if (_packet_header.is_two_bytes_for_packet_size) {
             _fsm_state = PACKET_SIZE_B;
-            return RECEIVER_PARSE_OK;
+            return PARSE_PACKET_OK;
         }
         break;
     case PACKET_SIZE_B:
@@ -103,7 +103,7 @@ bdsp_receiver_parse_status_t BDSPV1Receiver::parse_packet_byte(uint8_t byte, str
     }
 
     _fsm_state = PACKET_DATA;
-    return RECEIVER_PARSE_OK;
+    return PARSE_PACKET_OK;
 }
 
 void BDSPV1Receiver::reset(bool need_wait_delimiter) {

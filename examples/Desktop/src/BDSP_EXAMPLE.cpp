@@ -44,8 +44,8 @@ int main() {
         nullptr);
 
     transceiver.set_error_handler(
-        [](bdsp_receiver_parse_status_t status, void *ctx) {
-            std::cout << "bdsp_receiver_parse_error_status_t: " << static_cast<uint32_t>(status) << std::endl;
+        [](parse_packet_status_t status, void *ctx) {
+            std::cout << "parse_packet_status_t error: " << static_cast<uint32_t>(status) << std::endl;
         },
         nullptr);
 
