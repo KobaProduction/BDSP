@@ -24,7 +24,7 @@ struct packet_context_t {
     bool need_clear{};
 };
 
-enum bdsp_transmitter_send_packet_status_t {
+enum send_packet_status_t {
     SEND_PACKET_OK,
     STREAM_WRITER_NOT_SET_ERROR,
     MAXIMUM_PACKET_SIZE_EXCEEDING_ERROR,

@@ -18,11 +18,11 @@ protected:
     bool _checksum_usage_default_state = true;
 
 public:
-    bdsp_transmitter_send_packet_status_t send_data(uint8_t packet_id,
+    send_packet_status_t send_data(uint8_t packet_id,
                                                     uint8_t *buffer_ptr,
                                                     size_t size,
                                                     checksum_usage_state_t checksum_state = DEFAULT_CHECKSUM);
-    bdsp_transmitter_send_packet_status_t send_packet(packet_context_t &packet_context,
+    send_packet_status_t send_packet(packet_context_t &packet_context,
                                                       checksum_usage_state_t checksum_state = DEFAULT_CHECKSUM);
     void set_checksum_usage_default_state(bool using_checksum);
     set_stream_writer_status_t set_stream_writer(streams::IWriter *writer_ptr);
