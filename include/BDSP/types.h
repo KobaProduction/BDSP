@@ -17,7 +17,7 @@ struct packet_v1_header {
 
 } // namespace core
 
-struct bdsp_packet_context_t {
+struct packet_context_t {
     uint8_t packet_id{};
     uint8_t *data_ptr = nullptr;
     uint16_t size = 0;
@@ -44,7 +44,7 @@ enum bdsp_receiver_parse_status_t {
 
 typedef void (*receiver_error_handler_t)(bdsp_receiver_parse_status_t error, void *packet_handler_context);
 
-typedef void (*packet_handler_t)(bdsp_packet_context_t &packet_context, void *packet_handler_context);
+typedef void (*packet_handler_t)(packet_context_t &packet_context, void *packet_handler_context);
 } // namespace BDSP
 
 #endif // BDSP_TYPES_H

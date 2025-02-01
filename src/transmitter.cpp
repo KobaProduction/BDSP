@@ -8,11 +8,11 @@ using namespace BDSP::checksums;
 
 bdsp_transmitter_send_packet_status_t BDSPV1TransmitterCore::send_data(uint8_t packet_id, uint8_t *buffer_ptr, size_t size,
                                                                        checksum_usage_state_t checksum_state) {
-    bdsp_packet_context_t packet_context = {packet_id, buffer_ptr, static_cast<uint16_t>(size)};
+    packet_context_t packet_context = {packet_id, buffer_ptr, static_cast<uint16_t>(size)};
     return send_packet(packet_context, checksum_state);
 }
 
-bdsp_transmitter_send_packet_status_t BDSPV1TransmitterCore::send_packet(bdsp_packet_context_t &packet_context,
+bdsp_transmitter_send_packet_status_t BDSPV1TransmitterCore::send_packet(packet_context_t &packet_context,
                                                                          checksum_usage_state_t checksum_state) {
     if (not _writer) {
         return STREAM_WRITER_NOT_SET_ERROR;

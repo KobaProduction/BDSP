@@ -14,7 +14,7 @@ void show_data(uint8_t *buf, size_t size, bool use_hex = false);
 
 void show_data(std::vector<uint8_t> &data, bool use_hex = false);
 
-void show_packet_context(BDSP::bdsp_packet_context_t &packet_context, bool use_hex = false);
+void show_packet_context(BDSP::packet_context_t &packet_context, bool use_hex = false);
 
 void show_status(BDSP::streams::read_status_t status);
 

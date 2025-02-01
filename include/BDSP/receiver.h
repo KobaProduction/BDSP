@@ -32,8 +32,8 @@ protected:
     void *_error_handler_context = nullptr;
     streams::IReader *_reader = nullptr;
 
-    bdsp_packet_context_t _packet_context;
     core::packet_v1_header _packet_header{};
+    packet_context_t _packet_context;
 
     void _deallocate_packet_memory();
     bdsp_receiver_parse_status_t _cause_error(bdsp_receiver_parse_status_t status);

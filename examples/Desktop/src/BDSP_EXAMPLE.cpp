@@ -14,7 +14,7 @@ int main() {
     std::vector<uint8_t> data;
     for (int i = 1; i < 10; ++i)
         data.push_back(i);
-    bdsp_packet_context_t packet_context;
+    packet_context_t packet_context;
 
     packet_context.packet_id = 0;
     packet_context.size = data.size();
@@ -35,7 +35,7 @@ int main() {
         &reader);
 
     transceiver.set_packet_handler(
-        [](bdsp_packet_context_t &packet_ctx, void *ctx) {
+        [](packet_context_t &packet_ctx, void *ctx) {
             std::cout << "Got packet! Id: " << static_cast<uint32_t>(packet_ctx.packet_id);
             std::cout << ", size: " << uint32_t(packet_ctx.size) << std::endl;
             std::cout << "Packet ";
