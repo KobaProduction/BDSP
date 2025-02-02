@@ -17,7 +17,7 @@ namespace core {
 
 enum receiver_fsm_state_t { PACKET_HEADER, PACKET_SIZE_A, PACKET_SIZE_B, PACKET_DATA, PACKET_CHECKSUM, WAIT_END };
 
-class BDSPV1Receiver: public core::MaxPacketSizeMixin, public core::BDSPV1ChecksumMixin {
+class BDSPV1ReceiverCore: public core::MaxPacketSizeMixin, public core::BDSPV1ChecksumMixin {
 protected:
     core::receiver_fsm_state_t _fsm_state = core::PACKET_HEADER;
     uint16_t _received_packet_data_bytes = 0;
@@ -39,7 +39,7 @@ protected:
     parse_packet_status_t _cause_error(parse_packet_status_t status);
 
 public:
-    ~BDSPV1Receiver();
+    ~BDSPV1ReceiverCore();
     parse_packet_status_t parse_packet_byte(uint8_t byte, streams::read_status_t stream_status);
     void reset(bool need_wait_delimiter = false);
     void set_error_handler(receiver_error_handler_t error_handler, void *context = nullptr);
@@ -50,7 +50,7 @@ public:
 
 } // namespace core
 
-class BDSPReceiver final: public core::BDSPV1Receiver { };
+class BDSPReceiver final: public core::BDSPV1ReceiverCore { };
 } // namespace BDSP
 
 #endif // BDSP_RECEIVER_H
