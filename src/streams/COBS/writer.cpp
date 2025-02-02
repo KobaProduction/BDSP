@@ -1,6 +1,5 @@
 #include "BDSP/streams/COBS/writer.h"
 #include "BDSP/streams/COBS/checkers.h"
-#include <stdlib.h>
 
 using namespace BDSP::streams;
 using namespace BDSP::streams::COBS;
@@ -118,11 +117,8 @@ set_cobs_config_status COBSSRWriterCore::set_config(COBS::cobs_config_t config) 
     return COBSWriterCore::set_config(config);
 }
 
-
 COBSWriterCore::COBSWriterCore() {
     _config_checker = cobs_default_config_checker;
-    _malloc = malloc;
-    _free = free;
 }
 
 COBSSRWriterCore::COBSSRWriterCore() {

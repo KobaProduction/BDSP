@@ -3,6 +3,7 @@
 
 #include "BDSP/streams/COBS/types.h"
 #include "BDSP/streams/abstract/writer.h"
+#include <stdlib.h>
 
 namespace BDSP::streams::COBS {
 
@@ -10,8 +11,8 @@ namespace core {
 
 class COBSWriterCore: public ABS::AbstractWriter {
 protected:
-    void *(*_malloc)(size_t) {};
-    void (*_free)(void *) {};
+    void *(*_malloc)(size_t) = malloc;
+    void (*_free)(void *) = free;
     cobs_config_t _cfg{};
     set_cobs_config_status (*_config_checker)(cobs_config_t config){};
     uint8_t *_buffer_ptr = nullptr;
