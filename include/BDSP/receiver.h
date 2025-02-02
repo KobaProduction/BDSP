@@ -5,6 +5,8 @@
 #include "BDSP/streams/types.h"
 #include "BDSP/types.h"
 
+#include <stdlib.h>
+
 namespace BDSP {
 
 enum bdsp_set_stream_reader_status_t {
@@ -22,6 +24,9 @@ protected:
     core::receiver_fsm_state_t _fsm_state = core::PACKET_HEADER;
     uint16_t _received_packet_data_bytes = 0;
 
+    core::packet_v1_header _packet_header{};
+    packet_context_t _packet_context;
+
     packet_handler_t _packet_handler = nullptr;
     void *_packet_handler_context = nullptr;
 
@@ -32,8 +37,8 @@ protected:
     void *_error_handler_context = nullptr;
     streams::IReader *_reader = nullptr;
 
-    core::packet_v1_header _packet_header{};
-    packet_context_t _packet_context;
+    void *(*_malloc)(size_t) = malloc;
+    void (*_free)(void *) = free;
 
     void _deallocate_packet_memory();
     parse_packet_status_t _cause_error(parse_packet_status_t status);

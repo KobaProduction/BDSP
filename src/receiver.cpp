@@ -7,7 +7,7 @@ using namespace BDSP::streams;
 using namespace BDSP::checksums;
 
 void BDSPV1ReceiverCore::_deallocate_packet_memory() {
-    free(_packet_context.data_ptr);
+    _free(_packet_context.data_ptr);
     _packet_context.data_ptr = nullptr;
 }
 
@@ -90,7 +90,7 @@ parse_packet_status_t BDSPV1ReceiverCore::parse_packet_byte(uint8_t byte, stream
     if (not _packet_context.size or _packet_context.size > _max_packet_size) {
         return _cause_error(EXCEEDING_THE_MAXIMUM_PACKET_SIZE_ERROR);
     }
-    _packet_context.data_ptr = static_cast<uint8_t *>(malloc(_packet_context.size));
+    _packet_context.data_ptr = static_cast<uint8_t *>(_malloc(_packet_context.size));
     if (not _packet_context.data_ptr) {
         return _cause_error(NOT_ENOUGH_RAM_FOR_PACKET_ERROR);
     }
