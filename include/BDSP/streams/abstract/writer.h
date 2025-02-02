@@ -8,7 +8,7 @@
 
 namespace BDSP::streams::ABS {
 
-class AbstractWriter: public IWriter, protected AbstractStreamReadyMixin {
+class AbstractWriter: public IStreamWriter, protected AbstractStreamReadyMixin {
     stream_writer_t _writer = nullptr;
     void *_writer_context = nullptr;
 

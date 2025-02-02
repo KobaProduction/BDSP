@@ -14,7 +14,7 @@ enum checksum_usage_state_t { DEFAULT_CHECKSUM, WITHOUT_CHECKSUM, WITH_CHECKSUM 
 namespace core {
 class BDSPV1TransmitterCore: public core::MaxPacketSizeMixin, public core::BDSPV1ChecksumMixin {
 protected:
-    streams::IWriter *_writer = nullptr;
+    streams::IStreamWriter *_writer = nullptr;
     bool _checksum_usage_default_state = true;
 
 public:
@@ -26,7 +26,7 @@ public:
                                      checksum_usage_state_t checksum_state = DEFAULT_CHECKSUM,
                                      bool is_service_packet = false);
     void set_checksum_usage_default_state(bool using_checksum);
-    set_stream_writer_status_t set_stream_writer(streams::IWriter *writer_ptr);
+    set_stream_writer_status_t set_stream_writer(streams::IStreamWriter *writer_ptr);
 };
 } // namespace core
 

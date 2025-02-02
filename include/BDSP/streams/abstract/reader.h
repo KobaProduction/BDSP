@@ -8,7 +8,7 @@
 
 namespace BDSP::streams::ABS {
 
-class AbstractReader: public IReader, protected AbstractStreamReadyMixin {
+class AbstractReader: public IStreamReader, protected AbstractStreamReadyMixin {
     stream_data_handler_t _data_handler = nullptr;
     void *_data_handler_context = nullptr;
     bool _is_waiting_for_the_delimiter = false;

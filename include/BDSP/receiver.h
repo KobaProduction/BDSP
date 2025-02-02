@@ -35,7 +35,7 @@ protected:
 
     receiver_error_handler_t _error_handler = nullptr;
     void *_error_handler_context = nullptr;
-    streams::IReader *_reader = nullptr;
+    streams::IStreamReader *_reader = nullptr;
 
     void *(*_malloc)(size_t) = malloc;
     void (*_free)(void *) = free;
@@ -50,7 +50,7 @@ public:
     void set_error_handler(receiver_error_handler_t error_handler, void *context = nullptr);
     void set_packet_handler(packet_handler_t packet_handler, void *context = nullptr);
     void set_service_packet_handler(packet_handler_t service_packet_handler, void *context = nullptr);
-    bdsp_set_stream_reader_status_t set_stream_reader(streams::IReader *reader_ptr);
+    bdsp_set_stream_reader_status_t set_stream_reader(streams::IStreamReader *reader_ptr);
 };
 
 } // namespace core

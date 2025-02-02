@@ -124,7 +124,7 @@ void BDSPV1ReceiverCore::set_service_packet_handler(packet_handler_t service_pac
     _service_packet_handler_context = context;
 }
 
-bdsp_set_stream_reader_status_t BDSPV1ReceiverCore::set_stream_reader(streams::IReader *reader_ptr) {
+bdsp_set_stream_reader_status_t BDSPV1ReceiverCore::set_stream_reader(streams::IStreamReader *reader_ptr) {
     if (not reader_ptr) {
         return STREAM_READER_NULL_POINTER_ERROR;
     }
