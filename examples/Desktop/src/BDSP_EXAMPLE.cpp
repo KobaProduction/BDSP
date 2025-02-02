@@ -30,7 +30,7 @@ int main() {
 
     writer.set_stream_writer(
         [](uint8_t byte, void *ctx) {
-            reinterpret_cast<streams::IReader *>(ctx)->read(byte);
+            reinterpret_cast<COBSReader *>(ctx)->read(byte);
         },
         &reader);
 
