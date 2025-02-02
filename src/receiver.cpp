@@ -30,13 +30,11 @@ parse_packet_status_t BDSPV1ReceiverCore::parse_packet_byte(uint8_t byte, stream
     if (stream_status == STREAM_READ_ERROR) {
         return _cause_error(STREAM_READING_ERROR);
     }
-
     if (stream_status == STREAM_READ_END and _fsm_state not_eq WAIT_END) {
         _cause_error(STREAM_READING_ERROR);
         reset(false);
         return PARSE_PACKET_OK;
     }
-
     switch (_fsm_state) {
     case PACKET_DATA:
         _packet_context.data_ptr[_received_packet_data_bytes++] = byte;
@@ -62,7 +60,6 @@ parse_packet_status_t BDSPV1ReceiverCore::parse_packet_byte(uint8_t byte, stream
         if (stream_status not_eq STREAM_READ_END) {
             return _cause_error(STREAM_READING_ERROR);
         }
-
         if (not _packet_header.is_service_packet) {
             if (not _packet_handler) {
                 return _cause_error(PACKET_HANDLER_NOT_SET_ERROR);
@@ -87,21 +84,16 @@ parse_packet_status_t BDSPV1ReceiverCore::parse_packet_byte(uint8_t byte, stream
             return PARSE_PACKET_OK;
         }
         break;
-    case PACKET_SIZE_B:
-        _packet_context.size = (_packet_context.size << 8) + byte;
-        break;
+    case PACKET_SIZE_B: _packet_context.size = (_packet_context.size << 8) + byte; break;
     }
 
     if (not _packet_context.size or _packet_context.size > _max_packet_size) {
         return _cause_error(EXCEEDING_THE_MAXIMUM_PACKET_SIZE_ERROR);
     }
-
     _packet_context.data_ptr = static_cast<uint8_t *>(malloc(_packet_context.size));
-
     if (not _packet_context.data_ptr) {
         return _cause_error(NOT_ENOUGH_RAM_FOR_PACKET_ERROR);
     }
-
     _fsm_state = PACKET_DATA;
     return PARSE_PACKET_OK;
 }
@@ -136,19 +128,14 @@ bdsp_set_stream_reader_status_t BDSPV1ReceiverCore::set_stream_reader(streams::I
     if (not reader_ptr) {
         return STREAM_READER_NULL_POINTER_ERROR;
     }
-
     stream_data_handler_t callback = [](uint8_t byte, read_status_t read_state, void *context) {
         reinterpret_cast<BDSPV1ReceiverCore *>(context)->parse_packet_byte(byte, read_state);
     };
-
     reader_ptr->set_stream_data_handler(callback, this);
-
     if (not reader_ptr->get_ready_status()) {
         reader_ptr->set_stream_data_handler(nullptr, nullptr);
         return STREAM_READER_NOT_READY_ERROR;
     }
-
     _reader = reader_ptr;
-
     return SET_STREAM_READER_OK;
 }

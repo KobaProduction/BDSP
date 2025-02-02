@@ -15,17 +15,13 @@ uint8_t BDSPV1ChecksumMixin::_calc_checksum(packet_v1_header header, uint8_t *da
         return 0;
     }
     uint8_t checksum = _checksum_function(reinterpret_cast<uint8_t *>(&header), 1, 255);
-
     uint8_t size_byte = size;
-
     checksum = _checksum_function(&size_byte, 1, checksum);
     if (header.is_two_bytes_for_packet_size) {
         size_byte = size >> 8;
         checksum = _checksum_function(&size_byte, 1, checksum);
     }
-
     checksum = _checksum_function(data_ptr, size, checksum);
-
     return checksum;
 }
 

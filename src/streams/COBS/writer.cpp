@@ -10,7 +10,6 @@ void COBSWriterCore::_encode(uint8_t byte) {
     if (_buffer_position == _cfg.depth) {
         _write_buffer(_buffer_position);
     }
-
     if (byte not_eq _cfg.delimiter) {
         _buffer_ptr[_buffer_position++] = byte;
     } else {
@@ -88,34 +87,26 @@ COBS::cobs_config_t COBSWriterCore::get_config() {
 
 set_cobs_config_status COBSWriterCore::set_config(cobs_config_t config) {
     _set_ready_state(false);
-
     set_cobs_config_status status = _config_checker(config);
     if (status not_eq SET_OK) {
         return status;
     }
-
     if (_buffer_position not_eq 1) {
         return ERROR_PROCESS_NOT_FINISHED;
     }
-
     if (config.depth < MIN_BDSP_COBS_DEPTH) {
         return ERROR_COBS_DEPTH;
     }
-
     if (_buffer_ptr) {
         _free(_buffer_ptr);
         _buffer_ptr = nullptr;
     }
-
     _buffer_ptr = reinterpret_cast<uint8_t *>(_malloc(config.depth));
-
     if (not _buffer_ptr) {
         return ERROR_MEMORY_ALLOCATION;
     }
-
     _cfg = config;
     _set_ready_state(true);
-
     return status;
 }
 
