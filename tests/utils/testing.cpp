@@ -24,8 +24,17 @@ bool is_equals(std::vector<uint8_t> data1, std::vector<uint8_t> data2) {
     return is_equals(data1.data(), data1.size(), data2.data(), data2.size());
 }
 
+void check_data_for_correctness(std::vector<uint8_t> &current, std::vector<uint8_t> &correct, bool use_hex_when_show) {
+    if (is_equals(correct, current)) return;
+    std::cout << "Correct ";
+    show_data(correct, use_hex_when_show);
+    std::cout << "Current ";
+    show_data(current, use_hex_when_show);
+    FAIL() << "the current and correct array is not equal";
+}
+
 void start_test_writer(
-        BDSP::streams::ABS::AbstractWriter &writer,
+        BDSP::streams::IStreamWriter &writer,
         std::vector<uint8_t> &current,
         std::vector<uint8_t> &correct,
         bool use_hex_when_show
@@ -42,17 +51,11 @@ void start_test_writer(
         show_status(status);
         FAIL() << "Incorrect state";
     }
-    if (is_equals(correct, write_buffer)) return;
-
-    std::cout << "Correct ";
-    show_data(correct, use_hex_when_show);
-    std::cout << "Current ";
-    show_data(write_buffer, use_hex_when_show);
-    FAIL() << "the current and correct array is not equal";
+    check_data_for_correctness(write_buffer, correct);
 }
 
 void start_test_reader(
-        BDSP::streams::ABS::AbstractReader &reader,
+        BDSP::streams::IStreamReader &reader,
         std::vector<uint8_t> &current,
         std::vector<uint8_t> &correct,
         bool use_hex_when_show
@@ -81,10 +84,5 @@ void start_test_reader(
     }, &ctx);
 
     reader.read(current.data(), current.size());
-    if (is_equals(correct, ctx.read_buffer)) return;
-    std::cout << "Correct ";
-    show_data(correct, use_hex_when_show);
-    std::cout << "Current ";
-    show_data(ctx.read_buffer, use_hex_when_show);
-    FAIL() << "the current and correct array is not equal";
+    check_data_for_correctness(ctx.read_buffer, correct);
 }
