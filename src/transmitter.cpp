@@ -28,11 +28,13 @@ send_packet_status_t BDSPV1TransmitterCore::send_packet(packet_context_t &packet
     }
     bool is_need_use_checksum =
         checksum_state == DEFAULT_CHECKSUM ? _checksum_usage_default_state : checksum_state == WITH_CHECKSUM;
-    core::packet_v1_header header = {.is_unsupported_protocol_version = false,
-                                     .is_two_bytes_for_packet_size = packet_context.size > 255,
-                                     .is_checksum_used = is_need_use_checksum,
-                                     .is_service_packet = is_service_packet,
-                                     .packet_id = packet_context.packet_id};
+    core::packet_v1_header header = {
+        .packet_id = packet_context.packet_id,
+        .is_service_packet = is_service_packet,
+        .is_two_bytes_for_packet_size = packet_context.size > 255,
+        .is_checksum_used = is_need_use_checksum,
+        .is_unsupported_protocol_version = false,
+    };
     uint8_t checksum = _calc_checksum(header, packet_context.data_ptr, packet_context.size);
     _writer->write(reinterpret_cast<uint8_t *>(&header), 1);
     uint8_t size_byte = packet_context.size;

@@ -8,11 +8,11 @@ namespace BDSP {
 namespace core {
 
 struct packet_v1_header {
-    bool is_unsupported_protocol_version : 1;
+    uint8_t packet_id : 4;
+    bool is_service_packet : 1;
     bool is_two_bytes_for_packet_size : 1;
     bool is_checksum_used : 1;
-    bool is_service_packet : 1;
-    uint8_t packet_id : 4;
+    bool is_unsupported_protocol_version : 1;
 };
 
 } // namespace core
