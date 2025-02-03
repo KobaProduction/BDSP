@@ -1,5 +1,6 @@
 #include "BDSP/mixins.h"
 
+using namespace BDSP;
 using namespace BDSP::core;
 
 set_max_packet_size_status_t MaxPacketSizeMixin::set_max_packet_size(uint16_t max_packet_size) {

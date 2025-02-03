@@ -3,6 +3,7 @@
 #include "BDSP/checksums/crc8.h"
 #include "BDSP/mixins.h"
 
+using namespace BDSP;
 using namespace BDSP::core;
 using namespace BDSP::checksums;
 
