@@ -18,3 +18,11 @@ void VectorTestWriter::_finish() {
 VectorTestWriter::VectorTestWriter() {
     set_stream_writer([] (uint8_t byte, void *ctx) {}, nullptr);
 }
+
+BDSP::streams::read_status_t VectorTestReader::_process_byte(uint8_t byte) {
+    return BDSP::streams::STREAM_READ_END;
+}
+
+void VectorTestReader::_reset() {
+
+}

@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "BDSP/streams/PPP/types.h"
+#include "BDSP/streams/abstract/reader.h"
 #include "BDSP/streams/abstract/writer.h"
 
 class VectorTestWriter final: public BDSP::streams::ABS::AbstractWriter {
@@ -13,6 +14,13 @@ public:
     std::vector<std::vector<uint8_t>> stream_data;
 
     VectorTestWriter();
+};
+
+class VectorTestReader final: public BDSP::streams::ABS::AbstractReader {
+    BDSP::streams::read_status_t _process_byte(uint8_t byte) override;
+    void _reset() override;
+public:
+    std::vector<std::vector<uint8_t>> stream_data;
 };
 
 
