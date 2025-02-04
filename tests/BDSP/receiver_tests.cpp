@@ -25,3 +25,14 @@ TEST(bdsp_v1_receiver_tests, set_stream_reader_test) {
     EXPECT_EQ(receiver.set_stream_reader(&reader2), CHANGE_STREAM_READER);
     EXPECT_EQ(receiver.set_stream_reader(nullptr), RESET_STREAM_READER);
 }
+
+TEST(bdsp_v1_receiver_tests, reset_destructor_test) {
+    VectorTestReader reader;
+    ASSERT_FALSE(reader.get_ready_status());
+    {
+        BDSPReceiver receiver;
+        EXPECT_EQ(receiver.set_stream_reader(&reader), SET_STREAM_READER_OK);
+        ASSERT_TRUE(reader.get_ready_status());
+    };
+    ASSERT_FALSE(reader.get_ready_status());
+}
