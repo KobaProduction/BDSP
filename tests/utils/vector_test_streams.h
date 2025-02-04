@@ -15,7 +15,6 @@ public:
     std::vector<std::vector<uint8_t>> stream_data;
 
     VectorTestWriter();
-    bool is_empty();
 };
 
 
