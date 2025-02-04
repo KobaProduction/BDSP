@@ -45,9 +45,10 @@ endif ()
 #----------------------------------------------------------------------------------------------------------------------
 
 set(utils_sources
-        utils/testing.h utils/testing.cpp
-        utils/show.h utils/show.cpp
         utils/cobs.h utils/cobs.cpp
+        utils/show.h utils/show.cpp
+        utils/testing.h utils/testing.cpp
+        utils/vector_test_streams.h utils/vector_test_streams.cpp
 )
 
 set(sources ${utils_sources}
