@@ -125,17 +125,24 @@ void BDSPV1ReceiverCore::set_service_packet_handler(packet_handler_t service_pac
 }
 
 bdsp_set_stream_reader_status_t BDSPV1ReceiverCore::set_stream_reader(streams::IStreamReader *reader_ptr) {
-    if (not reader_ptr) {
+    if (reader_ptr and reader_ptr->get_ready_status()) {
+        return STREAM_READER_ALREADY_USED_ERROR;
+    }
+
+    bdsp_set_stream_reader_status_t status = SET_STREAM_READER_OK;
+
+    if (_reader) {
+        _reader->set_stream_data_handler(nullptr, nullptr);
+        status = reader_ptr ? CHANGE_STREAM_READER : RESET_STREAM_READER;
+    } else if (not reader_ptr) {
         return STREAM_READER_NULL_POINTER_ERROR;
     }
-    stream_data_handler_t callback = [](uint8_t byte, read_status_t read_state, void *context) {
-        reinterpret_cast<BDSPV1ReceiverCore *>(context)->parse_packet_byte(byte, read_state);
-    };
-    reader_ptr->set_stream_data_handler(callback, this);
-    if (not reader_ptr->get_ready_status()) {
-        reader_ptr->set_stream_data_handler(nullptr, nullptr);
-        return STREAM_READER_NOT_READY_ERROR;
+    if (reader_ptr) {
+        stream_data_handler_t callback = [](uint8_t byte, read_status_t read_state, void *context) {
+            reinterpret_cast<BDSPV1ReceiverCore *>(context)->parse_packet_byte(byte, read_state);
+        };
+        reader_ptr->set_stream_data_handler(callback, this);
     }
     _reader = reader_ptr;
-    return SET_STREAM_READER_OK;
+    return status;
 }

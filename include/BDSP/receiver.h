@@ -11,8 +11,10 @@ namespace BDSP {
 
 enum bdsp_set_stream_reader_status_t {
     SET_STREAM_READER_OK,
+    RESET_STREAM_READER,
+    CHANGE_STREAM_READER,
     STREAM_READER_NULL_POINTER_ERROR,
-    STREAM_READER_NOT_READY_ERROR
+    STREAM_READER_ALREADY_USED_ERROR
 };
 
 namespace core {
