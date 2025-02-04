@@ -62,6 +62,7 @@ set(sources ${utils_sources}
         BDSP/streams/cobs_zpe_tests.cpp
         BDSP/streams/ppp_tests.cpp
         BDSP/mixins_tests.cpp
+        BDSP/transmitter_tests.cpp
 )
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 
