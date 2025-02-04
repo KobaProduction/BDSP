@@ -8,7 +8,7 @@
 using namespace BDSP;
 using namespace BDSP::streams;
 
-TEST(bdsp_v1_transmitter_tests, set_stream_writer_tests) {
+TEST(bdsp_v1_transmitter_tests, set_stream_writer_test) {
     VectorTestWriter writer;
     BDSPTransmitter transmitter;
 
@@ -23,7 +23,7 @@ TEST(bdsp_v1_transmitter_tests, set_stream_writer_tests) {
     EXPECT_EQ(transmitter.set_stream_writer(nullptr), RESET_STREAM_WRITER);
 }
 
-TEST(bdsp_v1_transmitter_tests, error_send_data) {
+TEST(bdsp_v1_transmitter_tests, error_send_data_test) {
     struct Context {
         VectorTestWriter writer;
         BDSPTransmitter transmitter;
@@ -47,7 +47,7 @@ TEST(bdsp_v1_transmitter_tests, error_send_data) {
     EXPECT_EQ(ctx.transmitter.send_data(255, data.data(), data.size(), WITHOUT_CHECKSUM), PACKET_ID_ERROR);
 }
 
-TEST(bdsp_v1_transmitter_tests, send_data) {
+TEST(bdsp_v1_transmitter_tests, send_data_test) {
     struct Context {
         VectorTestWriter writer;
         BDSPTransmitter transmitter;
