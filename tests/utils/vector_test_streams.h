@@ -6,9 +6,7 @@
 #include "BDSP/streams/PPP/types.h"
 #include "BDSP/streams/abstract/writer.h"
 
-using namespace BDSP::streams;
-
-class VectorTestWriter final: public ABS::AbstractWriter {
+class VectorTestWriter final: public BDSP::streams::ABS::AbstractWriter {
     void _finish() override;
     void _process_byte(uint8_t byte) override;
 public:
