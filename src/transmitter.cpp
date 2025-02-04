@@ -16,7 +16,7 @@ send_packet_status_t BDSPV1TransmitterCore::send_data(uint8_t packet_id,
 
 send_packet_status_t BDSPV1TransmitterCore::send_packet(packet_context_t &packet_context,
                                                         checksum_usage_state_t checksum_state,
-                                                        bool is_service_packet) {
+                                                        bool is_service_packet) noexcept {
     if (not _writer) {
         return STREAM_WRITER_NOT_SET_ERROR;
     }
