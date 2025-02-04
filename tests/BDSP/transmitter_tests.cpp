@@ -64,7 +64,7 @@ TEST(bdsp_v1_transmitter_tests, send_data) {
     }
 
     EXPECT_EQ(ctx.transmitter.send_data(packet_id, data.data(), data.size(), WITHOUT_CHECKSUM), SEND_PACKET_OK);
-    ASSERT_FALSE(ctx.writer.is_empty());
+    ASSERT_FALSE(ctx.writer.stream_data.empty());
     EXPECT_EQ(ctx.writer.stream_data.size(), 2);
 
     check_data_for_correctness(ctx.writer.stream_data[0], correct);
