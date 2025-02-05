@@ -41,7 +41,7 @@ parse_packet_status_t BDSPV1ReceiverCore::parse_packet_byte(uint8_t byte, stream
         if (_received_packet_data_bytes == _packet_context.size) {
             _fsm_state = PACKET_CHECKSUM;
         }
-        return PARSE_PACKET_OK;
+        return PARSE_PACKET_BYTE_OK;
     case PACKET_HEADER:
         _packet_header = *reinterpret_cast<packet_v1_header *>(&byte);
         if (_packet_header.is_unsupported_protocol_version) {
@@ -49,13 +49,13 @@ parse_packet_status_t BDSPV1ReceiverCore::parse_packet_byte(uint8_t byte, stream
         }
         _packet_context = {_packet_header.packet_id, nullptr, 0, true};
         _fsm_state = PACKET_SIZE_A;
-        return PARSE_PACKET_OK;
+        return PARSE_PACKET_BYTE_OK;
     case PACKET_CHECKSUM:
         if (_calc_checksum(_packet_header, _packet_context.data_ptr, _packet_context.size) not_eq byte) {
             return _cause_error(CHECKSUM_ERROR);
         }
         _fsm_state = WAIT_END;
-        return PARSE_PACKET_OK;
+        return PARSE_PACKET_BYTE_OK;
     case WAIT_END:
         if (stream_status not_eq STREAM_READ_END) {
             return _cause_error(STREAM_READING_ERROR);
@@ -76,12 +76,12 @@ parse_packet_status_t BDSPV1ReceiverCore::parse_packet_byte(uint8_t byte, stream
         }
 
         reset(false);
-        return PARSE_PACKET_OK;
+        return PARSE_PACKET_BYTE_OK;
     case PACKET_SIZE_A:
         _packet_context.size = byte;
         if (_packet_header.is_two_bytes_for_packet_size) {
             _fsm_state = PACKET_SIZE_B;
-            return PARSE_PACKET_OK;
+            return PARSE_PACKET_BYTE_OK;
         }
         break;
     case PACKET_SIZE_B: _packet_context.size = (_packet_context.size << 8) + byte; break;
@@ -95,7 +95,7 @@ parse_packet_status_t BDSPV1ReceiverCore::parse_packet_byte(uint8_t byte, stream
         return _cause_error(NOT_ENOUGH_RAM_FOR_PACKET_ERROR);
     }
     _fsm_state = PACKET_DATA;
-    return PARSE_PACKET_OK;
+    return PARSE_PACKET_BYTE_OK;
 }
 
 void BDSPV1ReceiverCore::reset(bool need_wait_delimiter) {

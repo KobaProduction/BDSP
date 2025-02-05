@@ -32,7 +32,7 @@ enum send_packet_status_t {
 };
 
 enum parse_packet_status_t {
-    PARSE_PACKET_OK,
+    PARSE_PACKET_BYTE_OK,
     PACKET_HANDLER_NOT_SET_ERROR,
     SERVICE_PACKET_HANDLER_NOT_SET_ERROR,
     STREAM_READING_ERROR,
