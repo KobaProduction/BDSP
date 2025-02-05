@@ -33,7 +33,7 @@ parse_packet_status_t BDSPV1ReceiverCore::parse_packet_byte(uint8_t byte, stream
     if (stream_status == STREAM_READ_END and _fsm_state not_eq WAIT_END) {
         _cause_error(STREAM_READING_ERROR);
         reset(false);
-        return PARSE_PACKET_OK;
+        return STREAM_READING_ERROR;
     }
     switch (_fsm_state) {
     case PACKET_DATA:
