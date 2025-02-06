@@ -56,7 +56,7 @@ void BDSPV1TransmitterCore::set_checksum_usage_default_state(bool using_checksum
 
 set_stream_writer_status_t BDSPV1TransmitterCore::set_stream_writer(streams::IStreamWriter *writer_ptr) {
     if (writer_ptr and not writer_ptr->get_ready_status()) {
-        return STREAM_WRITER_NOT_READY_ERROR;
+        return STREAM_WRITER_NOT_READY;
     }
     _writer = writer_ptr;
     return _writer ? SET_STREAM_WRITER_OK : RESET_STREAM_WRITER;

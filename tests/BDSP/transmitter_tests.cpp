@@ -14,7 +14,7 @@ TEST(bdsp_v1_transmitter_tests, set_stream_writer_test) {
 
     writer.set_stream_writer(nullptr, nullptr);
     ASSERT_FALSE(writer.get_ready_status());
-    EXPECT_EQ(transmitter.set_stream_writer(&writer), STREAM_WRITER_NOT_READY_ERROR);
+    EXPECT_EQ(transmitter.set_stream_writer(&writer), STREAM_WRITER_NOT_READY);
 
     writer.set_stream_writer([](uint8_t byte, void *ctx) { }, nullptr);
     ASSERT_TRUE(writer.get_ready_status());

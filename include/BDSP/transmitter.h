@@ -7,7 +7,7 @@
 
 namespace BDSP {
 
-enum set_stream_writer_status_t { SET_STREAM_WRITER_OK, RESET_STREAM_WRITER, STREAM_WRITER_NOT_READY_ERROR };
+enum set_stream_writer_status_t { SET_STREAM_WRITER_OK, RESET_STREAM_WRITER, STREAM_WRITER_NOT_READY };
 
 enum checksum_usage_state_t { DEFAULT_CHECKSUM, WITHOUT_CHECKSUM, WITH_CHECKSUM };
 
