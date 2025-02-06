@@ -8,8 +8,7 @@ namespace BDSP {
 namespace core {
 
 struct packet_v1_header {
-    uint8_t packet_id : 4;
-    bool is_service_packet : 1;
+    uint8_t packet_id : 5;
     bool is_two_bytes_for_packet_size : 1;
     bool is_checksum_used : 1;
     bool is_unsupported_protocol_version : 1;
@@ -34,7 +33,6 @@ enum send_packet_status_t {
 enum parse_packet_status_t {
     PARSE_PACKET_BYTE_OK,
     PACKET_HANDLER_NOT_SET_ERROR,
-    SERVICE_PACKET_HANDLER_NOT_SET_ERROR,
     STREAM_READING_ERROR,
     EXCEEDING_THE_MAXIMUM_PACKET_SIZE_ERROR,
     NOT_ENOUGH_RAM_FOR_PACKET_ERROR,

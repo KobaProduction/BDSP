@@ -34,7 +34,6 @@ TEST(bdsp_core_tests, bdsp_v1_checksum_mixin_test) {
     header.is_unsupported_protocol_version = false;
     header.is_two_bytes_for_packet_size = false;
     header.is_checksum_used = true;
-    header.is_service_packet = false;
     header.packet_id = 1;
 
 

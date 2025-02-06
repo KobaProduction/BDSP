@@ -15,22 +15,20 @@ send_packet_status_t BDSPV1TransmitterCore::send_data(uint8_t packet_id,
 }
 
 send_packet_status_t BDSPV1TransmitterCore::send_packet(packet_context_t &packet_context,
-                                                        checksum_usage_state_t checksum_state,
-                                                        bool is_service_packet) noexcept {
+                                                        checksum_usage_state_t checksum_state) noexcept {
     if (not _writer) {
         return STREAM_WRITER_NOT_SET_ERROR;
     }
     if (packet_context.size < 1 or packet_context.size > _max_packet_size) {
         return MAXIMUM_PACKET_SIZE_EXCEEDING_ERROR;
     }
-    if (packet_context.packet_id > 15) {
+    if (packet_context.packet_id > 31) {
         return PACKET_ID_ERROR;
     }
     bool is_need_use_checksum =
         checksum_state == DEFAULT_CHECKSUM ? _checksum_usage_default_state : checksum_state == WITH_CHECKSUM;
     core::packet_v1_header header = {
         .packet_id = packet_context.packet_id,
-        .is_service_packet = is_service_packet,
         .is_two_bytes_for_packet_size = packet_context.size > 255,
         .is_checksum_used = is_need_use_checksum,
         .is_unsupported_protocol_version = false,

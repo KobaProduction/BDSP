@@ -60,16 +60,10 @@ parse_packet_status_t BDSPV1ReceiverCore::parse_packet_byte(uint8_t byte, stream
         if (stream_status not_eq STREAM_READ_END) {
             return _cause_error(STREAM_READING_ERROR);
         }
-        if (not _packet_header.is_service_packet) {
-            if (not _packet_handler) {
-                return _cause_error(PACKET_HANDLER_NOT_SET_ERROR);
-            }
-            _packet_handler(_packet_context, _packet_handler_context);
-        } else if (not _service_packet_handler) {
-            return _cause_error(SERVICE_PACKET_HANDLER_NOT_SET_ERROR);
-        } else {
-            _service_packet_handler(_packet_context, _service_packet_handler_context);
+        if (not _packet_handler) {
+            return _cause_error(PACKET_HANDLER_NOT_SET_ERROR);
         }
+        _packet_handler(_packet_context, _packet_handler_context);
 
         if (not _packet_context.need_clear) {
             _packet_context.data_ptr = nullptr;
@@ -117,11 +111,6 @@ void BDSPV1ReceiverCore::set_error_handler(receiver_error_handler_t error_handle
 void BDSPV1ReceiverCore::set_packet_handler(packet_handler_t packet_handler, void *context) {
     _packet_handler = packet_handler;
     _packet_handler_context = context;
-}
-
-void BDSPV1ReceiverCore::set_service_packet_handler(packet_handler_t service_packet_handler, void *context) {
-    _service_packet_handler = service_packet_handler;
-    _service_packet_handler_context = context;
 }
 
 bdsp_set_stream_reader_status_t BDSPV1ReceiverCore::set_stream_reader(streams::IStreamReader *reader_ptr) {

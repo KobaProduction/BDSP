@@ -32,9 +32,6 @@ protected:
     packet_handler_t _packet_handler = nullptr;
     void *_packet_handler_context = nullptr;
 
-    packet_handler_t _service_packet_handler = nullptr;
-    void *_service_packet_handler_context = nullptr;
-
     receiver_error_handler_t _error_handler = nullptr;
     void *_error_handler_context = nullptr;
     streams::IStreamReader *_reader = nullptr;
@@ -51,7 +48,6 @@ public:
     void reset(bool need_wait_delimiter = false);
     void set_error_handler(receiver_error_handler_t error_handler, void *context = nullptr);
     void set_packet_handler(packet_handler_t packet_handler, void *context = nullptr);
-    void set_service_packet_handler(packet_handler_t service_packet_handler, void *context = nullptr);
     bdsp_set_stream_reader_status_t set_stream_reader(streams::IStreamReader *reader_ptr);
 };
 

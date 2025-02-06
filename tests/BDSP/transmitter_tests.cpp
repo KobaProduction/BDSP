@@ -29,7 +29,7 @@ TEST(bdsp_v1_transmitter_tests, error_send_data_test) {
         BDSPTransmitter transmitter;
     } ctx;
 
-    uint8_t packet_id = 0;
+    uint8_t packet_id = 31;
 
     std::vector<uint8_t> data;
 
