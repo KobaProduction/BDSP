@@ -18,24 +18,24 @@ public:
 TEST(abstract_writer_tests, abstract_writer_errors_test) {
     auto writer = SimpleWriter();
     auto status = writer.write(0x00);
-    EXPECT_EQ(status, ERROR_WRITE_STREAM_NOT_READY);
+    EXPECT_EQ(status, STREAM_WRITER_NOT_READY_ERROR);
 
     status = writer.finish();
-    EXPECT_EQ(status, ERROR_WRITE_STREAM_NOT_READY);
+    EXPECT_EQ(status, STREAM_WRITER_NOT_READY_ERROR);
 
     std::vector<uint8_t> data = {0};
     status = writer.write(data.data(), data.size());
-    EXPECT_EQ(status, ERROR_WRITE_STREAM_NOT_READY);
+    EXPECT_EQ(status, STREAM_WRITER_NOT_READY_ERROR);
 
     writer.set_stream_writer([](uint8_t byte, void *ctx) { }, nullptr);
 
     writer.toggle_ready();
 
     status = writer.write(0x00);
-    EXPECT_EQ(status, ERROR_WRITE_STREAM_NOT_READY);
+    EXPECT_EQ(status, STREAM_WRITER_NOT_READY_ERROR);
 
     status = writer.finish();
-    EXPECT_EQ(status, ERROR_WRITE_STREAM_NOT_READY);
+    EXPECT_EQ(status, STREAM_WRITER_NOT_READY_ERROR);
 }
 
 TEST(abstract_writer_tests, abstract_writer_normal_using_test) {

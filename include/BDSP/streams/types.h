@@ -5,7 +5,7 @@
 
 namespace BDSP::streams {
 
-enum read_status_t { STREAM_READ_OK, STREAM_READ_END, STREAM_READ_ERROR, ERROR_READ_STREAM_NOT_READY };
+enum read_status_t { STREAM_READ_OK, STREAM_READ_END, STREAM_READ_ERROR, STREAM_READER_NOT_READY_ERROR };
 
 typedef void (*stream_data_handler_t)(uint8_t byte, read_status_t status, void *context_ptr);
 
@@ -18,7 +18,7 @@ public:
     virtual bool get_ready_status() = 0;
 };
 
-enum write_status_t { STREAM_WRITE_OK, STREAM_WRITE_END, ERROR_WRITE_STREAM_NOT_READY };
+enum write_status_t { STREAM_WRITE_OK, STREAM_WRITE_END, STREAM_WRITER_NOT_READY_ERROR };
 
 typedef void (*stream_writer_t)(uint8_t byte, void *context_ptr);
 

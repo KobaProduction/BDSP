@@ -42,7 +42,7 @@ void show_status(read_status_t status) {
     case STREAM_READ_OK: std::cout << "STREAM_READ_OK"; break;
     case STREAM_READ_END: std::cout << "STREAM_READ_END"; break;
     case STREAM_READ_ERROR: std::cout << "STREAM_READ_ERROR"; break;
-    case ERROR_READ_STREAM_NOT_READY: std::cout << "ERROR_READ_STREAM_NOT_READY"; break;
+    case STREAM_READER_NOT_READY_ERROR: std::cout << "STREAM_READER_NOT_READY_ERROR"; break;
     }
     std::cout << std::endl;
 }
@@ -51,7 +51,7 @@ void show_status(write_status_t status) {
     switch (status) {
     case STREAM_WRITE_OK: std::cout << "STREAM_WRITE_OK"; break;
     case STREAM_WRITE_END: std::cout << "STREAM_WRITE_END"; break;
-    case ERROR_WRITE_STREAM_NOT_READY: std::cout << "ERROR_WRITE_STREAM_NOT_READY"; break;
+    case STREAM_WRITER_NOT_READY_ERROR: std::cout << "STREAM_WRITER_NOT_READY_ERROR"; break;
     }
     std::cout << std::endl;
 }

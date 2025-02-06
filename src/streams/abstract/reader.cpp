@@ -16,7 +16,7 @@ bool AbstractReader::get_ready_status() {
 
 read_status_t AbstractReader::read(uint8_t byte) {
     if (_state not_eq READY) {
-        return ERROR_READ_STREAM_NOT_READY;
+        return STREAM_READER_NOT_READY_ERROR;
     }
     read_status_t status = _process_byte(byte);
     if (status not_eq STREAM_READ_OK) {
@@ -30,7 +30,7 @@ read_status_t AbstractReader::read(uint8_t *buffer_ptr, size_t size) {
     read_status_t status = read_status_t::STREAM_READ_OK;
     for (size_t i = 0; i < size; ++i) {
         switch (read(buffer_ptr[i])) {
-        case ERROR_READ_STREAM_NOT_READY: return ERROR_READ_STREAM_NOT_READY;
+        case STREAM_READER_NOT_READY_ERROR: return STREAM_READER_NOT_READY_ERROR;
         case STREAM_READ_ERROR: status = STREAM_READ_ERROR;
         default: break;
         }

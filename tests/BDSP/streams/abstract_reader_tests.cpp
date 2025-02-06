@@ -29,10 +29,10 @@ public:
 TEST(abstract_reader_tests, abstract_reader_errors_test) {
     auto reader = SimpleReader();
     auto status = reader.read(0x00);
-    EXPECT_EQ(status, ERROR_READ_STREAM_NOT_READY);
+    EXPECT_EQ(status, STREAM_READER_NOT_READY_ERROR);
 
     status = reader.read(&reader.error_byte, 1);
-    EXPECT_EQ(status, ERROR_READ_STREAM_NOT_READY);
+    EXPECT_EQ(status, STREAM_READER_NOT_READY_ERROR);
 
     reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx) { EXPECT_EQ(status, STREAM_READ_ERROR); },
                                    nullptr);

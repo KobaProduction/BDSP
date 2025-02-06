@@ -27,7 +27,7 @@ BDSPV1ReceiverCore::~BDSPV1ReceiverCore() {
 }
 
 parse_packet_status_t BDSPV1ReceiverCore::parse_packet_byte(uint8_t byte, streams::read_status_t stream_status) {
-    if (stream_status == STREAM_READ_ERROR) {
+    if (stream_status == STREAM_READ_ERROR or stream_status == STREAM_READER_NOT_READY_ERROR) {
         return _cause_error(STREAM_READING_ERROR);
     }
     if (stream_status == STREAM_READ_END and _fsm_state not_eq WAIT_END) {

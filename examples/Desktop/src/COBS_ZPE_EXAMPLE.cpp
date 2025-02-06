@@ -49,7 +49,7 @@ int main() {
                 //                std::cout << "end" << std::endl;
                 break;
             case STREAM_READ_ERROR:
-            case ERROR_READ_STREAM_NOT_READY: std::cout << "Symbol: " << uint32_t(byte) << " - ERROR" << std::endl; break;
+            case STREAM_READER_NOT_READY_ERROR: std::cout << "Symbol: " << uint32_t(byte) << " - ERROR" << std::endl; break;
             }
         },
         &context);
