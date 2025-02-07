@@ -39,7 +39,7 @@ parse_packet_status_t BDSPV1ReceiverCore::parse_packet_byte(uint8_t byte, stream
     case PACKET_DATA:
         _packet_context.data_ptr[_received_packet_data_bytes++] = byte;
         if (_received_packet_data_bytes == _packet_context.size) {
-            _fsm_state = PACKET_CHECKSUM;
+            _fsm_state = _packet_header.is_checksum_used ? PACKET_CHECKSUM : WAIT_END;
         }
         return PARSE_PACKET_BYTE_OK;
     case PACKET_HEADER:
