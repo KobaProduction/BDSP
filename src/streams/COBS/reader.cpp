@@ -40,12 +40,13 @@ read_status_t COBSReaderCore::_process_byte(uint8_t byte) {
 }
 
 read_status_t COBSSRReaderCore::_process_byte(uint8_t byte) {
-    if (_fsm_state == REPLACEMENT_SEQUENCE and byte == _cfg.delimiter) {
+    if (_is_sequence_replacement_state and byte == _cfg.delimiter) {
+        // potential bug when try process delimiter
         return STREAM_READ_ERROR;
     }
     read_status_t status = COBSReaderCore::_process_byte(byte);
-    if (_next_swap_byte_is_place_of_the_replaced_sequence and status == STREAM_READ_OK and _fsm_state == SWAP_BYTE) {
-        _fsm_state = REPLACEMENT_SEQUENCE;
+    if (_is_sequence_replacement_state and _fsm_state == SWAP_BYTE) {
+        _fsm_state = SERVICE_BYTE;
     }
     return status;
 }
@@ -62,7 +63,7 @@ read_status_t COBSReaderCore::_set_swap_byte_offset(uint8_t offset) {
 }
 
 read_status_t COBSSRReaderCore::_set_swap_byte_offset(uint8_t offset) {
-    if (_fsm_state == REPLACEMENT_SEQUENCE) {
+    if (_is_sequence_replacement_state) {
         for (int i = 0; i < _cfg.size_of_the_sequence_to_be_replaced; ++i) {
             _handler(_cfg.byte_of_the_sequence_to_be_replaced, STREAM_READ_OK);
         }
@@ -71,9 +72,9 @@ read_status_t COBSSRReaderCore::_set_swap_byte_offset(uint8_t offset) {
     _service_byte_offset = _cfg.depth;
     if (_swap_byte_offset > _sequence_replace_length_threshold) {
         _swap_byte_offset -= _sequence_replace_length_threshold;
-        _next_swap_byte_is_place_of_the_replaced_sequence = true;
+        _is_sequence_replacement_state = true;
     } else {
-        _next_swap_byte_is_place_of_the_replaced_sequence = false;
+        _is_sequence_replacement_state = false;
     }
     return _swap_byte_offset > _cfg.depth ? STREAM_READ_ERROR : STREAM_READ_OK;
 }
@@ -99,6 +100,7 @@ set_cobs_config_status COBSReaderCore::set_config(cobs_config_t config) {
     _set_ready_state(true);
     return status;
 }
+
 COBSReaderCore::COBSReaderCore() {
     _config_checker = cobs_default_config_checker;
     _cfg = {'\0', 255};
