@@ -37,7 +37,8 @@ enum parse_packet_status_t {
     EXCEEDING_THE_MAXIMUM_PACKET_SIZE_ERROR,
     NOT_ENOUGH_RAM_FOR_PACKET_ERROR,
     CHECKSUM_ERROR,
-    UNSUPPORTED_PROTOCOL_ERROR
+    UNSUPPORTED_PROTOCOL_ERROR,
+    UNKNOWN_READER_ERROR
 };
 
 typedef void (*receiver_error_handler_t)(parse_packet_status_t error, void *packet_handler_context);

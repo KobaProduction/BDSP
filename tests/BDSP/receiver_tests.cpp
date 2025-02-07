@@ -92,6 +92,9 @@ TEST(bdsp_v1_receiver_tests, error_parsing_test) {
 
     receiver.set_fsm_state(core::WAIT_END);
     EXPECT_EQ(receiver.parse_packet_byte(0x00, STREAM_READ_END), PACKET_HANDLER_NOT_SET_ERROR);
+
+    receiver.set_fsm_state(static_cast<core::receiver_fsm_state_t>(static_cast<unsigned int>(core::WAIT_END) + 1));
+    EXPECT_EQ(receiver.parse_packet_byte(0x00, STREAM_READ_OK), UNKNOWN_READER_ERROR);
 }
 
 TEST(bdsp_v1_receiver_tests, checksum_error_test) {

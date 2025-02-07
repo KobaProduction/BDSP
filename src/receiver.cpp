@@ -64,11 +64,9 @@ parse_packet_status_t BDSPV1ReceiverCore::parse_packet_byte(uint8_t byte, stream
             return _cause_error(PACKET_HANDLER_NOT_SET_ERROR);
         }
         _packet_handler(_packet_context, _packet_handler_context);
-
         if (not _packet_context.need_clear) {
             _packet_context.data_ptr = nullptr;
         }
-
         reset(false);
         return PARSE_PACKET_BYTE_OK;
     case PACKET_SIZE_A:
@@ -79,8 +77,8 @@ parse_packet_status_t BDSPV1ReceiverCore::parse_packet_byte(uint8_t byte, stream
         }
         break;
     case PACKET_SIZE_B: _packet_context.size = (_packet_context.size << 8) + byte; break;
+    default: return _cause_error(UNKNOWN_READER_ERROR);
     }
-
     if (not _packet_context.size or _packet_context.size > _max_packet_size) {
         return _cause_error(EXCEEDING_THE_MAXIMUM_PACKET_SIZE_ERROR);
     }
@@ -117,9 +115,7 @@ bdsp_set_stream_reader_status_t BDSPV1ReceiverCore::set_stream_reader(streams::I
     if (reader_ptr and reader_ptr->get_ready_status()) {
         return STREAM_READER_ALREADY_USED_ERROR;
     }
-
     bdsp_set_stream_reader_status_t status = SET_STREAM_READER_OK;
-
     if (_reader) {
         _reader->set_stream_data_handler(nullptr, nullptr);
         status = reader_ptr ? CHANGE_STREAM_READER : RESET_STREAM_READER;
