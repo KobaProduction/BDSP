@@ -125,3 +125,33 @@ TEST(bdsp_v1_receiver_tests, checksum_error_test) {
     uint8_t correct_checksum = checksum_tester.calc(header, data.data(), data.size());
     EXPECT_EQ(receiver.parse_packet_byte(correct_checksum + 1, STREAM_READ_OK), CHECKSUM_ERROR); // data
 }
+
+TEST(bdsp_v1_receiver_tests, normal_using_test) {
+    VectorTestReader reader;
+    BDSPReceiver receiver;
+    EXPECT_EQ(receiver.set_stream_reader(&reader), SET_STREAM_READER_OK);
+
+    receiver.set_error_handler([] (parse_packet_status_t error, void *ctx){
+        std::cout << "Error: " << error << std::endl;
+        FAIL();
+    }, nullptr);
+
+    receiver.set_packet_handler([] (packet_context_t &packet_context, void *ctx){
+        EXPECT_EQ(packet_context.packet_id, 0);
+        EXPECT_EQ(packet_context.size, 1);
+        EXPECT_EQ(packet_context.data_ptr[0], 99);
+    }, nullptr);
+
+    core::packet_v1_header header = {.packet_id = 0,
+                                     .is_two_bytes_for_packet_size = false,
+                                     .is_checksum_used = false,
+                                     .is_unsupported_protocol_version = false};
+
+    std::vector<uint8_t> data = {99};
+    EXPECT_EQ(reader.read(*reinterpret_cast<uint8_t *>(&header)), STREAM_READ_OK);
+    EXPECT_EQ(reader.read(data.size(), STREAM_READ_OK), STREAM_READ_OK); // data size
+    for (auto byte: data) {
+        EXPECT_EQ(reader.read(byte, STREAM_READ_OK), STREAM_READ_OK); // data
+    }
+    EXPECT_EQ(reader.read(0x00, STREAM_READ_END), STREAM_READ_END);
+}
