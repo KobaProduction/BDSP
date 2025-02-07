@@ -11,6 +11,7 @@ using namespace BDSP::streams::COBS;
 TEST(bdsp_full_tests, bdsp_v1_full_test) {
     COBSReader reader;
     COBSWriter writer;
+    bool is_packet_got = false;
 
     writer.set_stream_writer([] (uint8_t byte, void *ctx) {
         reinterpret_cast<COBSReader*>(ctx)->read(byte);
@@ -21,8 +22,8 @@ TEST(bdsp_full_tests, bdsp_v1_full_test) {
     transceiver1.set_stream_reader(&reader);
 
     transceiver1.set_packet_handler([] (packet_context_t &packet_context, void *ctx){
-        std::cout << "Got packet: " << packet_context.packet_id << std::endl;
-    }, nullptr);
+        *reinterpret_cast<bool*>(ctx) = true;
+    }, &is_packet_got);
 
     transceiver1.set_error_handler([] (parse_packet_status_t error, void *ctx){
         std::cout << "Error: " << error << std::endl;
@@ -40,4 +41,6 @@ TEST(bdsp_full_tests, bdsp_v1_full_test) {
     transceiver1.send_data(0, data, size);
 
     delete [] data;
+
+    ASSERT_TRUE(is_packet_got);
 }
