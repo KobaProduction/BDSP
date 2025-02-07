@@ -155,3 +155,51 @@ TEST(bdsp_v1_receiver_tests, normal_using_test) {
     }
     EXPECT_EQ(reader.read(0x00, STREAM_READ_END), STREAM_READ_END);
 }
+
+TEST(bdsp_v1_receiver_tests, normal_using_with_big_packet_and_no_clear_test) {
+    VectorTestReader reader;
+    BDSPReceiver receiver;
+    EXPECT_EQ(receiver.set_stream_reader(&reader), SET_STREAM_READER_OK);
+
+    receiver.set_error_handler([] (parse_packet_status_t error, void *ctx){
+        std::cout << "Error: " << error << std::endl;
+        FAIL();
+    }, nullptr);
+
+    uint8_t *packet_data_ptr = nullptr;
+
+
+    receiver.set_packet_handler([] (packet_context_t &packet_context, void *ctx){
+        EXPECT_EQ(packet_context.packet_id, 0);
+        EXPECT_EQ(packet_context.size, 300);
+        for (int i = 0; i < packet_context.size; ++i) {
+            EXPECT_EQ(packet_context.data_ptr[i], 99);
+        }
+        packet_context.need_clear = false;
+        *reinterpret_cast<uint8_t **>(ctx) = packet_context.data_ptr;
+    }, &packet_data_ptr);
+
+    core::packet_v1_header header = {.packet_id = 0,
+                                     .is_two_bytes_for_packet_size = false,
+                                     .is_checksum_used = false,
+                                     .is_unsupported_protocol_version = false};
+
+    std::vector<uint8_t> data;
+    data.reserve(300);
+    for (int i = 0; i < 300; ++i) {
+        data.push_back(99);
+    }
+    header.is_two_bytes_for_packet_size = data.size() > 255;
+    EXPECT_EQ(reader.read(*reinterpret_cast<uint8_t *>(&header)), STREAM_READ_OK);
+    EXPECT_EQ(reader.read(data.size() >> 8, STREAM_READ_OK), STREAM_READ_OK); // data size
+    EXPECT_EQ(reader.read(data.size(), STREAM_READ_OK), STREAM_READ_OK); // data size
+    for (auto byte: data) {
+        EXPECT_EQ(reader.read(byte, STREAM_READ_OK), STREAM_READ_OK); // data
+    }
+    EXPECT_EQ(reader.read(0x00, STREAM_READ_END), STREAM_READ_END);
+    EXPECT_NE(packet_data_ptr, nullptr);
+    for (int i = 0; i < data.size(); ++i) {
+        ASSERT_TRUE(packet_data_ptr[i] == data[i]);
+    }
+    free(packet_data_ptr);
+}
