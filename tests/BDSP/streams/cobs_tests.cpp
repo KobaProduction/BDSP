@@ -130,9 +130,9 @@ TEST(cobs_tests, cobs_reader_set_configuration_test) {
 
     EXPECT_EQ(cobs_reader.set_config(config), SET_OK);
 
-    cobs_reader.set_fst_state(REGULAR_BYTE);
+    cobs_reader.set_fst_state(COBSReader::REGULAR_BYTE);
     EXPECT_EQ(cobs_reader.set_config(config), ERROR_PROCESS_NOT_FINISHED);
-    cobs_reader.set_fst_state(SERVICE_BYTE);
+    cobs_reader.set_fst_state(COBSReader::SERVICE_BYTE);
 
     cobs_reader.set_service_byte_offset(config.depth + 1);
     EXPECT_EQ(cobs_reader.set_config(config), ERROR_PROCESS_NOT_FINISHED);

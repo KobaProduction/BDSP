@@ -21,7 +21,7 @@ TEST(cobs_zpe_tests, cobs_zpe_writer_set_configuration_test) {
 
     class COBSZPEReaderCoreTest: public COBSZPEReaderCore {
     public:
-        void set_fst_state(fsm_state_t state) { _fsm_state = state; }
+        void set_fst_state(COBSReader::fsm_state_t state) { _fsm_state = state; }
     };
 
     COBSZPEWriterCoreTest cobs_writer;
@@ -36,11 +36,11 @@ TEST(cobs_zpe_tests, cobs_zpe_writer_set_configuration_test) {
     EXPECT_EQ(cobs_reader.set_config(config), SET_OK);
 
     cobs_writer.set_current_size_of_the_sequence_to_be_replaced(1);
-    cobs_reader.set_fst_state(REGULAR_BYTE);
+    cobs_reader.set_fst_state(COBSReader::REGULAR_BYTE);
     EXPECT_EQ(cobs_writer.set_config(config), ERROR_PROCESS_NOT_FINISHED);
     EXPECT_EQ(cobs_reader.set_config(config), ERROR_PROCESS_NOT_FINISHED);
     cobs_writer.set_current_size_of_the_sequence_to_be_replaced(0);
-    cobs_reader.set_fst_state(SERVICE_BYTE);
+    cobs_reader.set_fst_state(COBSReader::SERVICE_BYTE);
 
     config.depth = 255;
     EXPECT_EQ(cobs_writer.set_config(config), ERROR_DEPTH_ZPE);

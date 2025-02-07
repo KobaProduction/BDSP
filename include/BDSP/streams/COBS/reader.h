@@ -8,10 +8,12 @@ namespace BDSP::streams::COBS {
 
 namespace core {
 class COBSReaderCore: public ABS::AbstractReader {
+public:
+    typedef enum { SERVICE_BYTE, REGULAR_BYTE, SWAP_BYTE, REPLACEMENT_SEQUENCE} fsm_state_t;
 protected:
     cobs_config_t _cfg{};
     set_cobs_config_status (*_config_checker)(cobs_config_t config){};
-    core::fsm_state_t _fsm_state = core::SERVICE_BYTE;
+    fsm_state_t _fsm_state = SERVICE_BYTE;
     uint8_t _service_byte_offset = _cfg.depth;
     uint8_t _swap_byte_offset{};
 
@@ -29,8 +31,8 @@ public:
 class COBSSRReaderCore: public COBSReaderCore {
 protected:
     uint8_t _sequence_replace_length_threshold{};
-
     bool _next_swap_byte_is_place_of_the_replaced_sequence = false;
+
     read_status_t _process_byte(uint8_t byte) override;
     read_status_t _set_swap_byte_offset(uint8_t offset) override;
 

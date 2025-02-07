@@ -62,10 +62,6 @@ enum set_cobs_config_status {
     ERROR_DEPTH_ZPE,
 };
 
-namespace core {
-enum fsm_state_t { SERVICE_BYTE, REGULAR_BYTE, SWAP_BYTE, REPLACEMENT_SEQUENCE };
-}
-
 } // namespace BDSP::streams::COBS
 
 #endif // BDSP_STREAMS_COBS_TYPES_H
