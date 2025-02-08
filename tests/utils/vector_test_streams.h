@@ -7,7 +7,7 @@
 #include "BDSP/streams/abstract/reader.h"
 #include "BDSP/streams/abstract/writer.h"
 
-class VectorTestWriter final: public BDSP::streams::ABS::AbstractWriter {
+class VectorTestWriter final: public BDSP::streams::ABS::AbstractStreamWriter {
     void _finish() override;
     void _process_byte(uint8_t byte) override;
 public:

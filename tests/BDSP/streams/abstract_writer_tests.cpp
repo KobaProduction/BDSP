@@ -5,7 +5,7 @@
 
 using namespace BDSP::streams;
 
-class SimpleWriter: public ABS::AbstractWriter {
+class SimpleWriter: public ABS::AbstractStreamWriter {
     void _process_byte(uint8_t byte) override { _write(byte); };
     void _finish() override { _write(end_header.data(), end_header.size()); };
 

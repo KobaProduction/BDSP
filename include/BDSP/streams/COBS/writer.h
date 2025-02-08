@@ -9,7 +9,7 @@ namespace BDSP::streams::COBS {
 
 namespace core {
 
-class COBSWriterCore: public ABS::AbstractWriter {
+class COBSWriterCore: public ABS::AbstractStreamWriter {
 protected:
     void *(*_malloc)(size_t) = malloc;
     void (*_free)(void *) = free;

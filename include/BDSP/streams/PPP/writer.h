@@ -9,7 +9,7 @@
 namespace BDSP::streams::PPP {
 
 namespace core {
-class PPPWriterCore: public ABS::AbstractWriter {
+class PPPWriterCore: public ABS::AbstractStreamWriter {
 protected:
     ppp_config_t _cfg;
 
