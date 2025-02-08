@@ -12,7 +12,10 @@ void PPPReaderCore::_reset() {
 read_status_t PPPReaderCore::_process_byte(uint8_t byte) {
     read_status_t status = STREAM_READ_OK;
     if (byte == _cfg.end_byte) {
-        return _is_escape_state ? STREAM_READ_ERROR : STREAM_READ_END;
+        if (_is_escape_state) {
+            _handler(byte, STREAM_READ_ERROR);
+        }
+        return STREAM_READ_END;
     }
     if (_is_escape_state) {
         _is_escape_state = false;

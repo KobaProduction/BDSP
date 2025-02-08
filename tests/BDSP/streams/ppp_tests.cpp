@@ -60,12 +60,25 @@ TEST(ppp_pipelines_tests, decoding_errors_test) {
     PPPReader reader;
     ppp_config_t config = reader.get_config();
 
-    reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx) { }, nullptr);
+    std::vector<read_status_t> statuses;
+
+    reader.set_stream_data_handler(
+        [](uint8_t byte, read_status_t status, void *ctx) {
+            reinterpret_cast<std::vector<read_status_t> *>(ctx)->push_back(status);
+        },
+        &statuses);
 
     EXPECT_EQ(reader.read(config.escape_byte), STREAM_READ_OK);
-    EXPECT_EQ(reader.read(config.end_byte), STREAM_READ_ERROR);
-    reader.reset_read_state(false);
+    ASSERT_TRUE(statuses.empty());
+    std::cout << "Size: " << statuses.size();
 
+    EXPECT_EQ(reader.read(config.end_byte), STREAM_READ_END);
+    ASSERT_TRUE(statuses == std::vector<read_status_t>({STREAM_READ_ERROR, STREAM_READ_END}));
+
+    statuses.clear();
     EXPECT_EQ(reader.read(config.escape_byte), STREAM_READ_OK);
-    EXPECT_EQ(reader.read(0), STREAM_READ_ERROR);
+    ASSERT_TRUE(statuses.empty());
+
+    EXPECT_EQ(reader.read(config.end_byte + 1), STREAM_READ_ERROR);
+    ASSERT_TRUE(statuses == std::vector<read_status_t>({STREAM_READ_ERROR}));
 }
