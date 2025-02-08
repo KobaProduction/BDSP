@@ -11,6 +11,12 @@ void COBSReaderCore::_exec_delimiter(uint8_t byte) {
     }
 }
 
+void COBSSRReaderCore::_exec_delimiter(uint8_t byte) {
+    if (_fsm_state == REGULAR_BYTE or _is_sequence_replacement_state) {
+        _handler(byte, STREAM_READ_ERROR);
+    }
+}
+
 uint8_t COBSReaderCore::_get_converted_swap_byte_offset(uint8_t raw_offset) {
     return _cfg.delimiter not_eq 0x00 and raw_offset == 0x00 ? _cfg.delimiter : raw_offset;
 }
@@ -47,10 +53,6 @@ read_status_t COBSReaderCore::_process_byte(uint8_t byte) {
 }
 
 read_status_t COBSSRReaderCore::_process_byte(uint8_t byte) {
-    if (_is_sequence_replacement_state and byte == _cfg.delimiter) {
-        // potential bug when try process delimiter
-        return STREAM_READ_ERROR;
-    }
     read_status_t status = COBSReaderCore::_process_byte(byte);
     if (_is_sequence_replacement_state and _fsm_state == SWAP_BYTE) {
         _fsm_state = SERVICE_BYTE;
@@ -63,6 +65,11 @@ void COBSReaderCore::_reset() {
     _service_byte_offset = _cfg.depth;
 }
 
+void COBSSRReaderCore::_reset() {
+    COBSReaderCore::_reset();
+    _is_sequence_replacement_state = false;
+}
+
 read_status_t COBSReaderCore::_set_swap_byte_offset(uint8_t offset) {
     _swap_byte_offset = _get_converted_swap_byte_offset(offset);
     _service_byte_offset = _cfg.depth;
@@ -70,20 +77,23 @@ read_status_t COBSReaderCore::_set_swap_byte_offset(uint8_t offset) {
 }
 
 read_status_t COBSSRReaderCore::_set_swap_byte_offset(uint8_t offset) {
+    _swap_byte_offset = _get_converted_swap_byte_offset(offset);
+    bool is_need_activate_sequence_replacement_state = false;
+    if (_swap_byte_offset > _sequence_replace_length_threshold) {
+        _swap_byte_offset -= _sequence_replace_length_threshold;
+        is_need_activate_sequence_replacement_state = true;
+    }
+    if (_swap_byte_offset > _cfg.depth) {
+        return STREAM_READ_ERROR;
+    }
     if (_is_sequence_replacement_state) {
         for (int i = 0; i < _cfg.size_of_the_sequence_to_be_replaced; ++i) {
             _handler(_cfg.byte_of_the_sequence_to_be_replaced, STREAM_READ_OK);
         }
     }
-    _swap_byte_offset = _get_converted_swap_byte_offset(offset);
+    _is_sequence_replacement_state = is_need_activate_sequence_replacement_state;
     _service_byte_offset = _cfg.depth;
-    if (_swap_byte_offset > _sequence_replace_length_threshold) {
-        _swap_byte_offset -= _sequence_replace_length_threshold;
-        _is_sequence_replacement_state = true;
-    } else {
-        _is_sequence_replacement_state = false;
-    }
-    return _swap_byte_offset > _cfg.depth ? STREAM_READ_ERROR : STREAM_READ_OK;
+    return STREAM_READ_OK;
 }
 
 COBS::cobs_config_t COBSReaderCore::get_config() {
