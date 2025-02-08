@@ -26,22 +26,33 @@ TEST(cobs_default_tests, cobs_default_set_configuration_test) {
     EXPECT_EQ(cobs_reader.set_config(config), ERROR_DEFAULT_COBS_SIZE_SR);
 }
 
-TEST(cobs_default_tests, check_reader_errors_test) {
-    COBSReader cobs_reader;
-    cobs_config_t config = cobs_reader.get_config();
+TEST(cobs_default_tests, reader_errors_test) {
+    COBSReader reader;
+    cobs_config_t config = reader.get_config();
 
-    cobs_reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx) { }, nullptr);
+    std::vector<read_status_t> statuses;
 
-    EXPECT_EQ(cobs_reader.read(config.delimiter + 2), STREAM_READ_OK);
-    EXPECT_EQ(cobs_reader.read(config.delimiter), STREAM_READ_ERROR);
+    reader.set_stream_data_handler(
+        [](uint8_t byte, read_status_t status, void *ctx) {
+            reinterpret_cast<std::vector<read_status_t> *>(ctx)->push_back(status);
+        },
+        &statuses);
+
+    EXPECT_EQ(reader.read(config.delimiter + 2), STREAM_READ_OK);
+    ASSERT_TRUE(statuses.empty());
+
+    EXPECT_EQ(reader.read(config.delimiter), STREAM_READ_END);
+    ASSERT_TRUE(statuses == std::vector<read_status_t>({STREAM_READ_ERROR, STREAM_READ_END}));
 
     config.delimiter = 1;
     config.depth = 16;
 
-    EXPECT_EQ(cobs_reader.set_config(config), SET_OK);
+    EXPECT_EQ(reader.set_config(config), SET_OK);
 
-    EXPECT_EQ(cobs_reader.read(0), STREAM_READ_OK);
-    EXPECT_EQ(cobs_reader.read(255), STREAM_READ_ERROR);
+    statuses.clear();
+    EXPECT_EQ(reader.read(0), STREAM_READ_OK);
+    EXPECT_EQ(reader.read(255), STREAM_READ_ERROR);
+    ASSERT_TRUE(statuses == std::vector<read_status_t>({STREAM_READ_ERROR}));
 }
 
 TEST(cobs_default_tests, encoding_depth_test) {

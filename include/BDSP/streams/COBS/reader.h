@@ -17,6 +17,7 @@ protected:
     uint8_t _service_byte_offset = _cfg.depth;
     uint8_t _swap_byte_offset{};
 
+    virtual void _exec_delimiter(uint8_t byte);
     uint8_t _get_converted_swap_byte_offset(uint8_t raw_offset);
     read_status_t _process_byte(uint8_t byte) override;
     void _reset() override;

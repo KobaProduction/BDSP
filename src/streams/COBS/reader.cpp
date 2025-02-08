@@ -5,6 +5,12 @@ using namespace BDSP::streams;
 using namespace BDSP::streams::COBS;
 using namespace BDSP::streams::COBS::core;
 
+void COBSReaderCore::_exec_delimiter(uint8_t byte) {
+    if (_fsm_state == REGULAR_BYTE) {
+        _handler(byte, STREAM_READ_ERROR);
+    }
+}
+
 uint8_t COBSReaderCore::_get_converted_swap_byte_offset(uint8_t raw_offset) {
     return _cfg.delimiter not_eq 0x00 and raw_offset == 0x00 ? _cfg.delimiter : raw_offset;
 }
@@ -12,7 +18,8 @@ uint8_t COBSReaderCore::_get_converted_swap_byte_offset(uint8_t raw_offset) {
 read_status_t COBSReaderCore::_process_byte(uint8_t byte) {
     read_status_t status = STREAM_READ_OK;
     if (byte == _cfg.delimiter) {
-        return _fsm_state not_eq REGULAR_BYTE ? STREAM_READ_END : STREAM_READ_ERROR;
+        _exec_delimiter(byte);
+        return STREAM_READ_END;
     }
     if (_fsm_state not_eq REGULAR_BYTE) {
         status = _set_swap_byte_offset(byte);
