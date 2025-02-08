@@ -70,7 +70,6 @@ TEST(ppp_pipelines_tests, decoding_errors_test) {
 
     EXPECT_EQ(reader.read(config.escape_byte), STREAM_READ_OK);
     ASSERT_TRUE(statuses.empty());
-    std::cout << "Size: " << statuses.size();
 
     EXPECT_EQ(reader.read(config.end_byte), STREAM_READ_END);
     ASSERT_TRUE(statuses == std::vector<read_status_t>({STREAM_READ_ERROR, STREAM_READ_END}));
