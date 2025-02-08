@@ -7,7 +7,7 @@
 namespace BDSP::streams::COBS {
 
 namespace core {
-class COBSReaderCore: public ABS::AbstractReader {
+class COBSReaderCore: public ABS::AbstractStreamReader {
 public:
     typedef enum { SERVICE_BYTE, REGULAR_BYTE, SWAP_BYTE} fsm_state_t;
 protected:

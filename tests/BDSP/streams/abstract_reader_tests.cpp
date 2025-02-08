@@ -5,7 +5,7 @@
 
 using namespace BDSP::streams;
 
-class SimpleReader: public ABS::AbstractReader {
+class SimpleReader: public ABS::AbstractStreamReader {
     read_status_t _process_byte(uint8_t byte) override {
         read_status_t status = STREAM_READ_OK;
         if (byte == error_byte)

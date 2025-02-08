@@ -9,7 +9,7 @@
 namespace BDSP::streams::PPP {
 
 namespace core {
-class PPPReaderCore: public ABS::AbstractReader {
+class PPPReaderCore: public ABS::AbstractStreamReader {
 protected:
     ppp_config_t _cfg;
     bool _is_escape_state = false;
