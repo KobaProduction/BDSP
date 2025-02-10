@@ -50,7 +50,7 @@ void COBSSRWriterCore::_process_byte(uint8_t byte) {
 }
 
 void COBSZPEWriterCore::_process_byte(uint8_t byte) {
-    if (byte == _cfg.byte_of_the_sequence_to_be_replaced and _buffer_position < 31) {
+    if (byte == _cfg.byte_of_the_sequence_to_be_replaced and _buffer_position <= 31) {
         _current_size_of_the_sequence_to_be_replaced++;
         if (_current_size_of_the_sequence_to_be_replaced == _cfg.size_of_the_sequence_to_be_replaced) {
             _write_buffer(_buffer_position + 0xE0);
