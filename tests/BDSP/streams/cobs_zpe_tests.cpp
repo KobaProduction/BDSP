@@ -120,6 +120,25 @@ TEST(cobs_zpe_tests, cobs_with_zero_pair_elimination_article_test) {
     start_test_reader(cobs_reader, correct_encoded, data, true);
 }
 
+TEST(cobs_zpe_tests, cobs_zero_pair_elimination_max_offset_test) {
+    COBSZPEWriter cobs_writer;
+    COBSZPEReader cobs_reader;
+
+    std::vector<uint8_t> data;
+    for (int i = 1; i < 31; ++i) {
+        data.push_back(0xAA);
+    }
+    data.push_back(0x00);
+    data.push_back(0x00);
+
+    std::vector<uint8_t> correct_encoded = {0xFF, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+                                            0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+                                            0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0x01, 0x00};
+
+    start_test_writer(cobs_writer, data, correct_encoded, true);
+    start_test_reader(cobs_reader, correct_encoded, data, true);
+}
+
 TEST(cobs_zpe_tests, cobs_with_zero_pair_elimination_full_test) {
     COBSZPEWriter cobs_writer;
     COBSZPEReader cobs_reader;
