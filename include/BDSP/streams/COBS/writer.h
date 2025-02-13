@@ -36,7 +36,7 @@ protected:
 
     void _finish() override;
     void _process_byte(uint8_t byte) override;
-    void _reset_elimination_sequence();
+    virtual void _reset_elimination_sequence();
 
 public:
     set_cobs_config_status set_config(cobs_config_t config) override;
