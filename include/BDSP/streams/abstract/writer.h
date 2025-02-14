@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include "BDSP/streams/abstract/stream.h"
+#include "BDSP/streams/abstract/mixins.h"
 #include "BDSP/streams/types.h"
 
 namespace BDSP::streams::ABS {

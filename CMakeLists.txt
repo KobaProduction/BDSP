@@ -69,7 +69,7 @@ set(headers
 
 
         include/BDSP/streams/abstract/reader.h
-        include/BDSP/streams/abstract/stream.h
+        include/BDSP/streams/abstract/mixins.h
         include/BDSP/streams/abstract/writer.h
         include/BDSP/streams/types.h
 
@@ -92,7 +92,7 @@ set(sources
         src/transmitter.cpp
 
         src/streams/abstract/reader.cpp
-        src/streams/abstract/stream.cpp
+        src/streams/abstract/mixins.cpp
         src/streams/abstract/writer.cpp
 
         src/streams/COBS/mixins.cpp
