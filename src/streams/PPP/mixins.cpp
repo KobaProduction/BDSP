@@ -1,8 +1,8 @@
-#include "BDSP/streams/PPP/checkers.h"
+#include "BDSP/streams/PPP/mixins.h"
 
 using namespace BDSP::streams::PPP;
 
-set_ppp_config_status core::check_ppp_config(ppp_config_t config) {
+set_ppp_config_status core::PPPConfigChecker::_check_config(ppp_config_t config) {
     if (config.escape_byte == config.end_byte) {
         return ERROR_END_AND_ESCAPE_BYTES_IS_EQUALS;
     }

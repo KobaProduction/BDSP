@@ -4,12 +4,13 @@
 #include <stdint.h>
 
 #include "BDSP/streams/PPP/types.h"
+#include "BDSP/streams/PPP/mixins.h"
 #include "BDSP/streams/abstract/writer.h"
 
 namespace BDSP::streams::PPP {
 
 namespace core {
-class PPPWriterCore: public ABS::AbstractStreamWriter {
+class PPPWriterCore: public ABS::AbstractStreamWriter, public virtual PPPConfigChecker {
 protected:
     ppp_config_t _cfg;
 

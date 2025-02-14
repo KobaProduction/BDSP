@@ -1,5 +1,4 @@
 #include "BDSP/streams/PPP/writer.h"
-#include "BDSP/streams/PPP/checkers.h"
 
 using namespace BDSP::streams::PPP;
 using namespace BDSP::streams::PPP::core;
@@ -20,7 +19,7 @@ ppp_config_t PPPWriterCore::get_config() {
 }
 
 set_ppp_config_status PPPWriterCore::set_config(ppp_config_t config) {
-    set_ppp_config_status status = check_ppp_config(config);
+    set_ppp_config_status status = _check_config(config);
     if (status == SET_OK) {
         _cfg = config;
     }

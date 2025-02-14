@@ -78,7 +78,7 @@ set(headers
         include/BDSP/streams/COBS/types.h
         include/BDSP/streams/COBS/writer.h
 
-        include/BDSP/streams/PPP/checkers.h
+        include/BDSP/streams/PPP/mixins.h
         include/BDSP/streams/PPP/reader.h
         include/BDSP/streams/PPP/types.h
         include/BDSP/streams/PPP/writer.h
@@ -99,7 +99,7 @@ set(sources
         src/streams/COBS/reader.cpp
         src/streams/COBS/writer.cpp
 
-        src/streams/PPP/checkers.cpp
+        src/streams/PPP/mixins.cpp
         src/streams/PPP/reader.cpp
         src/streams/PPP/writer.cpp
 

@@ -1,5 +1,4 @@
 #include "BDSP/streams/PPP/reader.h"
-#include "BDSP/streams/PPP/checkers.h"
 
 using namespace BDSP::streams;
 using namespace BDSP::streams::PPP;
@@ -36,7 +35,7 @@ ppp_config_t PPPReaderCore::get_config() {
 }
 
 set_ppp_config_status PPPReaderCore::set_config(ppp_config_t config) {
-    set_ppp_config_status status = check_ppp_config(config);
+    set_ppp_config_status status = _check_config(config);
     if (_is_escape_state) {
         status = ERROR_PROCESS_NOT_FINISHED;
     }

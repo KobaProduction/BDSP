@@ -4,12 +4,13 @@
 #include <stdint.h>
 
 #include "BDSP/streams/PPP/types.h"
+#include "BDSP/streams/PPP/mixins.h"
 #include "BDSP/streams/abstract/reader.h"
 
 namespace BDSP::streams::PPP {
 
 namespace core {
-class PPPReaderCore: public ABS::AbstractStreamReader {
+class PPPReaderCore: public ABS::AbstractStreamReader, public PPPConfigChecker {
 protected:
     ppp_config_t _cfg;
     bool _is_escape_state = false;
