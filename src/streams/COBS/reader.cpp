@@ -1,5 +1,4 @@
 #include "BDSP/streams/COBS/reader.h"
-#include "BDSP/streams/COBS/checkers.h"
 
 using namespace BDSP::streams;
 using namespace BDSP::streams::COBS;
@@ -102,7 +101,7 @@ COBS::cobs_config_t COBSReaderCore::get_config() {
 
 set_cobs_config_status COBSReaderCore::set_config(cobs_config_t config) {
     _set_ready_state(false);
-    set_cobs_config_status status = _config_checker(config);
+    set_cobs_config_status status = _check_config(config);
     if (status not_eq SET_OK) {
         return status;
     }
@@ -119,21 +118,18 @@ set_cobs_config_status COBSReaderCore::set_config(cobs_config_t config) {
 }
 
 COBSReaderCore::COBSReaderCore() {
-    _config_checker = cobs_default_config_checker;
     _cfg = {'\0', 255};
     _service_byte_offset = _cfg.depth;
     _reset();
 }
 
 COBSSRReaderCore::COBSSRReaderCore() {
-    _config_checker = cobs_sr_config_checker;
     _sequence_replace_length_threshold = 127;
     _cfg = {'\0', 127, 2};
     _service_byte_offset = _cfg.depth;
 }
 
 COBSZPEReaderCore::COBSZPEReaderCore() {
-    _config_checker = cobs_zpe_config_checker;
     _sequence_replace_length_threshold = 224;
     _cfg = {'\0', 224, 2};
     _service_byte_offset = _cfg.depth;

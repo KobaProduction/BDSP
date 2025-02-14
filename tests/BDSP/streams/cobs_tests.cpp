@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "BDSP/streams/COBS/checkers.h"
+#include "BDSP/streams/COBS/mixins.h"
 #include "BDSP/streams/COBS/reader.h"
 #include "BDSP/streams/COBS/writer.h"
 
@@ -35,53 +35,65 @@ TEST(cobs_tests, cobs_reference_encoders_test) {
 }
 
 TEST(cobs_tests, cobs_default_config_checker_test) {
+    class TestCOBSConfigChecker final : public COBSConfigChecker {
+    public:
+        using COBSConfigChecker::_check_config;
+    } checker;
 
     cobs_config_t config = {.delimiter = '\0',
                             .depth = 255,
                             .size_of_the_sequence_to_be_replaced = 0,
                             .byte_of_the_sequence_to_be_replaced = '\0'};
 
-    EXPECT_EQ(cobs_default_config_checker(config), SET_OK);
+    EXPECT_EQ(checker._check_config(config), SET_OK);
 
     config.size_of_the_sequence_to_be_replaced = 2;
 
-    EXPECT_EQ(cobs_default_config_checker(config), ERROR_DEFAULT_COBS_SIZE_SR);
+    EXPECT_EQ(checker._check_config(config), ERROR_DEFAULT_COBS_SIZE_SR);
 }
 
 TEST(cobs_tests, cobs_sr_config_checker_test) {
+    class TestCOBSSRConfigChecker final : public COBSSRConfigChecker {
+    public:
+        using COBSSRConfigChecker::_check_config;
+    } checker;
 
     cobs_config_t config = {.delimiter = '\0',
                             .depth = 127,
                             .size_of_the_sequence_to_be_replaced = 2,
                             .byte_of_the_sequence_to_be_replaced = '\0'};
 
-    EXPECT_EQ(cobs_sr_config_checker(config), SET_OK);
+    EXPECT_EQ(checker._check_config(config), SET_OK);
 
     config.depth = 255;
 
-    EXPECT_EQ(cobs_sr_config_checker(config), ERROR_DEPTH_SR);
+    EXPECT_EQ(checker._check_config(config), ERROR_DEPTH_SR);
 
     config.size_of_the_sequence_to_be_replaced = 0;
 
-    EXPECT_EQ(cobs_sr_config_checker(config), ERROR_SIZE_SR);
+    EXPECT_EQ(checker._check_config(config), ERROR_SIZE_SR);
 }
 
 TEST(cobs_tests, cobs_zpe_config_checker_test) {
+    class TestCOBSZPEConfigChecker final : public COBSZPEConfigChecker {
+    public:
+        using COBSZPEConfigChecker::_check_config;
+    } checker;
 
     cobs_config_t config = {.delimiter = '\0',
                             .depth = 224,
                             .size_of_the_sequence_to_be_replaced = 2,
                             .byte_of_the_sequence_to_be_replaced = '\0'};
 
-    EXPECT_EQ(cobs_zpe_config_checker(config), SET_OK);
+    EXPECT_EQ(checker._check_config(config), SET_OK);
 
     config.depth = 255;
 
-    EXPECT_EQ(cobs_zpe_config_checker(config), ERROR_DEPTH_ZPE);
+    EXPECT_EQ(checker._check_config(config), ERROR_DEPTH_ZPE);
 
     config.size_of_the_sequence_to_be_replaced = 0;
 
-    EXPECT_EQ(cobs_zpe_config_checker(config), ERROR_SIZE_SR);
+    EXPECT_EQ(checker._check_config(config), ERROR_SIZE_SR);
 }
 
 TEST(cobs_tests, cobs_writer_set_configuration_test) {

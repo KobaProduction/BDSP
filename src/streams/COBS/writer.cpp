@@ -1,5 +1,4 @@
 #include "BDSP/streams/COBS/writer.h"
-#include "BDSP/streams/COBS/checkers.h"
 
 using namespace BDSP::streams;
 using namespace BDSP::streams::COBS;
@@ -86,7 +85,7 @@ COBS::cobs_config_t COBSWriterCore::get_config() {
 
 set_cobs_config_status COBSWriterCore::set_config(cobs_config_t config) {
     _set_ready_state(false);
-    set_cobs_config_status status = _config_checker(config);
+    set_cobs_config_status status = _check_config(config);
     if (status not_eq SET_OK) {
         return status;
     }
@@ -117,17 +116,7 @@ set_cobs_config_status COBSSRWriterCore::set_config(COBS::cobs_config_t config) 
     return COBSWriterCore::set_config(config);
 }
 
-COBSWriterCore::COBSWriterCore() {
-    _config_checker = cobs_default_config_checker;
-}
 
-COBSSRWriterCore::COBSSRWriterCore() {
-    _config_checker = cobs_sr_config_checker;
-}
-
-COBSZPEWriterCore::COBSZPEWriterCore() {
-    _config_checker = cobs_zpe_config_checker;
-}
 
 COBSWriter::COBSWriter() noexcept {
     COBSWriterCore::set_config({'\0', 255});
