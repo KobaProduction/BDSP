@@ -31,6 +31,30 @@ public:
     virtual bool get_ready_status() = 0;
 };
 
+namespace core {
+
+typedef void (*strategy_ready_state_callback_t)(bool state, void *ctx);
+
+class IStreamWritingStrategy {
+public:
+    virtual ~IStreamWritingStrategy() = default;
+    virtual void init(stream_writer_t write_callback, strategy_ready_state_callback_t ready_callback, void *ctx) = 0;
+    virtual void finish() = 0;
+    virtual void send_delimiter() = 0;
+    virtual void write(uint8_t byte) = 0;
+    virtual void write(uint8_t *bytes, size_t size) = 0;
+};
+
+class IStreamReadingStrategy {
+public:
+    virtual void init(stream_data_handler_t read_callback,
+                      strategy_ready_state_callback_t ready_callback, void *ctx) = 0;
+    virtual read_status_t read(uint8_t byte) = 0;
+    virtual void reset_read_state() = 0;
+    virtual ~IStreamReadingStrategy() = default;
+};
+} // namespace core
+
 } // namespace BDSP::streams
 
 #endif // BDSP_STREAMS_TYPES_H
