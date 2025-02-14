@@ -21,7 +21,7 @@ protected:
     void _encode(uint8_t byte);
     void _finish() override;
     void _process_byte(uint8_t byte) override;
-    void _write_buffer(uint8_t offset_value);
+    void _write_buffer_to_stream(uint8_t offset_value);
 
 public:
     cobs_config_t get_config();
