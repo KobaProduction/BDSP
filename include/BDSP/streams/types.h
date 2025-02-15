@@ -42,7 +42,6 @@ public:
     virtual void finish() = 0;
     virtual void send_delimiter() = 0;
     virtual void write(uint8_t byte) = 0;
-    virtual void write(uint8_t *bytes, size_t size) = 0;
 };
 
 class IStreamReadingStrategy {
