@@ -6,25 +6,28 @@
 #include "BDSP/streams/abstract/mixins.h"
 #include "BDSP/streams/types.h"
 
-namespace BDSP::streams::ABS {
+namespace BDSP::streams::core {
 
-class AbstractStreamWriter: public IStreamWriter, protected AbstractStreamReadyMixin {
-    stream_writer_t _writer = nullptr;
-    void *_writer_context = nullptr;
+class AbstractStreamWriteStrategy: public streams::core::IStreamWritingStrategy {
+private:
+    static void _default_write_handler(uint8_t byte, void *ctx) { };
+    static void _default_ready_state_callback(bool state, void *ctx) { };
 
 protected:
-    virtual void _finish() = 0;
-    virtual void _process_byte(uint8_t byte) = 0;
-    void _write(uint8_t byte);
-    void _write(uint8_t *buffer_ptr, size_t size);
+    stream_writer_t _write_handler = _default_write_handler;
+    core::strategy_ready_state_callback_t _ready_state_callback = _default_ready_state_callback;
+    void *_context = nullptr;
+
+    virtual void _init() { };
 
 public:
-    write_status_t finish() final;
-    bool get_ready_status() override;
-    void set_stream_writer(stream_writer_t writer, void *context_ptr) final;
-    write_status_t write(uint8_t byte) final;
-    write_status_t write(uint8_t *buffer_ptr, size_t size) final;
+    void init(stream_writer_t write_handler,
+              core::strategy_ready_state_callback_t ready_state_callback,
+              void *ctx) override;
+    void finish() override;
+    void write(uint8_t byte) override = 0;
 };
-} // namespace BDSP::streams::ABS
+
+} // namespace BDSP::streams::core
 
 #endif // BDSP_STREAMS_ABSTRACT_WRITER_H

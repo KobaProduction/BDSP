@@ -1,51 +1,23 @@
 #include "BDSP/streams/abstract/writer.h"
 
-using namespace BDSP::streams;
-using namespace BDSP::streams::ABS;
+using namespace BDSP::streams::core;
 
-void AbstractStreamWriter::_write(uint8_t byte) {
-    _writer(byte, _writer_context);
-}
-
-void AbstractStreamWriter::_write(uint8_t *buffer_ptr, size_t size) {
-    for (int i = 0; i < size; ++i) {
-        _write(buffer_ptr[i]);
+void AbstractStreamWriteStrategy::init(stream_writer_t write_handler,
+                                       core::strategy_ready_state_callback_t ready_state_callback,
+                                       void *ctx) {
+    _ready_state_callback = ready_state_callback;
+    if (not _ready_state_callback) {
+        _ready_state_callback = _default_ready_state_callback;
     }
-}
-
-write_status_t AbstractStreamWriter::write(uint8_t byte) {
-    if (_state not_eq READY) {
-        return STREAM_WRITER_NOT_READY_ERROR;
+    _write_handler = write_handler;
+    if (not _write_handler) {
+        _write_handler = _default_write_handler;
     }
-    _process_byte(byte);
-    return STREAM_WRITE_OK;
+    _context = ctx;
+    _ready_state_callback(_write_handler not_eq _default_write_handler, _context);
+    _init();
 }
 
-write_status_t AbstractStreamWriter::write(uint8_t *buffer_ptr, size_t size) {
-    write_status_t status = STREAM_WRITE_OK;
-    for (size_t i = 0; i < size; ++i) {
-        status = write(buffer_ptr[i]);
-        if (status not_eq STREAM_WRITE_OK) {
-            break;
-        }
-    }
-    return status;
-}
-
-write_status_t AbstractStreamWriter::finish() {
-    if (_state not_eq READY) {
-        return STREAM_WRITER_NOT_READY_ERROR;
-    }
-    _finish();
-    return STREAM_WRITE_END;
-}
-
-bool AbstractStreamWriter::get_ready_status() {
-    return _state == READY;
-}
-
-void AbstractStreamWriter::set_stream_writer(stream_writer_t writer, void *context_ptr) {
-    _writer = writer;
-    _writer_context = context_ptr;
-    _set_handler_state(_writer not_eq nullptr);
+void AbstractStreamWriteStrategy::finish() {
+    send_delimiter();
 }
