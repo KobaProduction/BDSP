@@ -6,25 +6,24 @@
 #include "BDSP/streams/abstract/mixins.h"
 #include "BDSP/streams/types.h"
 
-namespace BDSP::streams::ABS {
-
-class AbstractStreamReader: public IStreamReader, protected AbstractStreamReadyMixin {
-    stream_data_handler_t _data_handler = nullptr;
-    void *_data_handler_context = nullptr;
-    bool _is_waiting_for_the_delimiter = false;
+namespace BDSP::streams::core {
+class AbstractStreamReadStrategy: public streams::core::IStreamReadingStrategy {
+private:
+    static void _default_read_callback(uint8_t byte, read_status_t status, void *ctx) { };
+    static void _default_ready_state_callback(bool state, void *ctx) { };
 
 protected:
-    void _handler(uint8_t byte, read_status_t state);
-    virtual read_status_t _process_byte(uint8_t byte) = 0;
-    virtual void _reset() = 0;
+    stream_data_handler_t _read_callback = _default_read_callback;
+    core::strategy_ready_state_callback_t _ready_state_callback = _default_ready_state_callback;
+    void *_context = nullptr;
+
+    virtual void _init() { };
 
 public:
-    bool get_ready_status() override;
-    read_status_t read(uint8_t byte) final;
-    read_status_t read(uint8_t *buffer_ptr, size_t size) final;
-    void reset_read_state(bool is_need_wait_delimiter) final;
-    void set_stream_data_handler(stream_data_handler_t handler, void *context_ptr) final;
+    void init(stream_data_handler_t read_callback,
+              core::strategy_ready_state_callback_t ready_callback,
+              void *ctx) final;
 };
-} // namespace BDSP::streams::ABS
+} // namespace BDSP::streams::core
 
 #endif // BDSP_STREAMS_ABSTRACT_READER_H
