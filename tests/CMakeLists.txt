@@ -64,6 +64,7 @@ set(sources ${utils_sources}
         BDSP/mixins_tests.cpp
         BDSP/receiver_tests.cpp
         BDSP/transmitter_tests.cpp
+        BDSP/streams/abstract/reader_tests.cpp
 
         BDSP/bdsp_full_tests.cpp
 )
