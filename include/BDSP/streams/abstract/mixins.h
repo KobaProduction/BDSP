@@ -11,7 +11,7 @@ private:
     struct {
         bool handler : 1;
         bool strategy : 1;
-    } states = {false, true};
+    } _states = {false, false};
     void _update_ready_state();
 
 protected:
