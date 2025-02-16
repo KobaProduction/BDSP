@@ -4,15 +4,18 @@
 
 using namespace BDSP::streams::core;
 
-TEST(abstract_stream_tests, abstract_stream_states_test) {
-    class SimpleStream: public StreamReadyMixin {
-    public:
-        using StreamReadyMixin::_state;
-        using StreamReadyMixin::_set_handler_state;
-        using StreamReadyMixin::_set_strategy_state;
-    };
+namespace {
+class TestSimpleStream: public StreamReadyMixin {
+public:
+    using StreamReadyMixin::_state;
+    using StreamReadyMixin::_set_handler_state;
+    using StreamReadyMixin::_set_strategy_state;
+};
+} // namespace
 
-    SimpleStream stream;
+TEST(streams_abstract_mixins_tests, stream_ready_mixin_states_test) {
+
+    TestSimpleStream stream;
 
     stream._set_handler_state(false);
     stream._set_strategy_state(false);

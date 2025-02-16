@@ -1,9 +1,11 @@
 #include <gtest/gtest.h>
 #include <vector>
+
 #include "BDSP/streams/abstract/writer.h"
 
 using namespace BDSP::streams;
 
+namespace {
 class TestAbstractStreamWriteStrategy final: public core::AbstractStreamWriteStrategy {
 public:
     bool init_used = false;
@@ -22,16 +24,16 @@ struct ContextTestAbstractStreamWriteStrategy {
     std::vector<uint8_t> bytes;
 };
 
-static void write_handler(uint8_t byte, void *ctx) {
+void write_handler(uint8_t byte, void *ctx) {
     reinterpret_cast<ContextTestAbstractStreamWriteStrategy *>(ctx)->bytes.push_back(byte);
 };
 
-static void set_ready_state_callback(bool state, void *ctx) {
+void set_ready_state_callback(bool state, void *ctx) {
     reinterpret_cast<ContextTestAbstractStreamWriteStrategy *>(ctx)->ready_state = state;
 };
+} // namespace
 
 TEST(abstract_writer_strategy_tests, init_test) {
-
     auto writer = TestAbstractStreamWriteStrategy();
     auto default_context_pointer = writer._context;
     auto default_write_handler = writer._write_handler;

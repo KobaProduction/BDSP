@@ -5,6 +5,7 @@
 
 using namespace BDSP::streams;
 
+namespace {
 class TestAbstractStreamReadStrategy final: public core::AbstractStreamReadStrategy {
 public:
     bool init_used = false;
@@ -17,6 +18,7 @@ public:
     read_status_t read(uint8_t byte) override { return STREAM_READER_NOT_READY_ERROR; }
     void reset_read_state() override { }
 };
+} // namespace
 
 TEST(abstract_reader_strategy_tests, init_test) {
     struct Context {
