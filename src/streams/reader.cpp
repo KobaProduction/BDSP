@@ -34,7 +34,6 @@ read_status_t StreamReaderCore::read(uint8_t byte) {
     }
     read_status_t status = _strategy->read(byte);
     if (status not_eq STREAM_READ_OK) {
-        _is_waiting_for_the_delimiter = status not_eq STREAM_READ_END;
         reset_read_state(status == STREAM_READ_ERROR);
     }
     return status;
