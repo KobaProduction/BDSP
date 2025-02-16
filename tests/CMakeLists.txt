@@ -54,8 +54,8 @@ set(utils_sources
 set(sources ${utils_sources}
         BDSP/checksums/checksums.cpp
         BDSP/streams/abstract_reader_tests.cpp
+        BDSP/streams/writer_tests.cpp
         BDSP/streams/abstract/mixins_tests.cpp
-        BDSP/streams/abstract_writer_tests.cpp
         BDSP/streams/cobs_tests.cpp
         BDSP/streams/cobs_default_tests.cpp
         BDSP/streams/cobs_sr_tests.cpp
