@@ -8,7 +8,7 @@ void StreamWriterCore::_set_strategy(IStreamWritingStrategy &strategy) noexcept 
     _strategy->init(
         [](uint8_t byte, void *ctx) {
             auto *self = reinterpret_cast<StreamWriterCore *>(ctx);
-            self->_writer(byte, self->_writer_context);
+            self->_write_handler(byte, self->_write_handler_context);
         },
         [](bool new_ready_state, void *ctx) {
             reinterpret_cast<StreamWriterCore *>(ctx)->_set_strategy_state(new_ready_state);
@@ -30,9 +30,9 @@ write_status_t StreamWriterCore::finish() {
 }
 
 void StreamWriterCore::set_stream_writer(stream_writer_t writer, void *context_ptr) {
-    _writer = writer;
-    _writer_context = context_ptr;
-    _set_handler_state(_writer not_eq nullptr);
+    _write_handler = writer;
+    _write_handler_context = context_ptr;
+    _set_handler_state(_write_handler not_eq nullptr);
 }
 
 write_status_t StreamWriterCore::write(uint8_t byte) {
@@ -53,5 +53,3 @@ write_status_t StreamWriterCore::write(uint8_t *buffer_ptr, size_t size) {
     }
     return status;
 }
-
-

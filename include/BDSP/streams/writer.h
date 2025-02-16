@@ -5,11 +5,12 @@
 #include "BDSP/streams/types.h"
 
 namespace BDSP::streams {
-
+namespace core {
 class StreamWriterCore: public IStreamWriter, public BDSP::streams::core::StreamReadyMixin {
 private:
-    stream_writer_t _writer = nullptr;
-    void *_writer_context = nullptr;
+    stream_writer_t _write_handler = nullptr;
+    void *_write_handler_context = nullptr;
+
 protected:
     core::IStreamWritingStrategy *_strategy = nullptr;
     void _set_strategy(core::IStreamWritingStrategy &strategy) noexcept;
@@ -21,9 +22,10 @@ public:
     write_status_t write(uint8_t byte) final;
     write_status_t write(uint8_t *buffer_ptr, size_t size) final;
 };
+} // namespace core
 
 template<typename TStrategy>
-class StreamWriter: public StreamWriterCore {
+class StreamWriter: public core::StreamWriterCore {
 public:
     StreamWriter() {
         _strategy = new TStrategy();
