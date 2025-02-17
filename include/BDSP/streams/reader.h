@@ -15,23 +15,25 @@ class StreamReaderCore: public IStreamReader, public BDSP::streams::core::Stream
 protected:
     core::IStreamReadingStrategy *_strategy = nullptr;
     void _handler(uint8_t byte, read_status_t state);
-    void _set_strategy(core::IStreamReadingStrategy &strategy) noexcept;
 
 public:
     bool get_ready_status() override;
     read_status_t read(uint8_t byte) final;
     read_status_t read(uint8_t *buffer_ptr, size_t size) final;
     void reset_read_state(bool is_need_wait_delimiter) final;
+    void set_strategy(core::IStreamReadingStrategy &strategy) noexcept;
     void set_stream_data_handler(stream_data_handler_t handler, void *context_ptr) final;
 };
 } // namespace core
 
 template<typename TStrategy>
 class StreamReader: public core::StreamReaderCore {
+protected:
+    using core::StreamReaderCore::set_strategy;
 public:
     StreamReader() {
         _strategy = new TStrategy();
-        _set_strategy(*_strategy);
+        set_strategy(*_strategy);
     }
 
     ~StreamReader() { delete _strategy; }

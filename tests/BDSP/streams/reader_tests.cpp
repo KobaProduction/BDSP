@@ -36,16 +36,13 @@ void read_handler(uint8_t byte, read_status_t status, void *ctx) {
 } // namespace
 
 TEST(stream_reader_tests, ready_test) {
-    class TestStreamReader: public core::StreamReaderCore {
-    public:
-        using StreamReaderCore::_set_strategy;
-    };
+    class TestStreamReader final: public core::StreamReaderCore { };
     auto reader = TestStreamReader();
 
     ASSERT_FALSE(reader.get_ready_status());
 
     auto strategy = EmptyStrategy();
-    reader._set_strategy(strategy);
+    reader.set_strategy(strategy);
 
     ASSERT_FALSE(reader.get_ready_status());
 
@@ -119,4 +116,3 @@ TEST(stream_reader_tests, reset_when_have_errors_and_read_delimiter_test) {
     ASSERT_TRUE(context.data == std::vector<uint8_t>({3, 0, 1, 3}));
     ASSERT_TRUE(context.statuses == std::vector<read_status_t>({STREAM_READ_OK, STREAM_READ_ERROR, STREAM_READ_END, STREAM_READ_OK}));
 }
-

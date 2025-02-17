@@ -13,7 +13,7 @@ void StreamReaderCore::_handler(uint8_t byte, read_status_t status) {
     _data_handler(byte, status, _data_handler_context);
 }
 
-void StreamReaderCore::_set_strategy(IStreamReadingStrategy &strategy) noexcept {
+void StreamReaderCore::set_strategy(core::IStreamReadingStrategy &strategy) noexcept {
     _strategy = &strategy;
     _strategy->init([](uint8_t byte,
                        read_status_t status,
