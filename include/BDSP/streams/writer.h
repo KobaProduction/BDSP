@@ -13,11 +13,11 @@ private:
 
 protected:
     core::IStreamWritingStrategy *_strategy = nullptr;
-    void _set_strategy(core::IStreamWritingStrategy &strategy) noexcept;
 
 public:
     bool get_ready_status() final;
     write_status_t finish() final;
+    void set_strategy(core::IStreamWritingStrategy &strategy) noexcept;
     void set_stream_writer(stream_writer_t writer, void *context_ptr) final;
     write_status_t write(uint8_t byte) final;
     write_status_t write(uint8_t *buffer_ptr, size_t size) final;
@@ -26,10 +26,13 @@ public:
 
 template<typename TStrategy>
 class StreamWriter: public core::StreamWriterCore {
+protected:
+    using core::StreamWriterCore::set_strategy;
+
 public:
     StreamWriter() {
         _strategy = new TStrategy();
-        _set_strategy(*_strategy);
+        set_strategy(*_strategy);
     }
 
     ~StreamWriter() { delete _strategy; }

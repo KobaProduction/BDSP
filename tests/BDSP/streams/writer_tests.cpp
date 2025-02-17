@@ -27,17 +27,14 @@ void write_handler(uint8_t byte, void *ctx) {
 } // namespace
 
 TEST(stream_writer_tests, ready_test) {
-    class TestStreamWriter: public core::StreamWriterCore {
-    public:
-        using StreamWriterCore::_set_strategy;
-    };
+    class TestStreamWriter final: public core::StreamWriterCore { };
     auto writer = TestStreamWriter();
     writer.set_stream_writer(nullptr, nullptr);
 
     ASSERT_FALSE(writer.get_ready_status());
 
     auto strategy = TestAbstractStreamWriteStrategy();
-    writer._set_strategy(strategy);
+    writer.set_strategy(strategy);
 
     ASSERT_FALSE(writer.get_ready_status());
 

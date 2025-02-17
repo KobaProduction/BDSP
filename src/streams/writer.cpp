@@ -3,7 +3,7 @@
 using namespace BDSP::streams;
 using namespace BDSP::streams::core;
 
-void StreamWriterCore::_set_strategy(IStreamWritingStrategy &strategy) noexcept {
+void StreamWriterCore::set_strategy(core::IStreamWritingStrategy &strategy) noexcept {
     _strategy = &strategy;
     _strategy->init(
         [](uint8_t byte, void *ctx) {
