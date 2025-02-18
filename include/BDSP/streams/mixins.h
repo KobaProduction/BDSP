@@ -1,5 +1,5 @@
-#ifndef BDSP_STREAMS_ABSTRACT_MIXINS_H
-#define BDSP_STREAMS_ABSTRACT_MIXINS_H
+#ifndef BDSP_STREAMS_MIXINS_H
+#define BDSP_STREAMS_MIXINS_H
 
 namespace BDSP::streams::core {
 
@@ -21,4 +21,4 @@ protected:
 };
 } // namespace BDSP::streams::core
 
-#endif // BDSP_STREAMS_ABSTRACT_MIXINS_H
+#endif // BDSP_STREAMS_MIXINS_H

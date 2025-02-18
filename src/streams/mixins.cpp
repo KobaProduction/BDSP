@@ -1,4 +1,4 @@
-#include "BDSP/streams/abstract/mixins.h"
+#include "BDSP/streams/mixins.h"
 
 using namespace BDSP::streams::core;
 
