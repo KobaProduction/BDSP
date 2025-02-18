@@ -1,26 +1,27 @@
 #ifndef BDSP_STREAMS_STREAM_WRITER_H
 #define BDSP_STREAMS_STREAM_WRITER_H
 
-#include "BDSP/streams/abstract/mixins.h"
+#include "BDSP/streams/mixins.h"
+#include "BDSP/streams/strategies/types.h"
 #include "BDSP/streams/types.h"
 
 namespace BDSP::streams {
 namespace core {
-class StreamWriterCore: public IStreamWriter, public BDSP::streams::core::StreamReadyMixin {
+class StreamWriterCore: public IStreamWriter, public core::StreamReadyMixin {
 private:
-    stream_writer_t _write_handler = nullptr;
-    void *_write_handler_context = nullptr;
+    stream_write_handler_t _handler = nullptr;
+    void *_handler_context = nullptr;
 
 protected:
-    core::IStreamWritingStrategy *_strategy = nullptr;
+    strategies::IStreamWriteStrategy *_strategy = nullptr;
 
 public:
     bool get_ready_status() final;
-    write_status_t finish() final;
-    void set_strategy(core::IStreamWritingStrategy &strategy) noexcept;
-    void set_stream_writer(stream_writer_t writer, void *context_ptr) final;
-    write_status_t write(uint8_t byte) final;
-    write_status_t write(uint8_t *buffer_ptr, size_t size) final;
+    stream_write_status_t finish() final;
+    void set_strategy(strategies::IStreamWriteStrategy &strategy) noexcept;
+    void set_stream_writer(stream_write_handler_t handler, void *context_ptr) final;
+    stream_write_status_t write(uint8_t byte) final;
+    stream_write_status_t write(uint8_t *buffer_ptr, size_t size) final;
 };
 } // namespace core
 
@@ -31,7 +32,7 @@ protected:
 
 public:
     StreamWriter() {
-        _strategy = new TStrategy();
+        _strategy = static_cast<strategies::IStreamWriteStrategy *>(new TStrategy());
         set_strategy(*_strategy);
     }
 

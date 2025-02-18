@@ -2,15 +2,16 @@
 
 #include "../../utils/testing.h"
 
-#include "BDSP/streams/abstract/writer.h"
+#include "BDSP/streams/strategies/abstract/write.h"
 #include "BDSP/streams/writer.h"
 
 using namespace BDSP::streams;
+using namespace BDSP::streams::strategies;
 
 namespace {
 std::vector<uint8_t> finish_bytes = {0xFF, 0xFF};
 
-class TestAbstractStreamWriteStrategy final: public core::AbstractStreamWriteStrategy {
+class TestAbstractStreamWriteStrategy final: public abstract::AbstractWriteStrategy {
 public:
     void write(uint8_t byte) override { _write_handler(byte, _context); }
 
@@ -55,7 +56,7 @@ TEST(stream_writer_tests, finish_test) {
 
     ASSERT_TRUE(writer.get_ready_status());
 
-    EXPECT_EQ(writer.finish(), STREAM_WRITE_END);
+    EXPECT_EQ(writer.finish(), STREAM_WRITE_DELIMITER);
     ASSERT_TRUE(stream == finish_bytes);
 }
 
