@@ -2,22 +2,23 @@
 
 #include "../../utils/testing.h"
 
-#include "BDSP/streams/abstract/reader.h"
 #include "BDSP/streams/reader.h"
+#include "BDSP/streams/strategies/abstract/read.h"
 
 using namespace BDSP::streams;
+using namespace BDSP::streams::strategies;
 
 namespace {
 
 std::vector<uint8_t> finish_bytes = {0xFF, 0xFF};
 
-class EmptyStrategy final: public core::AbstractStreamReadStrategy {
+class EmptyStrategy final: public abstract::AbstractReadStrategy {
 public:
-    read_status_t read(uint8_t byte) override {
-        read_status_t status = byte == 0 ? STREAM_READ_ERROR : byte == 1 ? STREAM_READ_END : STREAM_READ_OK;
-        _read_callback(byte, status, _context);
+    strategy_read_status_t read(uint8_t byte) override {
+        strategy_read_status_t status = byte == 0 ? STRATEGY_READ_ERROR : byte == 1 ? STRATEGY_READ_DELIMITER : STRATEGY_READ_OK;
+        _data_callback(byte, status, _context);
         return status;
-    };
+    }
 
     void reset_read_state() override {
 
@@ -26,10 +27,10 @@ public:
 
 struct Context {
     std::vector<uint8_t> data;
-    std::vector<read_status_t> statuses;
+    std::vector<stream_read_status_t> statuses;
 };
 
-void read_handler(uint8_t byte, read_status_t status, void *ctx) {
+void read_handler(uint8_t byte, stream_read_status_t status, void *ctx) {
     reinterpret_cast<Context *>(ctx)->data.push_back(byte);
     reinterpret_cast<Context *>(ctx)->statuses.push_back(status);
 }
@@ -46,7 +47,7 @@ TEST(stream_reader_tests, ready_test) {
 
     ASSERT_FALSE(reader.get_ready_status());
 
-    reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx) { }, nullptr);
+    reader.set_stream_data_handler([](uint8_t byte, stream_read_status_t status, void *ctx) { }, nullptr);
     ASSERT_TRUE(reader.get_ready_status());
 }
 
@@ -65,9 +66,9 @@ TEST(stream_reader_tests, read_test) {
     context.data.clear();
     context.statuses.clear();
 
-    EXPECT_EQ(reader.read(1), STREAM_READ_END);
+    EXPECT_EQ(reader.read(1), STREAM_READ_DELIMITER);
     ASSERT_TRUE(context.data.size() == 1 and context.data[0] == 1);
-    ASSERT_TRUE(context.statuses.size() == 1 and context.statuses[0] == STREAM_READ_END);
+    ASSERT_TRUE(context.statuses.size() == 1 and context.statuses[0] == STREAM_READ_DELIMITER);
 
     context.data.clear();
     context.statuses.clear();
@@ -92,7 +93,7 @@ TEST(stream_reader_tests, read_when_have_errors_test) {
     std::vector<uint8_t> stream = {3, 3, 0, 2, 3, 3, 3};
     EXPECT_EQ(reader.read(stream.data(), stream.size()), STREAM_READ_ERROR);
     ASSERT_TRUE(context.data == std::vector<uint8_t>({3, 3, 0}));
-    ASSERT_TRUE(context.statuses == std::vector<read_status_t>({STREAM_READ_OK, STREAM_READ_OK, STREAM_READ_ERROR}));
+    ASSERT_TRUE(context.statuses == std::vector<stream_read_status_t>({STREAM_READ_OK, STREAM_READ_OK, STREAM_READ_ERROR}));
 }
 
 TEST(stream_reader_tests, manual_reset_after_error__test) {
@@ -104,7 +105,7 @@ TEST(stream_reader_tests, manual_reset_after_error__test) {
     reader.reset_read_state(false);
     EXPECT_EQ(reader.read(3), STREAM_READ_OK);
     ASSERT_TRUE(context.data == std::vector<uint8_t>({0, 3}));
-    ASSERT_TRUE(context.statuses == std::vector<read_status_t>({STREAM_READ_ERROR, STREAM_READ_OK}));
+    ASSERT_TRUE(context.statuses == std::vector<stream_read_status_t>({STREAM_READ_ERROR, STREAM_READ_OK}));
 }
 
 TEST(stream_reader_tests, reset_when_have_errors_and_read_delimiter_test) {
@@ -114,5 +115,5 @@ TEST(stream_reader_tests, reset_when_have_errors_and_read_delimiter_test) {
     std::vector<uint8_t> stream = {3, 0, 3, 1, 3};
     EXPECT_EQ(reader.read(stream.data(), stream.size()), STREAM_READ_ERROR);
     ASSERT_TRUE(context.data == std::vector<uint8_t>({3, 0, 1, 3}));
-    ASSERT_TRUE(context.statuses == std::vector<read_status_t>({STREAM_READ_OK, STREAM_READ_ERROR, STREAM_READ_END, STREAM_READ_OK}));
+    ASSERT_TRUE(context.statuses == std::vector<stream_read_status_t>({STREAM_READ_OK, STREAM_READ_ERROR, STREAM_READ_DELIMITER, STREAM_READ_OK}));
 }
