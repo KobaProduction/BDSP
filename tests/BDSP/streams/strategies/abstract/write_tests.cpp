@@ -1,18 +1,18 @@
 #include <gtest/gtest.h>
 #include <vector>
 
-#include "BDSP/streams/abstract/writer.h"
+#include "BDSP/streams/strategies/abstract/write.h"
 
-using namespace BDSP::streams;
+using namespace BDSP::streams::strategies::abstract;
 
 namespace {
-class TestAbstractStreamWriteStrategy final: public core::AbstractStreamWriteStrategy {
+class TestAbstractStreamWriteStrategy final: public AbstractWriteStrategy {
 public:
     bool init_used = false;
 
-    using AbstractStreamWriteStrategy::_ready_state_callback;
-    using AbstractStreamWriteStrategy::_write_handler;
-    using AbstractStreamWriteStrategy::_context;
+    using AbstractWriteStrategy::_ready_state_callback;
+    using AbstractWriteStrategy::_write_handler;
+    using AbstractWriteStrategy::_context;
 
     void _init() override { init_used = true; };
     void send_delimiter() override { write(0); }

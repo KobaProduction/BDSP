@@ -1,9 +1,10 @@
-#include "BDSP/streams/abstract/writer.h"
+#include "BDSP/streams/strategies/abstract/write.h"
 
-using namespace BDSP::streams::core;
+using namespace BDSP::streams::strategies;
+using namespace BDSP::streams::strategies::abstract;
 
-void AbstractStreamWriteStrategy::init(stream_writer_t write_handler,
-                                       core::strategy_ready_state_callback_t ready_state_callback,
+void AbstractWriteStrategy::init(strategy_write_handler_t write_handler,
+                                       strategy_ready_state_callback_t ready_state_callback,
                                        void *ctx) {
     _ready_state_callback = ready_state_callback;
     if (not _ready_state_callback) {
@@ -18,6 +19,6 @@ void AbstractStreamWriteStrategy::init(stream_writer_t write_handler,
     _init();
 }
 
-void AbstractStreamWriteStrategy::finish() {
+void AbstractWriteStrategy::finish() {
     send_delimiter();
 }
