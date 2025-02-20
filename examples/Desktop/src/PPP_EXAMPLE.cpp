@@ -1,13 +1,13 @@
 #include <iostream>
 #include <vector>
 
-#include <BDSP/streams/PPP/reader.h>
-#include <BDSP/streams/PPP/writer.h>
+#include <BDSP/streams/ppp/reader.h>
+#include <BDSP/streams/ppp/writer.h>
 
 #include "utils.h"
 
 using namespace BDSP::streams;
-using namespace BDSP::streams::PPP;
+using namespace BDSP::streams::ppp;
 
 struct Context {
     std::vector<uint8_t> write_buffer;
@@ -21,10 +21,10 @@ int main() {
     std::cout << "Default ";
     show_data_(data, true);
 
-    auto ppp_writer = PPPWriter();
+    auto ppp_writer = PPPWriterStream();
     ppp_writer.set_stream_writer([](uint8_t byte, void *ctx_ptr) {
         if (not ctx_ptr) {
-            std::cout << "read writer ctx_ptr is null!" << std::endl;
+            std::cout << "read_with_status writer ctx_ptr is null!" << std::endl;
             return;
         };
         reinterpret_cast<Context *>(ctx_ptr)->write_buffer.push_back(byte);
@@ -35,11 +35,11 @@ int main() {
     std::cout << "Write ";
     show_data_(context.write_buffer, true);
 
-    auto ppp_reader = PPPDecoder();
+    auto ppp_reader = PPPReaderStream();
     ppp_reader.reset_read_state(false);
-    ppp_reader.set_stream_data_handler([](uint8_t byte, read_status_t state, void *ctx_ptr) {
+    ppp_reader.set_stream_data_handler([](uint8_t byte, stream_read_status_t state, void *ctx_ptr) {
         if (not ctx_ptr) {
-            std::cout << "read data handler ctx_ptr is null!" << std::endl;
+            std::cout << "read_with_status data handler ctx_ptr is null!" << std::endl;
             return;
         };
         reinterpret_cast<Context *>(ctx_ptr)->read_buffer.push_back(byte);
