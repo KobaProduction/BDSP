@@ -3,28 +3,13 @@
 
 #include <stdint.h>
 
-#include "BDSP/streams/PPP/types.h"
-#include "BDSP/streams/PPP/mixins.h"
-#include "BDSP/streams/abstract/writer.h"
+#include "BDSP/streams/strategies/byte_stuffing/write.h"
+#include "BDSP/streams/writer.h"
 
-namespace BDSP::streams::PPP {
+namespace BDSP::streams::ppp {
 
-namespace core {
-class PPPWriterCore: public ABS::AbstractStreamWriter, public virtual PPPConfigChecker {
-protected:
-    ppp_config_t _cfg;
+class PPPWriterStream final: public StreamWriter<strategies::byte_stuffing::PPPStreamWriteStrategy> { };
 
-    void _finish() override;
-    void _process_byte(uint8_t byte) override;
-
-public:
-    ppp_config_t get_config();
-    set_ppp_config_status set_config(ppp_config_t config);
-};
-} // namespace core
-
-class PPPWriter final: public core::PPPWriterCore { };
-
-} // namespace BDSP::streams::PPP
+} // namespace BDSP::streams::ppp
 
 #endif // BDSP_STREAMS_PPP_WRITER_H

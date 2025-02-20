@@ -3,29 +3,13 @@
 
 #include <stdint.h>
 
-#include "BDSP/streams/PPP/types.h"
-#include "BDSP/streams/PPP/mixins.h"
-#include "BDSP/streams/abstract/reader.h"
+#include "BDSP/streams/reader.h"
+#include "BDSP/streams/strategies/byte_stuffing/read.h"
 
-namespace BDSP::streams::PPP {
+namespace BDSP::streams::ppp {
 
-namespace core {
-class PPPReaderCore: public ABS::AbstractStreamReader, public PPPConfigChecker {
-protected:
-    ppp_config_t _cfg;
-    bool _is_escape_state = false;
+class PPPReaderStream final: public StreamReader<streams::strategies::byte_stuffing::PPPReadStrategy> { };
 
-    read_status_t _process_byte(uint8_t byte) override;
-    void _reset() override;
-
-public:
-    ppp_config_t get_config();
-    set_ppp_config_status set_config(ppp_config_t config);
-};
-} // namespace core
-
-class PPPReader final: public core::PPPReaderCore { };
-
-} // namespace BDSP::streams::PPP
+} // namespace BDSP::streams::ppp
 
 #endif // BDSP_STREAMS_PPP_READER_H
