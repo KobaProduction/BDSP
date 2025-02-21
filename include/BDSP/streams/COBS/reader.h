@@ -1,59 +1,15 @@
 #ifndef BDSP_STREAMS_COBS_READER_H
 #define BDSP_STREAMS_COBS_READER_H
 
-#include "BDSP/streams/COBS/mixins.h"
-#include "BDSP/streams/COBS/types.h"
-#include "BDSP/streams/abstract/reader.h"
+#include "BDSP/streams/reader.h"
+#include "BDSP/streams/strategies/COBS/read.h"
 
-namespace BDSP::streams::COBS {
+namespace BDSP::streams::cobs {
 
-namespace core {
-class COBSReaderCore: public ABS::AbstractStreamReader, public virtual COBSConfigCheckerMixin {
-public:
-    typedef enum { SERVICE_BYTE, REGULAR_BYTE, SWAP_BYTE} fsm_state_t;
-protected:
-    cobs_config_t _cfg{};
-    fsm_state_t _fsm_state = SERVICE_BYTE;
-    uint8_t _service_byte_offset = _cfg.depth;
-    uint8_t _swap_byte_offset{};
+class COBSReaderStream final: public StreamReader<streams::strategies::cobs::COBSReadStrategy> { };
+class COBSSRReaderStream final: public StreamReader<streams::strategies::cobs::COBSSRReadStrategy> { };
+class COBSZPEReaderStream final: public StreamReader<streams::strategies::cobs::COBSZPEReadStrategy> { };
 
-    virtual void _exec_delimiter(uint8_t byte);
-    uint8_t _get_converted_swap_byte_offset(uint8_t raw_offset);
-    read_status_t _process_byte(uint8_t byte) override;
-    void _reset() override;
-    virtual read_status_t _set_swap_byte_offset(uint8_t offset);
-
-public:
-    cobs_config_t get_config();
-    set_cobs_config_status set_config(cobs_config_t config);
-    explicit COBSReaderCore();
-};
-
-class COBSSRReaderCore: public COBSReaderCore, public virtual COBSSRConfigCheckerMixin {
-protected:
-    uint8_t _sequence_replace_length_threshold{};
-    bool _is_sequence_replacement_state = false;
-
-    void _exec_delimiter(uint8_t byte) override;
-    read_status_t _process_byte(uint8_t byte) override;
-    void _reset() override;
-    read_status_t _set_swap_byte_offset(uint8_t offset) override;
-
-public:
-    explicit COBSSRReaderCore();
-};
-
-public:
-    explicit COBSZPEReaderCore();
-class COBSZPEReaderCore: public COBSSRReaderCore, public virtual COBSZPEConfigCheckerMixin {
-};
-}
-class COBSReader final: public core::COBSReaderCore { };
-
-class COBSSRReader final: public core::COBSSRReaderCore { };
-
-class COBSZPEReader final: public core::COBSZPEReaderCore { };
-
-} // namespace BDSP::streams::COBS
+} // namespace BDSP::streams::cobs
 
 #endif // BDSP_STREAMS_COBS_READER_H
