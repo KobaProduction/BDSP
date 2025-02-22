@@ -1,13 +1,13 @@
 #include <iostream>
 #include <vector>
 
-#include <BDSP/streams/COBS/reader.h>
-#include <BDSP/streams/COBS/writer.h>
+#include <BDSP/streams/cobs/reader.h>
+#include <BDSP/streams/cobs/writer.h>
 
 #include "utils.h"
 
 using namespace BDSP::streams;
-using namespace BDSP::streams::COBS;
+using namespace BDSP::streams::strategies::cobs;
 
 struct Context {
     std::vector<uint8_t> write_buffer;
@@ -20,17 +20,21 @@ int main() {
     std::vector<uint8_t> test = {0x45, 0x00, 0x00, 0x2C, 0x4C, 0x79, 0x00, 0x00, 0x40, 0x06, 0x4F, 0x37};
 
     for (int i = 1; i < 224; ++i) {
-        data.push_back(0xAA);
+        data.push_back(0x00);
     }
     data.insert(data.end(), test.begin(), test.end());
 
-    COBSZPEWriter writer;
-    COBSZPEReader reader;
+    cobs_config_t config = BDSP::streams::strategies::cobs::core::COBSZPEConfigsMixin().get_default_config();
+
+    cobs::COBSZPEWriterStream writer;
+    writer.get_strategy().set_config(config);
+    cobs::COBSZPEReaderStream reader;
+    reader.get_strategy().set_config(config);
 
     writer.set_stream_writer(
         [](uint8_t byte, void *ctx_ptr) {
             if (not ctx_ptr) {
-                std::cout << "read writer ctx_ptr is null!" << std::endl;
+                std::cout << "read_with_status writer ctx_ptr is null!" << std::endl;
                 return;
             };
             reinterpret_cast<Context *>(ctx_ptr)->write_buffer.push_back(byte);
@@ -38,18 +42,20 @@ int main() {
         &context);
 
     reader.set_stream_data_handler(
-        [](uint8_t byte, read_status_t status, void *ctx_ptr) {
+        [](uint8_t byte, stream_read_status_t status, void *ctx_ptr) {
             if (not ctx_ptr) {
-                std::cout << "read data handler ctx_ptr is null!" << std::endl;
+                std::cout << "read_with_status data handler ctx_ptr is null!" << std::endl;
                 return;
             }
             switch (status) {
             case STREAM_READ_OK: reinterpret_cast<Context *>(ctx_ptr)->read_buffer.push_back(byte); break;
-            case STREAM_READ_END:
+            case STREAM_READ_DELIMITER:
                 //                std::cout << "end" << std::endl;
                 break;
             case STREAM_READ_ERROR:
-            case STREAM_READER_NOT_READY_ERROR: std::cout << "Symbol: " << uint32_t(byte) << " - ERROR" << std::endl; break;
+            case STREAM_READER_NOT_READY_ERROR:
+                std::cout << "Symbol: " << uint32_t(byte) << " - ERROR" << std::endl;
+                break;
             }
         },
         &context);
