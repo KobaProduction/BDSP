@@ -37,20 +37,20 @@ void show_packet_context(packet_context_t &packet_context, bool use_hex) {
     show_data(packet_context.data_ptr, packet_context.size, use_hex);
 }
 
-void show_status(read_status_t status) {
+void show_status(stream_read_status_t status) {
     switch (status) {
     case STREAM_READ_OK: std::cout << "STREAM_READ_OK"; break;
-    case STREAM_READ_END: std::cout << "STREAM_READ_END"; break;
+    case STREAM_READ_DELIMITER: std::cout << "STREAM_READ_END"; break;
     case STREAM_READ_ERROR: std::cout << "STREAM_READ_ERROR"; break;
     case STREAM_READER_NOT_READY_ERROR: std::cout << "STREAM_READER_NOT_READY_ERROR"; break;
     }
     std::cout << std::endl;
 }
 
-void show_status(write_status_t status) {
+void show_status(stream_write_status_t status) {
     switch (status) {
     case STREAM_WRITE_OK: std::cout << "STREAM_WRITE_OK"; break;
-    case STREAM_WRITE_END: std::cout << "STREAM_WRITE_END"; break;
+    case STREAM_WRITE_DELIMITER: std::cout << "STREAM_WRITE_END"; break;
     case STREAM_WRITER_NOT_READY_ERROR: std::cout << "STREAM_WRITER_NOT_READY_ERROR"; break;
     }
     std::cout << std::endl;

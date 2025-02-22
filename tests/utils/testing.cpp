@@ -65,14 +65,14 @@ void start_test_reader(
         bool is_ended = false;
     } ctx;
 
-    reader.set_stream_data_handler([](uint8_t byte, read_status_t status, void *ctx_ptr) {
+    reader.set_stream_data_handler([](uint8_t byte, stream_read_status_t status, void *ctx_ptr) {
         auto context = reinterpret_cast<Context *>(ctx_ptr);
         ASSERT_FALSE(context->is_ended);
         switch (status) {
             case STREAM_READ_OK:
                 context->read_buffer.push_back(byte);
                 break;
-            case STREAM_READ_END:
+            case STREAM_READ_DELIMITER:
                 context->is_ended = true;
                 break;
             default:

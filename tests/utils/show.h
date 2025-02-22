@@ -16,8 +16,8 @@ void show_data(std::vector<uint8_t> &data, bool use_hex = false);
 
 void show_packet_context(BDSP::packet_context_t &packet_context, bool use_hex = false);
 
-void show_status(BDSP::streams::read_status_t status);
+void show_status(BDSP::streams::stream_read_status_t status);
 
-void show_status(BDSP::streams::write_status_t status);
+void show_status(BDSP::streams::stream_write_status_t status);
 
 #endif //BDSP_TESTS_UTILS_SHOW_H
