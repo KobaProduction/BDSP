@@ -1,20 +1,20 @@
 #include <gtest/gtest.h>
 
 #include "BDSP/transceiver.h"
-#include "BDSP/streams/COBS/reader.h"
-#include "BDSP/streams/COBS/writer.h"
+#include "BDSP/streams/cobs/reader.h"
+#include "BDSP/streams/cobs/writer.h"
 
 using namespace BDSP;
 using namespace BDSP::streams;
-using namespace BDSP::streams::COBS;
+using namespace BDSP::streams::cobs;
 
 TEST(bdsp_full_tests, bdsp_v1_full_test) {
-    COBSReader reader;
-    COBSWriter writer;
+    COBSReaderStream reader;
+    COBSWriterStream writer;
     bool is_packet_got = false;
 
     writer.set_stream_writer([] (uint8_t byte, void *ctx) {
-        reinterpret_cast<COBSReader*>(ctx)->read(byte);
+        reinterpret_cast<COBSReaderStream*>(ctx)->read(byte);
     }, &reader);
 
     BDSPTransceiver transceiver1;
