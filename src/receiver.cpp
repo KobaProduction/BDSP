@@ -26,11 +26,11 @@ BDSPV1ReceiverCore::~BDSPV1ReceiverCore() {
     _deallocate_packet_memory();
 }
 
-parse_packet_status_t BDSPV1ReceiverCore::parse_packet_byte(uint8_t byte, streams::read_status_t stream_status) {
+parse_packet_status_t BDSPV1ReceiverCore::parse_packet_byte(uint8_t byte, streams::stream_read_status_t stream_status) {
     if (stream_status == STREAM_READ_ERROR or stream_status == STREAM_READER_NOT_READY_ERROR) {
         return _cause_error(STREAM_READING_ERROR);
     }
-    if (stream_status == STREAM_READ_END and _fsm_state not_eq WAIT_END) {
+    if (stream_status == STREAM_READ_DELIMITER and _fsm_state not_eq WAIT_END) {
         _cause_error(STREAM_READING_ERROR);
         reset(false);
         return STREAM_READING_ERROR;
@@ -57,7 +57,7 @@ parse_packet_status_t BDSPV1ReceiverCore::parse_packet_byte(uint8_t byte, stream
         _fsm_state = WAIT_END;
         return PARSE_PACKET_BYTE_OK;
     case WAIT_END:
-        if (stream_status not_eq STREAM_READ_END) {
+        if (stream_status not_eq STREAM_READ_DELIMITER) {
             return _cause_error(STREAM_READING_ERROR);
         }
         if (not _packet_handler) {
@@ -123,8 +123,8 @@ bdsp_set_stream_reader_status_t BDSPV1ReceiverCore::set_stream_reader(streams::I
         return STREAM_READER_NULL_POINTER_ERROR;
     }
     if (reader_ptr) {
-        stream_data_handler_t callback = [](uint8_t byte, read_status_t read_state, void *context) {
-            reinterpret_cast<BDSPV1ReceiverCore *>(context)->parse_packet_byte(byte, read_state);
+        stream_data_callback_t callback = [](uint8_t byte, stream_read_status_t read_status, void *context) {
+            reinterpret_cast<BDSPV1ReceiverCore *>(context)->parse_packet_byte(byte, read_status);
         };
         reader_ptr->set_stream_data_handler(callback, this);
     }
