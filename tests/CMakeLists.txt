@@ -52,24 +52,32 @@ set(utils_sources
 )
 
 set(sources ${utils_sources}
-        BDSP/checksums/checksums.cpp
-        BDSP/streams/PPP/mixins_tests.cpp
-        BDSP/streams/COBS/mixins_tests.cpp
-        BDSP/streams/reader_tests.cpp
-        BDSP/streams/writer_tests.cpp
-        BDSP/streams/abstract/mixins_tests.cpp
-        BDSP/streams/cobs_tests.cpp
-        BDSP/streams/cobs_default_tests.cpp
-        BDSP/streams/cobs_sr_tests.cpp
-        BDSP/streams/cobs_zpe_tests.cpp
-        BDSP/streams/ppp_tests.cpp
+        BDSP/integration_tests.cpp
+        BDSP/streams/cobs/integration_tests.cpp
+        BDSP/streams/cobs/utils_tests.cpp
+        BDSP/streams/ppp/integration_tests.cpp
+
         BDSP/mixins_tests.cpp
         BDSP/receiver_tests.cpp
         BDSP/transmitter_tests.cpp
-        BDSP/streams/abstract/reader_tests.cpp
-        BDSP/streams/abstract/writer_tests.cpp
 
-        BDSP/bdsp_full_tests.cpp
+        BDSP/streams/strategies/cobs/default_tests.cpp
+        BDSP/streams/strategies/cobs/mixins_tests.cpp
+        BDSP/streams/strategies/cobs/sr_tests.cpp
+        BDSP/streams/strategies/cobs/zpe_tests.cpp
+
+        BDSP/streams/strategies/byte_stuffing/mixins_tests.cpp
+        BDSP/streams/strategies/byte_stuffing/read_tests.cpp
+        BDSP/streams/strategies/byte_stuffing/write_tests.cpp
+
+        BDSP/streams/mixins_tests.cpp
+        BDSP/streams/reader_tests.cpp
+        BDSP/streams/writer_tests.cpp
+
+        BDSP/streams/strategies/abstract/read_tests.cpp
+        BDSP/streams/strategies/abstract/write_tests.cpp
+
+        BDSP/checksums/checksums.cpp
 )
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 

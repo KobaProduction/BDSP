@@ -58,32 +58,41 @@ endif ()
 generate_export_header(BDSP EXPORT_FILE_NAME include/BDSP/${export_file_name})
 
 set(headers
-        include/BDSP/export.h
         include/BDSP/BDSP.h
-        include/BDSP/types.h
-
+        include/BDSP/export.h
         include/BDSP/mixins.h
         include/BDSP/receiver.h
         include/BDSP/transceiver.h
         include/BDSP/transmitter.h
-
-
-        include/BDSP/streams/abstract/reader.h
-        include/BDSP/streams/abstract/mixins.h
-        include/BDSP/streams/abstract/writer.h
-        include/BDSP/streams/types.h
-
-        include/BDSP/streams/COBS/mixins.h
-        include/BDSP/streams/COBS/reader.h
-        include/BDSP/streams/COBS/types.h
-        include/BDSP/streams/COBS/writer.h
-
-        include/BDSP/streams/PPP/mixins.h
-        include/BDSP/streams/PPP/reader.h
-        include/BDSP/streams/PPP/types.h
-        include/BDSP/streams/PPP/writer.h
+        include/BDSP/types.h
 
         include/BDSP/checksums/crc8.h
+
+        include/BDSP/streams/mixins.h
+        include/BDSP/streams/reader.h
+        include/BDSP/streams/writer.h
+        include/BDSP/streams/types.h
+
+        include/BDSP/streams/cobs/reader.h
+        include/BDSP/streams/cobs/writer.h
+
+        include/BDSP/streams/ppp/reader.h
+        include/BDSP/streams/ppp/writer.h
+
+        include/BDSP/streams/strategies/types.h
+
+        include/BDSP/streams/strategies/abstract/read.h
+        include/BDSP/streams/strategies/abstract/write.h
+
+        include/BDSP/streams/strategies/byte_stuffing/mixins.h
+        include/BDSP/streams/strategies/byte_stuffing/read.h
+        include/BDSP/streams/strategies/byte_stuffing/types.h
+        include/BDSP/streams/strategies/byte_stuffing/write.h
+
+        include/BDSP/streams/strategies/cobs/mixins.h
+        include/BDSP/streams/strategies/cobs/read.h
+        include/BDSP/streams/strategies/cobs/types.h
+        include/BDSP/streams/strategies/cobs/write.h
 )
 
 set(sources
@@ -91,19 +100,22 @@ set(sources
         src/receiver.cpp
         src/transmitter.cpp
 
-        src/streams/abstract/reader.cpp
-        src/streams/abstract/mixins.cpp
-        src/streams/abstract/writer.cpp
-
-        src/streams/COBS/mixins.cpp
-        src/streams/COBS/reader.cpp
-        src/streams/COBS/writer.cpp
-
-        src/streams/PPP/mixins.cpp
-        src/streams/PPP/reader.cpp
-        src/streams/PPP/writer.cpp
-
         src/checksums/crc8.cpp
+
+        src/streams/mixins.cpp
+        src/streams/reader.cpp
+        src/streams/writer.cpp
+
+        src/streams/strategies/abstract/read.cpp
+        src/streams/strategies/abstract/write.cpp
+
+        src/streams/strategies/byte_stuffing/mixins.cpp
+        src/streams/strategies/byte_stuffing/read.cpp
+        src/streams/strategies/byte_stuffing/write.cpp
+
+        src/streams/strategies/cobs/mixins.cpp
+        src/streams/strategies/cobs/read.cpp
+        src/streams/strategies/cobs/write.cpp
 )
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 
