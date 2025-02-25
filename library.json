@@ -20,7 +20,7 @@
   "platforms": "*",
   "headers": "BDSP.h",
   "export": {
-    "exclude": ["docs"]
+    "exclude": ["docs", "tests"]
   },
   "build": {
     "srcFilter": [
