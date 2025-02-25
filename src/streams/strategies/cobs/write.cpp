@@ -7,7 +7,7 @@ void COBSWriteStrategyCore::_encode(uint8_t byte) {
     if (_buffer_position == _cfg.depth) {
         _write_buffer_to_stream(_buffer_position);
     }
-    if (byte not_eq _cfg.delimiter) {
+    if (byte not_eq _cfg.delimiter_byte) {
         _buffer_ptr[_buffer_position++] = byte;
     } else {
         _write_buffer_to_stream(_buffer_position);
@@ -26,7 +26,7 @@ void COBSWriteStrategyCore::_init() {
 }
 
 void COBSWriteStrategyCore::_write_buffer_to_stream(uint8_t offset_value) {
-    _buffer_ptr[0] = _cfg.delimiter not_eq 0x00 and offset_value == _cfg.delimiter ? 0 : offset_value;
+    _buffer_ptr[0] = _cfg.delimiter_byte not_eq 0x00 and offset_value == _cfg.delimiter_byte ? 0 : offset_value;
     for (int i = 0; i < _buffer_position; ++i) {
         _write_handler(_buffer_ptr[i], _context);
     }
@@ -50,7 +50,7 @@ void COBSWriteStrategyCore::finish() {
 }
 
 void COBSWriteStrategyCore::send_delimiter() {
-    _write_handler(_cfg.delimiter, _context);
+    _write_handler(_cfg.delimiter_byte, _context);
 }
 
 set_cobs_config_status COBSWriteStrategyCore::set_config(cobs_config_t config) {

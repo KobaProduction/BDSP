@@ -8,7 +8,7 @@ using namespace BDSP::streams::strategies::cobs::core;
 TEST(cobs_mixins_tests, cobs_default_config_test) {
     cobs_config_t config = COBSConfigsMixin().get_default_config();
 
-    EXPECT_EQ(config.delimiter, '\0');
+    EXPECT_EQ(config.delimiter_byte, '\0');
     EXPECT_EQ(config.depth, 255);
     EXPECT_EQ(config.size_of_the_sequence_to_be_replaced, 0);
     EXPECT_EQ(config.byte_of_the_sequence_to_be_replaced, '\0');
@@ -22,7 +22,7 @@ TEST(cobs_mixins_tests,cobs_default_checker_mixin_test) {
     } checker;
 
     cobs_config_t config;
-    config.delimiter = '\0';
+    config.delimiter_byte = '\0';
     config.depth = 255;
     config.size_of_the_sequence_to_be_replaced = 0;
     config.byte_of_the_sequence_to_be_replaced = '\0';
@@ -40,7 +40,7 @@ TEST(cobs_mixins_tests,cobs_default_checker_mixin_test) {
 TEST(cobs_mixins_tests, cobs_sr_config_test) {
     cobs_config_t config = COBSSRConfigsMixin().get_default_config();
 
-    EXPECT_EQ(config.delimiter, '\0');
+    EXPECT_EQ(config.delimiter_byte, '\0');
     EXPECT_EQ(config.depth, 127);
     EXPECT_EQ(config.size_of_the_sequence_to_be_replaced, 2);
     EXPECT_EQ(config.byte_of_the_sequence_to_be_replaced, '\0');
@@ -53,7 +53,7 @@ TEST(cobs_mixins_tests, cobs_sr_checker_mixin_test) {
     } checker;
 
     cobs_config_t config;
-    config.delimiter = '\0';
+    config.delimiter_byte = '\0';
     config.depth = 127;
     config.size_of_the_sequence_to_be_replaced = 2;
     config.byte_of_the_sequence_to_be_replaced = '\0';
@@ -72,7 +72,7 @@ TEST(cobs_mixins_tests, cobs_sr_checker_mixin_test) {
 TEST(cobs_mixins_tests, cobs_zpe_config_test) {
     cobs_config_t config = COBSZPEConfigsMixin().get_default_config();
 
-    EXPECT_EQ(config.delimiter, '\0');
+    EXPECT_EQ(config.delimiter_byte, '\0');
     EXPECT_EQ(config.depth, 224);
     EXPECT_EQ(config.size_of_the_sequence_to_be_replaced, 2);
     EXPECT_EQ(config.byte_of_the_sequence_to_be_replaced, '\0');
@@ -85,7 +85,7 @@ TEST(cobs_mixins_tests, cobs_zpe_checker_mixin_test) {
     } checker;
 
     cobs_config_t config;
-    config.delimiter = '\0';
+    config.delimiter_byte = '\0';
     config.depth = 224;
     config.size_of_the_sequence_to_be_replaced = 2;
     config.byte_of_the_sequence_to_be_replaced = '\0';

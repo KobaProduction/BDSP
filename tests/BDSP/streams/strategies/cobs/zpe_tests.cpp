@@ -14,14 +14,14 @@ TEST(strategies_strategies_cobs_zpe_tests, writer_reset_elimination_sequence_tes
     cobs_config_t config = writer.get_strategy().get_config();
 
     std::vector<uint8_t> data = {config.byte_of_the_sequence_to_be_replaced, 1};
-    std::vector<uint8_t> correct_encoded = {1, 2, 1, config.delimiter};
+    std::vector<uint8_t> correct_encoded = {1, 2, 1, config.delimiter_byte};
     start_test_writer(writer, data, correct_encoded);
 }
 
 TEST(strategies_strategies_cobs_zpe_tests, writer_elimination_sequence_after_offset_test) {
     COBSZPEWriterStream writer;
     cobs_config_t config = writer.get_strategy().get_config();
-    config.delimiter = 255;
+    config.delimiter_byte = 255;
     EXPECT_EQ(writer.get_strategy().set_config(config), SET_OK);
 
     writer.set_stream_writer([](uint8_t byte, void *ctx_ptr) { }, nullptr);
@@ -68,7 +68,7 @@ TEST(strategies_strategies_cobs_zpe_tests, writer_elimination_sequence_after_off
                                             99,
                                             99,
                                             config.byte_of_the_sequence_to_be_replaced,
-                                            config.delimiter};
+                                            config.delimiter_byte};
     start_test_writer(writer, data, correct_encoded);
 }
 
@@ -77,6 +77,6 @@ TEST(strategies_strategies_cobs_zpe_tests, writer_elimination_sequence_test) {
     cobs_config_t config = writer.get_strategy().get_config();
 
     std::vector<uint8_t> data = {config.byte_of_the_sequence_to_be_replaced, config.byte_of_the_sequence_to_be_replaced};
-    std::vector<uint8_t> correct_encoded = {0xE1, 1, config.delimiter};
+    std::vector<uint8_t> correct_encoded = {0xE1, 1, config.delimiter_byte};
     start_test_writer(writer, data, correct_encoded);
 }

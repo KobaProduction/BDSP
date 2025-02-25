@@ -13,7 +13,7 @@ void COBSReadStrategyCore::_exec_delimiter(uint8_t byte) {
 }
 
 uint8_t COBSReadStrategyCore::_get_converted_swap_byte_offset(uint8_t raw_offset) {
-    return _cfg.delimiter not_eq 0x00 and raw_offset == 0x00 ? _cfg.delimiter : raw_offset;
+    return _cfg.delimiter_byte not_eq 0x00 and raw_offset == 0x00 ? _cfg.delimiter_byte : raw_offset;
 }
 
 bool COBSReadStrategyCore::_get_read_process_state() {
@@ -44,7 +44,7 @@ cobs_config_t COBSReadStrategyCore::get_config() {
 
 strategy_read_status_t COBSReadStrategyCore::read(uint8_t byte) {
     strategy_read_status_t status = STRATEGY_READ_OK;
-    if (byte == _cfg.delimiter) {
+    if (byte == _cfg.delimiter_byte) {
         _exec_delimiter(byte);
         return STRATEGY_READ_DELIMITER;
     }
@@ -57,7 +57,7 @@ strategy_read_status_t COBSReadStrategyCore::read(uint8_t byte) {
         }
         if (_fsm_state == SWAP_BYTE) {
             _fsm_state = REGULAR_BYTE;
-            byte = _cfg.delimiter;
+            byte = _cfg.delimiter_byte;
         }
     }
     if (_fsm_state == REGULAR_BYTE) {

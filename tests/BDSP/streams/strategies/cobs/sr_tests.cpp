@@ -43,16 +43,16 @@ TEST(strategies_cobs_sr_tests, reader_errors_test) {
         nullptr,
         &statuses);
 
-    EXPECT_EQ(read_strategy.read(config.delimiter + 2), STRATEGY_READ_OK);
+    EXPECT_EQ(read_strategy.read(config.delimiter_byte + 2), STRATEGY_READ_OK);
     ASSERT_TRUE(statuses.empty());
 
-    EXPECT_EQ(read_strategy.read(config.delimiter), STRATEGY_READ_DELIMITER);
+    EXPECT_EQ(read_strategy.read(config.delimiter_byte), STRATEGY_READ_DELIMITER);
     ASSERT_TRUE(statuses == std::vector<strategy_read_status_t>({STRATEGY_READ_ERROR, STRATEGY_READ_DELIMITER}));
 
     statuses.clear();
     EXPECT_EQ(read_strategy.read(128), STRATEGY_READ_OK);
     ASSERT_TRUE(statuses.empty());
-    EXPECT_EQ(read_strategy.read(config.delimiter), STRATEGY_READ_DELIMITER);
+    EXPECT_EQ(read_strategy.read(config.delimiter_byte), STRATEGY_READ_DELIMITER);
     ASSERT_TRUE(statuses == std::vector<strategy_read_status_t>({STRATEGY_READ_ERROR, STRATEGY_READ_DELIMITER}));
 
     statuses.clear();
@@ -66,22 +66,22 @@ TEST(strategies_cobs_sr_tests, writer_reset_elimination_sequence_test) {
     COBSSRWriterStream writer;
 
     cobs_config_t config = core::COBSSRConfigsMixin().get_default_config();
-    config.delimiter = 255;
+    config.delimiter_byte = 255;
     writer.get_strategy().set_config(config);
     reader.get_strategy().set_config(config);
 
     std::vector<uint8_t> data = {config.byte_of_the_sequence_to_be_replaced};
-    std::vector<uint8_t> correct_encoded = {2, config.byte_of_the_sequence_to_be_replaced, config.delimiter};
+    std::vector<uint8_t> correct_encoded = {2, config.byte_of_the_sequence_to_be_replaced, config.delimiter_byte};
     start_test_writer(writer, data, correct_encoded);
     start_test_reader(reader, correct_encoded, data);
 
     data = {config.byte_of_the_sequence_to_be_replaced, 1};
-    correct_encoded = {3, config.byte_of_the_sequence_to_be_replaced, 1, config.delimiter};
+    correct_encoded = {3, config.byte_of_the_sequence_to_be_replaced, 1, config.delimiter_byte};
     start_test_writer(writer, data, correct_encoded);
     start_test_reader(reader, correct_encoded, data);
 
     data = {1, 1};
-    correct_encoded = {3, 1, 1, config.delimiter};
+    correct_encoded = {3, 1, 1, config.delimiter_byte};
     start_test_writer(writer, data, correct_encoded);
     start_test_reader(reader, correct_encoded, data);
 }

@@ -119,13 +119,13 @@ TEST(strategies_cobs_default_tests, reader_errors_test) {
         nullptr,
         &statuses);
 
-    EXPECT_EQ(read_strategy.read(config.delimiter + 2), STRATEGY_READ_OK);
+    EXPECT_EQ(read_strategy.read(config.delimiter_byte + 2), STRATEGY_READ_OK);
     ASSERT_TRUE(statuses.empty());
 
-    EXPECT_EQ(read_strategy.read(config.delimiter), STRATEGY_READ_DELIMITER);
+    EXPECT_EQ(read_strategy.read(config.delimiter_byte), STRATEGY_READ_DELIMITER);
     ASSERT_TRUE(statuses == std::vector<strategy_read_status_t>({STRATEGY_READ_ERROR, STRATEGY_READ_DELIMITER}));
 
-    config.delimiter = 1;
+    config.delimiter_byte = 1;
     config.depth = 16;
 
     EXPECT_EQ(read_strategy.set_config(config), SET_OK);
@@ -147,7 +147,7 @@ TEST(strategies_cobs_default_tests, encoding_depth_test) {
 
     std::vector<uint8_t> data;
     std::vector<uint8_t> correct_encoded = {
-        config.depth, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 1, config.delimiter};
+        config.depth, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 1, config.delimiter_byte};
 
     data.reserve(config.depth - 1);
     for (int i = 0; i < config.depth - 1; ++i) {
@@ -177,7 +177,7 @@ TEST(strategies_cobs_default_tests, encoding_depth_test) {
                        255,
                        2,
                        255,
-                       config.delimiter};
+                       config.delimiter_byte};
 
     start_test_writer(writer, data, correct_encoded);
     start_test_reader(reader, correct_encoded, data);
@@ -188,7 +188,7 @@ TEST(strategies_cobs_default_tests, encoding_custom_delimiter_test) {
     COBSWriterStream writer;
 
     cobs_config_t config = core::COBSConfigsMixin().get_default_config();
-    config.delimiter = 2;
+    config.delimiter_byte = 2;
     EXPECT_EQ(reader.get_strategy().set_config(config), SET_OK);
     EXPECT_EQ(writer.get_strategy().set_config(config), SET_OK);
 

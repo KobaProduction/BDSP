@@ -10,7 +10,7 @@
 namespace BDSP::streams::strategies::cobs {
 
 struct cobs_config_t {
-    uint8_t delimiter = '\0';
+    uint8_t delimiter_byte = '\0';
     uint8_t depth = 255;
     uint8_t size_of_the_sequence_to_be_replaced = 0;
     uint8_t byte_of_the_sequence_to_be_replaced = '\0';
