@@ -1,45 +1,72 @@
 #include <Arduino.h>
-#include <BDSP.h>
+#include <BDSP/BDSP.h>
 
-BDSPTransceiver transceiver;
+BDSP::streams::cobs::COBSZPEReaderStream reader;
+BDSP::streams::cobs::COBSZPEWriterStream writer;
+BDSP::BDSPTransceiver transceiver;
+
+#define SAMPLES_SIZE 255
+
+#if not defined(ANALOG_PIN) and defined(ESP32)
+#define ANALOG_PIN 0
+#endif
+
+uint16_t samples[SAMPLES_SIZE];
 
 void setup() {
     Serial.begin(115200);
     Serial.println();
-    COBS::config_t config = {.delimiter = '\n', .depth = 255};
-    transceiver.set_config(
-            config,
-            [] (uint8_t *data, size_t size, void *context) {
-                Serial.write(data, size);
-                Serial.flush();
-            },
-            [] (Packet &packet, void *context) {
-                // Sending the packet back.
-                transceiver.send_packet(packet);
-            }
-    );
 
-    transceiver.set_error_handler([] (BDSP::receiver_error_t error, void *context) {
-        auto &bdsp_transceiver= *static_cast<BDSPTransceiver*>(context);
-        Packet error_packet(0, 1);
-        error_packet.create_buffer();
-        error_packet.data_ptr[0]=error;
-        bdsp_transceiver.send_packet(error_packet);
-    }, &transceiver);
+    auto config = writer.get_strategy().get_config();
+    config.delimiter_byte = '\n';
+    writer.get_strategy().set_config(config);
+    reader.get_strategy().set_config(config);
+
+
+    writer.set_stream_writer(
+        [](uint8_t byte, void *ctx) {
+            Serial.write(byte);
+            Serial.flush();
+        },
+        &reader);
+
+    transceiver.set_stream_writer(&writer);
+    transceiver.set_stream_reader(&reader);
+    transceiver.set_packet_handler(
+        [](BDSP::packet_context_t &packet_ctx, void *ctx) {
+            reinterpret_cast<BDSP::BDSPTransceiver*>(ctx)->send_packet(packet_ctx);
+        },
+        &transceiver);
+
+    transceiver.set_error_handler(
+        [](BDSP::parse_packet_status_t status, void *ctx) {
+            Serial.print(F("error - BDSP::parse_packet_status_t code: "));
+            Serial.println(uint32_t(status));
+        },
+        &transceiver);
 }
 
-#define SAMPLES_SIZE 255
-uint8_t data[SAMPLES_SIZE];
 
 void loop() {
-    for (unsigned char & i : data) i = analogRead(A2) >> 2;
-    transceiver.send_data(1, data, SAMPLES_SIZE);
-//    delay(500);
-//    size_t available = Serial.available();
-//    if (available) {
-//        auto *buffer = new uint8_t[available];
-//        Serial.readBytes(buffer, available);
-//        transceiver.parse(buffer, available);
-//        delete[] buffer;
-//    }
+    size_t available = Serial.available();
+    if (available) {
+        auto *buffer = new uint8_t[available];
+        Serial.readBytes(buffer, available);
+        reader.read(buffer, available);
+        delete[] buffer;
+    }
+
+    static uint32_t timer;
+    if (millis() - timer < 1000) return;
+    timer = millis();
+
+    for (uint16_t &sample: samples) {
+        sample = analogRead(ANALOG_PIN);
+    }
+
+    transceiver.send_data(
+        1,
+        reinterpret_cast<uint8_t *>(samples),
+        SAMPLES_SIZE * sizeof(*samples),
+        BDSP::WITH_CHECKSUM);
 }
