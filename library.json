@@ -1,7 +1,7 @@
 {
   "name": "BDSP",
-  "description": "The library implements a binary data separation protocol based on COBS encoding. Asynchronous application architecture. No dependencies.",
-  "keywords": "uart, protocol, COBS",
+  "description": "The library implements a low-level packet data transfer protocol for byte communication channels (for example, UART, IP Socket). PPP and COBS byte stuffing methods are used.",
+  "keywords": "packet, protocol, COBS, PPP, UART, socket, ",
   "authors": [
     {
       "name": "Arthur Koba",
@@ -13,7 +13,7 @@
     "type": "git",
     "url": "https://github.com/KobaProduction/BDSP.git"
   },
-  "version": "0.1.2",
+  "version": "0.2.1",
   "license": "MIT",
   "homepage": "https://github.com/KobaProduction/BDSP",
   "frameworks": "*",

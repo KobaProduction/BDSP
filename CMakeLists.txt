@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 set(CMAKE_CXX_STANDARD 17)
 project(BDSP
-        VERSION 0.1.2
+        VERSION 0.2.1
         DESCRIPTION "The library implements a binary data separation protocol."
         LANGUAGES CXX
 )
