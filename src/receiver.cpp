@@ -47,7 +47,10 @@ parse_packet_status_t BDSPV1ReceiverCore::parse_packet_byte(uint8_t byte, stream
         if (_packet_header.is_unsupported_protocol_version) {
             return _cause_error(UNSUPPORTED_PROTOCOL_ERROR);
         }
-        _packet_context = {_packet_header.packet_id, nullptr, 0, true};
+        _packet_context.packet_id = _packet_header.packet_id;
+        _packet_context.data_ptr = nullptr;
+        _packet_context.size = 0;
+        _packet_context.need_clear = true;
         _fsm_state = PACKET_SIZE_A;
         return PARSE_PACKET_BYTE_OK;
     case PACKET_CHECKSUM:

@@ -17,9 +17,17 @@ set_byte_stuffing_config_status ByteStuffingConfigsMixin::_check_config(byte_stu
 }
 
 byte_stuffing_config_t ByteStuffingConfigsMixin::get_default_config() {
-    return {.delimiter_byte = 0xFE, .escape_byte = 0xFD, .escape_mask = 0x20};
+    byte_stuffing_config_t config;
+    config.delimiter_byte = 0xFE;
+    config.escape_byte = 0xFD;
+    config.escape_mask = 0x20;
+    return config;
 }
 
 byte_stuffing_config_t PPPConfigsMixin::get_default_config() {
-    return {.delimiter_byte = 0x7E, .escape_byte = 0x7D, .escape_mask = 0x20};
+    byte_stuffing_config_t config;
+    config.delimiter_byte = 0x7E;
+    config.escape_byte = 0x7D;
+    config.escape_mask = 0x20;
+    return config;
 }

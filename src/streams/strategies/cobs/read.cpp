@@ -89,7 +89,7 @@ set_cobs_config_status COBSReadStrategyCore::set_config(cobs_config_t config) {
     if (_get_read_process_state()) {
         return ERROR_PROCESS_NOT_FINISHED;
     }
-    _cfg = {.delimiter = config.delimiter, .depth = config.depth};
+    _cfg = config;
     reset_read_state();
     _ready_state_callback(true, _context);
     return status;

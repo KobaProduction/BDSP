@@ -1,6 +1,7 @@
 #ifndef BDSP_STREAMS_TYPES_H
 #define BDSP_STREAMS_TYPES_H
 
+#include <stddef.h>
 #include <stdint.h>
 
 namespace BDSP::streams {

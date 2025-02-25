@@ -10,7 +10,10 @@ send_packet_status_t BDSPV1TransmitterCore::send_data(uint8_t packet_id,
                                                       uint8_t *buffer_ptr,
                                                       size_t size,
                                                       checksum_usage_state_t checksum_state) {
-    packet_context_t packet_context = {packet_id, buffer_ptr, static_cast<uint16_t>(size)};
+    packet_context_t packet_context;
+    packet_context.packet_id = packet_id;
+    packet_context.data_ptr = buffer_ptr;
+    packet_context.size = static_cast<uint16_t>(size);
     return send_packet(packet_context, checksum_state);
 }
 

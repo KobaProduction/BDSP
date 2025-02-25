@@ -18,10 +18,12 @@ set_cobs_config_status COBSConfigsMixin::_check_min_cobs_depth(cobs_config_t con
 }
 
 cobs_config_t COBSConfigsMixin::get_default_config() {
-    return {.delimiter = '\0',
-            .depth = 255,
-            .size_of_the_sequence_to_be_replaced = 0,
-            .byte_of_the_sequence_to_be_replaced = '\0'};
+    cobs_config_t config;
+    config.delimiter = '\0';
+    config.depth = 255;
+    config.size_of_the_sequence_to_be_replaced = 0;
+    config.byte_of_the_sequence_to_be_replaced = '\0';
+    return config;
 }
 
 set_cobs_config_status COBSSRConfigsMixin::_check_config(cobs_config_t config) {
@@ -35,10 +37,12 @@ set_cobs_config_status COBSSRConfigsMixin::_check_config(cobs_config_t config) {
 }
 
 cobs_config_t COBSSRConfigsMixin::get_default_config() {
-    return {.delimiter = '\0',
-            .depth = 127,
-            .size_of_the_sequence_to_be_replaced = 2,
-            .byte_of_the_sequence_to_be_replaced = '\0'};
+    cobs_config_t config;
+    config.delimiter = '\0';
+    config.depth = 127;
+    config.size_of_the_sequence_to_be_replaced = 2;
+    config.byte_of_the_sequence_to_be_replaced = '\0';
+    return config;
 }
 
 set_cobs_config_status COBSZPEConfigsMixin::_check_config(cobs_config_t config) {
@@ -52,8 +56,10 @@ set_cobs_config_status COBSZPEConfigsMixin::_check_config(cobs_config_t config) 
 }
 
 cobs_config_t COBSZPEConfigsMixin::get_default_config() {
-    return {.delimiter = '\0',
-            .depth = 224,
-            .size_of_the_sequence_to_be_replaced = 2,
-            .byte_of_the_sequence_to_be_replaced = '\0'};
+    cobs_config_t config;
+    config.delimiter = '\0';
+    config.depth = 224;
+    config.size_of_the_sequence_to_be_replaced = 2;
+    config.byte_of_the_sequence_to_be_replaced = '\0';
+    return config;
 }
