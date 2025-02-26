@@ -29,29 +29,24 @@ public:
     cobs_config_t get_config();
     void finish() override;
     void send_delimiter() override;
-    set_cobs_config_status set_config(cobs_config_t config);
+    virtual set_cobs_config_status set_config(cobs_config_t config);
     void write(uint8_t byte) override;
 };
 
 class COBSSRWriteStrategyCore: public COBSWriteStrategyCore, public virtual COBSSRConfigsMixin {
 protected:
     uint8_t _current_size_of_the_sequence_to_be_replaced = 0;
-//    void _init() override;
+    uint8_t _position_threshold_of_the_sequence_to_be_replaced = 0;
     bool _get_read_process_state() override;
     virtual void _reset_elimination_sequence();
 
 public:
     void finish() override;
+    set_cobs_config_status set_config(cobs_config_t config) override;
     void write(uint8_t byte) override;
 };
 
-class COBSZPEWriteStrategyCore: public COBSSRWriteStrategyCore, public virtual COBSZPEConfigsMixin {
-//protected:
-//    void _init() override;
-
-public:
-    void write(uint8_t byte) override;
-};
+class COBSZPEWriteStrategyCore: public COBSSRWriteStrategyCore, public virtual COBSZPEConfigsMixin { };
 
 } // namespace core
 

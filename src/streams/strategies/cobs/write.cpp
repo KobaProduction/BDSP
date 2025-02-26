@@ -104,25 +104,20 @@ void COBSSRWriteStrategyCore::finish() {
     COBSWriteStrategyCore::finish();
 }
 
-void COBSSRWriteStrategyCore::write(uint8_t byte) {
-    if (byte == _cfg.byte_of_the_sequence_to_be_replaced) {
-        _current_size_of_the_sequence_to_be_replaced++;
-        if (_current_size_of_the_sequence_to_be_replaced == _cfg.size_of_the_sequence_to_be_replaced) {
-            _write_buffer_to_stream(_buffer_position + 127);
-            _current_size_of_the_sequence_to_be_replaced = 0;
-        }
-        return;
-    } else if (_current_size_of_the_sequence_to_be_replaced) {
-        _reset_elimination_sequence();
+set_cobs_config_status COBSSRWriteStrategyCore::set_config(cobs_config_t config) {
+    set_cobs_config_status status = COBSWriteStrategyCore::set_config(config);
+    if (status == SET_OK) {
+        _position_threshold_of_the_sequence_to_be_replaced = 0xFF - _cfg.depth;
     }
-    _encode(byte);
+    return status;
 }
 
-void COBSZPEWriteStrategyCore::write(uint8_t byte) {
-    if (byte == _cfg.byte_of_the_sequence_to_be_replaced and _buffer_position <= 31) {
+void COBSSRWriteStrategyCore::write(uint8_t byte) {
+    if (byte == _cfg.byte_of_the_sequence_to_be_replaced and
+        _buffer_position <= _position_threshold_of_the_sequence_to_be_replaced) {
         _current_size_of_the_sequence_to_be_replaced++;
         if (_current_size_of_the_sequence_to_be_replaced == _cfg.size_of_the_sequence_to_be_replaced) {
-            _write_buffer_to_stream(_buffer_position + 0xE0);
+            _write_buffer_to_stream(_buffer_position + _cfg.depth);
             _current_size_of_the_sequence_to_be_replaced = 0;
         }
         return;
