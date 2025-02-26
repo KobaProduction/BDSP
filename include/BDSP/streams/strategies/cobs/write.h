@@ -19,7 +19,7 @@ protected:
     void (*_free)(void *) = free;
 
     void _encode(uint8_t byte);
-    virtual bool _get_read_process_state();
+    virtual bool _get_active_write_state_status();
     void _init() override;
     void _write_buffer_with_offset_to_handler(uint8_t offset);
 
@@ -34,10 +34,10 @@ public:
 
 class COBSSRWriteStrategyCore: public COBSWriteStrategyCore, public virtual COBSSRConfigsMixin {
 protected:
-    uint8_t _position_threshold_of_the_sequence_to_be_replaced = 0;
-    bool _get_read_process_state() override;
-    virtual void _reset_elimination_sequence();
     uint8_t _counter_of_the_sequence_to_be_replaced = 0;
+    uint8_t _limit_position_of_the_sequence_to_be_replaced = 0;
+    bool _get_active_write_state_status() override;
+    void _reset_counter_of_the_sequence_to_be_replaced();
 
 public:
     void finish() override;

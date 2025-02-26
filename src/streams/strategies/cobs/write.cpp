@@ -13,7 +13,7 @@ inline void COBSWriteStrategyCore::_encode(uint8_t byte) {
     _write_buffer_with_offset_to_handler(_buffer_position);
 }
 
-bool COBSWriteStrategyCore::_get_read_process_state() {
+bool COBSWriteStrategyCore::_get_active_write_state_status() {
     if (_buffer_position not_eq 1) {
         return true;
     }
@@ -55,7 +55,7 @@ set_cobs_config_status COBSWriteStrategyCore::set_config(cobs_config_t config) {
     if (status not_eq SET_OK) {
         return status;
     }
-    if (_get_read_process_state()) {
+    if (_get_active_write_state_status()) {
         return ERROR_PROCESS_NOT_FINISHED;
     }
     if (_buffer_ptr and _cfg.depth not_eq config.depth) {
@@ -77,14 +77,14 @@ void COBSWriteStrategyCore::write(uint8_t byte) {
     _encode(byte);
 }
 
-bool COBSSRWriteStrategyCore::_get_read_process_state() {
+bool COBSSRWriteStrategyCore::_get_active_write_state_status() {
     if (_counter_of_the_sequence_to_be_replaced not_eq 0) {
         return ERROR_PROCESS_NOT_FINISHED;
     }
-    return COBSWriteStrategyCore::_get_read_process_state();
+    return COBSWriteStrategyCore::_get_active_write_state_status();
 }
 
-inline void COBSSRWriteStrategyCore::_reset_elimination_sequence() {
+inline void COBSSRWriteStrategyCore::_reset_counter_of_the_sequence_to_be_replaced() {
     while (_counter_of_the_sequence_to_be_replaced) {
         _encode(_cfg.byte_of_the_sequence_to_be_replaced);
         _counter_of_the_sequence_to_be_replaced--;
@@ -101,22 +101,22 @@ void COBSSRWriteStrategyCore::finish() {
 set_cobs_config_status COBSSRWriteStrategyCore::set_config(cobs_config_t config) {
     set_cobs_config_status status = COBSWriteStrategyCore::set_config(config);
     if (status == SET_OK) {
-        _position_threshold_of_the_sequence_to_be_replaced = 0xFF - _cfg.depth;
+        _limit_position_of_the_sequence_to_be_replaced = 0xFF - _cfg.depth;
     }
     return status;
 }
 
 void COBSSRWriteStrategyCore::write(uint8_t byte) {
     if (byte == _cfg.byte_of_the_sequence_to_be_replaced and
-        _buffer_position <= _position_threshold_of_the_sequence_to_be_replaced) {
+        _buffer_position <= _limit_position_of_the_sequence_to_be_replaced) {
         _counter_of_the_sequence_to_be_replaced++;
         if (_counter_of_the_sequence_to_be_replaced == _cfg.size_of_the_sequence_to_be_replaced) {
             _write_buffer_with_offset_to_handler(_buffer_position + _cfg.depth);
             _counter_of_the_sequence_to_be_replaced = 0;
         }
         return;
-        _reset_elimination_sequence();
     } else if (_counter_of_the_sequence_to_be_replaced) {
+        _reset_counter_of_the_sequence_to_be_replaced();
     }
     _encode(byte);
 }
