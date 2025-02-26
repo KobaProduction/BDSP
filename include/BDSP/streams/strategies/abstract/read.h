@@ -17,7 +17,7 @@ protected:
     strategy_data_callback_t _data_callback = _default_read_callback;
     strategy_ready_state_callback_t _ready_state_callback = _default_ready_state_callback;
 
-    virtual void _init() { };
+    virtual void _init() = 0;
 
 public:
     void init(strategies::strategy_data_callback_t read_callback,

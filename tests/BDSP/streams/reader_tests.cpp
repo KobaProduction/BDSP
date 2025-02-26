@@ -14,15 +14,16 @@ std::vector<uint8_t> finish_bytes = {0xFF, 0xFF};
 
 class EmptyStrategy final: public abstract::AbstractReadStrategy {
 public:
+    void _init() override { }
+
     strategy_read_status_t read(uint8_t byte) override {
         strategy_read_status_t status = byte == 0 ? STRATEGY_READ_ERROR : byte == 1 ? STRATEGY_READ_DELIMITER : STRATEGY_READ_OK;
         _data_callback(byte, status, _context);
         return status;
     }
 
-    void reset_read_state() override {
+    void reset_read_state() override {};
 
-    };
 };
 
 struct Context {
@@ -93,7 +94,8 @@ TEST(stream_reader_tests, read_when_have_errors_test) {
     std::vector<uint8_t> stream = {3, 3, 0, 2, 3, 3, 3};
     EXPECT_EQ(reader.read(stream.data(), stream.size()), STREAM_READ_ERROR);
     ASSERT_TRUE(context.data == std::vector<uint8_t>({3, 3, 0}));
-    ASSERT_TRUE(context.statuses == std::vector<stream_read_status_t>({STREAM_READ_OK, STREAM_READ_OK, STREAM_READ_ERROR}));
+    ASSERT_TRUE(context.statuses ==
+                std::vector<stream_read_status_t>({STREAM_READ_OK, STREAM_READ_OK, STREAM_READ_ERROR}));
 }
 
 TEST(stream_reader_tests, manual_reset_after_error__test) {
@@ -115,5 +117,6 @@ TEST(stream_reader_tests, reset_when_have_errors_and_read_delimiter_test) {
     std::vector<uint8_t> stream = {3, 0, 3, 1, 3};
     EXPECT_EQ(reader.read(stream.data(), stream.size()), STREAM_READ_ERROR);
     ASSERT_TRUE(context.data == std::vector<uint8_t>({3, 0, 1, 3}));
-    ASSERT_TRUE(context.statuses == std::vector<stream_read_status_t>({STREAM_READ_OK, STREAM_READ_ERROR, STREAM_READ_DELIMITER, STREAM_READ_OK}));
+    ASSERT_TRUE(context.statuses == std::vector<stream_read_status_t>(
+                                        {STREAM_READ_OK, STREAM_READ_ERROR, STREAM_READ_DELIMITER, STREAM_READ_OK}));
 }

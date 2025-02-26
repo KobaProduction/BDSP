@@ -22,9 +22,12 @@ class VectorTestWriter final: public BDSP::streams::StreamWriter<TestVectorWrite
 
 class TestVectorReadStrategy final: public BDSP::streams::strategies::abstract::AbstractReadStrategy {
 public:
+    void _init() override { };
+
     BDSP::streams::strategies::strategy_read_status_t read(uint8_t byte) override;
-    BDSP::streams::strategies::strategy_read_status_t read_with_status(uint8_t byte,
-                                                           BDSP::streams::strategies::strategy_read_status_t status);
+    BDSP::streams::strategies::strategy_read_status_t read_with_status(
+        uint8_t byte,
+        BDSP::streams::strategies::strategy_read_status_t status);
     void reset_read_state() override;
 };
 
