@@ -34,10 +34,10 @@ public:
 
 class COBSSRWriteStrategyCore: public COBSWriteStrategyCore, public virtual COBSSRConfigsMixin {
 protected:
-    uint8_t _current_size_of_the_sequence_to_be_replaced = 0;
     uint8_t _position_threshold_of_the_sequence_to_be_replaced = 0;
     bool _get_read_process_state() override;
     virtual void _reset_elimination_sequence();
+    uint8_t _counter_of_the_sequence_to_be_replaced = 0;
 
 public:
     void finish() override;

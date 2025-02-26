@@ -78,22 +78,22 @@ void COBSWriteStrategyCore::write(uint8_t byte) {
 }
 
 bool COBSSRWriteStrategyCore::_get_read_process_state() {
-    if (_current_size_of_the_sequence_to_be_replaced not_eq 0) {
+    if (_counter_of_the_sequence_to_be_replaced not_eq 0) {
         return ERROR_PROCESS_NOT_FINISHED;
     }
     return COBSWriteStrategyCore::_get_read_process_state();
 }
 
 inline void COBSSRWriteStrategyCore::_reset_elimination_sequence() {
-    while (_current_size_of_the_sequence_to_be_replaced) {
+    while (_counter_of_the_sequence_to_be_replaced) {
         _encode(_cfg.byte_of_the_sequence_to_be_replaced);
-        _current_size_of_the_sequence_to_be_replaced--;
+        _counter_of_the_sequence_to_be_replaced--;
     }
 }
 
 void COBSSRWriteStrategyCore::finish() {
-    if (_current_size_of_the_sequence_to_be_replaced) {
-        _reset_elimination_sequence();
+    if (_counter_of_the_sequence_to_be_replaced) {
+        _reset_counter_of_the_sequence_to_be_replaced();
     }
     COBSWriteStrategyCore::finish();
 }
@@ -109,14 +109,14 @@ set_cobs_config_status COBSSRWriteStrategyCore::set_config(cobs_config_t config)
 void COBSSRWriteStrategyCore::write(uint8_t byte) {
     if (byte == _cfg.byte_of_the_sequence_to_be_replaced and
         _buffer_position <= _position_threshold_of_the_sequence_to_be_replaced) {
-        _current_size_of_the_sequence_to_be_replaced++;
-        if (_current_size_of_the_sequence_to_be_replaced == _cfg.size_of_the_sequence_to_be_replaced) {
+        _counter_of_the_sequence_to_be_replaced++;
+        if (_counter_of_the_sequence_to_be_replaced == _cfg.size_of_the_sequence_to_be_replaced) {
             _write_buffer_with_offset_to_handler(_buffer_position + _cfg.depth);
-            _current_size_of_the_sequence_to_be_replaced = 0;
+            _counter_of_the_sequence_to_be_replaced = 0;
         }
         return;
-    } else if (_current_size_of_the_sequence_to_be_replaced) {
         _reset_elimination_sequence();
+    } else if (_counter_of_the_sequence_to_be_replaced) {
     }
     _encode(byte);
 }

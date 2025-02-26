@@ -13,7 +13,7 @@ TEST(strategies_strategies_cobs_sr_tests, set_configuration_with_active_process)
 
     class AccessFieldClass: public core::COBSSRWriteStrategyCore {
     public:
-        using core::COBSSRWriteStrategyCore::_current_size_of_the_sequence_to_be_replaced;
+        using core::COBSSRWriteStrategyCore::_counter_of_the_sequence_to_be_replaced;
     };
 
     COBSSRWriteStrategy write_strategy;
@@ -21,10 +21,10 @@ TEST(strategies_strategies_cobs_sr_tests, set_configuration_with_active_process)
 
     cobs_config_t config = core::COBSSRConfigsMixin().get_default_config();
 
-    reinterpret_cast<AccessFieldClass*>(&write_strategy)->_current_size_of_the_sequence_to_be_replaced = 1;
+    reinterpret_cast<AccessFieldClass*>(&write_strategy)->_counter_of_the_sequence_to_be_replaced = 1;
 
     EXPECT_EQ(write_strategy.set_config(config), ERROR_PROCESS_NOT_FINISHED);
-    reinterpret_cast<AccessFieldClass*>(&write_strategy)->_current_size_of_the_sequence_to_be_replaced = 0;
+    reinterpret_cast<AccessFieldClass*>(&write_strategy)->_counter_of_the_sequence_to_be_replaced = 0;
 
     read_strategy.read(config.depth + 1);
     EXPECT_EQ(read_strategy.set_config(config), ERROR_PROCESS_NOT_FINISHED);
