@@ -15,6 +15,6 @@ void AbstractReadStrategy::init(strategy_data_callback_t read_callback,
         _ready_state_callback = _default_ready_state_callback;
     }
     _context = ctx;
-    _ready_state_callback(_data_callback not_eq _default_read_callback, _context);
     _init();
+    _ready_state_callback(_data_callback not_eq _default_read_callback, _context);
 }
