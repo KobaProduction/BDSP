@@ -18,6 +18,7 @@ protected:
     void *(*_malloc)(size_t) = malloc;
     void (*_free)(void *) = free;
 
+    void _check_buffer_fullness();
     void _encode(uint8_t byte);
     virtual bool _get_read_process_state();
     void _init() override;
