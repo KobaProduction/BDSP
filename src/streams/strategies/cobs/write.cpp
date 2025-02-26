@@ -88,11 +88,11 @@ bool COBSSRWriteStrategyCore::_get_read_process_state() {
     return COBSWriteStrategyCore::_get_read_process_state();
 }
 
-void COBSSRWriteStrategyCore::_reset_elimination_sequence() {
-    for (size_t i = 0; i < _current_size_of_the_sequence_to_be_replaced; ++i) {
+inline void COBSSRWriteStrategyCore::_reset_elimination_sequence() {
+    while (_current_size_of_the_sequence_to_be_replaced) {
         _encode(_cfg.byte_of_the_sequence_to_be_replaced);
+        _current_size_of_the_sequence_to_be_replaced--;
     }
-    _current_size_of_the_sequence_to_be_replaced = 0;
 }
 
 void COBSSRWriteStrategyCore::finish() {
