@@ -62,11 +62,13 @@ set_cobs_config_status COBSWriteStrategyCore::set_config(cobs_config_t config) {
     if (_get_read_process_state()) {
         return ERROR_PROCESS_NOT_FINISHED;
     }
-    if (_buffer_ptr) {
+    if (_buffer_ptr and _cfg.depth not_eq config.depth) {
         _free(_buffer_ptr);
         _buffer_ptr = nullptr;
     }
-    _buffer_ptr = reinterpret_cast<uint8_t *>(_malloc(config.depth));
+    if (not _buffer_ptr) {
+        _buffer_ptr = reinterpret_cast<uint8_t *>(_malloc(config.depth));
+    }
     if (not _buffer_ptr) {
         return ERROR_MEMORY_ALLOCATION;
     }

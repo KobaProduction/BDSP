@@ -100,6 +100,7 @@ TEST(strategies_cobs_default_tests, set_configuration_to_write_strategy_when_no_
     reinterpret_cast<AccessFieldClass *>(&write_strategy)->_malloc = [](size_t size) -> void * { return nullptr; };
 
     cobs_config_t config = write_strategy.get_config();
+    config.depth--;
 
     EXPECT_EQ(write_strategy.set_config(config), ERROR_MEMORY_ALLOCATION);
 
