@@ -78,9 +78,9 @@ TEST(strategies_cobs_default_tests, set_configuration_with_active_process) {
     read_strategy.reset_read_state();
     class AccessFieldClass: public core::COBSReadStrategyCore {
     public:
-        using core::COBSReadStrategyCore::_service_byte_offset;
+        using core::COBSReadStrategyCore::_offset_to_service_byte;
     };
-    reinterpret_cast<AccessFieldClass *>(&read_strategy)->_service_byte_offset = 0;
+    reinterpret_cast<AccessFieldClass *>(&read_strategy)->_offset_to_service_byte = 1;
 
     EXPECT_EQ(read_strategy.set_config(config), ERROR_PROCESS_NOT_FINISHED);
     ASSERT_FALSE(read_strategy_ready);
