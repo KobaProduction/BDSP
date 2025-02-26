@@ -11,20 +11,16 @@ namespace BDSP::streams::strategies::cobs {
 
 namespace core {
 class COBSReadStrategyCore: public strategies::abstract::AbstractReadStrategy, public virtual COBSConfigsMixin {
-public:
-    typedef enum { SERVICE_BYTE, REGULAR_BYTE, SWAP_BYTE } fsm_state_t;
-
 protected:
     cobs_config_t _cfg{};
-    fsm_state_t _fsm_state = SERVICE_BYTE;
-    uint8_t _service_byte_offset = _cfg.depth;
-    uint8_t _swap_byte_offset{};
+    uint8_t _offset_to_service_byte = 0;
+    bool _service_byte_type_is_offset = true;
 
     virtual void _exec_delimiter(uint8_t byte);
+    virtual bool _exec_new_offset_and_get_success_status(uint8_t offset);
     uint8_t _get_converted_swap_byte_offset(uint8_t raw_offset);
     virtual bool _get_read_process_state();
     void _init() override;
-    virtual strategy_read_status_t _set_swap_byte_offset(uint8_t offset);
 
 public:
     cobs_config_t get_config();
@@ -38,16 +34,14 @@ protected:
     bool _is_sequence_replacement_state = false;
 
     void _exec_delimiter(uint8_t byte) override;
+    bool _exec_new_offset_and_get_success_status(uint8_t offset) override;
     bool _get_read_process_state() override;
-    strategy_read_status_t _set_swap_byte_offset(uint8_t offset) override;
 
 public:
-    strategy_read_status_t read(uint8_t byte) override;
     void reset_read_state() override;
 };
 
-class COBSZPEReadStrategyCore: public COBSSRReadStrategyCore, public virtual COBSZPEConfigsMixin {
-};
+class COBSZPEReadStrategyCore: public COBSSRReadStrategyCore, public virtual COBSZPEConfigsMixin { };
 
 } // namespace core
 
