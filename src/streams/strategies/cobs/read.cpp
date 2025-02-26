@@ -104,10 +104,9 @@ void COBSSRReadStrategyCore::_exec_delimiter(uint8_t byte) {
 
 strategy_read_status_t COBSSRReadStrategyCore::_set_swap_byte_offset(uint8_t offset) {
     offset = _get_converted_swap_byte_offset(offset);
-    bool is_need_activate_sequence_replacement_state = false;
-    if (offset > _sequence_replace_length_threshold) {
-        offset -= _sequence_replace_length_threshold;
-        is_need_activate_sequence_replacement_state = true;
+    bool is_need_activate_sequence_replacement_state = offset > _cfg.depth;
+    if (is_need_activate_sequence_replacement_state) {
+        offset -= _cfg.depth;
     }
     if (offset > _cfg.depth) {
         return STRATEGY_READ_ERROR;
@@ -134,7 +133,6 @@ strategy_read_status_t COBSSRReadStrategyCore::read(uint8_t byte) {
 void COBSSRReadStrategyCore::reset_read_state() {
     COBSReadStrategyCore::reset_read_state();
     _is_sequence_replacement_state = false;
-    _sequence_replace_length_threshold = _cfg.depth;
 }
 
 bool COBSSRReadStrategyCore::_get_read_process_state() {

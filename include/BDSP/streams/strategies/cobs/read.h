@@ -35,7 +35,6 @@ public:
 
 class COBSSRReadStrategyCore: public COBSReadStrategyCore, public virtual COBSSRConfigsMixin {
 protected:
-    uint8_t _sequence_replace_length_threshold{};
     bool _is_sequence_replacement_state = false;
 
     void _exec_delimiter(uint8_t byte) override;
