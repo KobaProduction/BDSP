@@ -22,7 +22,7 @@ protected:
     void _encode(uint8_t byte);
     virtual bool _get_read_process_state();
     void _init() override;
-    void _write_buffer_to_stream(uint8_t offset_value);
+    void _write_buffer_with_offset_to_handler(uint8_t offset);
 
 public:
     ~COBSWriteStrategyCore() override;

@@ -5,7 +5,7 @@ using namespace BDSP::streams::strategies::cobs::core;
 
 inline void COBSWriteStrategyCore::_check_buffer_fullness() {
     if (_buffer_position == _cfg.depth) {
-        _write_buffer_to_stream(_buffer_position);
+        _write_buffer_with_offset_to_handler(_buffer_position);
     }
 }
 
@@ -14,7 +14,7 @@ inline void COBSWriteStrategyCore::_encode(uint8_t byte) {
     if (byte not_eq _cfg.delimiter_byte) {
         _buffer_ptr[_buffer_position++] = byte;
     } else {
-        _write_buffer_to_stream(_buffer_position);
+        _write_buffer_with_offset_to_handler(_buffer_position);
     }
 }
 
@@ -29,8 +29,8 @@ void COBSWriteStrategyCore::_init() {
     set_config(get_default_config());
 }
 
-void COBSWriteStrategyCore::_write_buffer_to_stream(uint8_t offset_value) {
-    _buffer_ptr[0] = _cfg.delimiter_byte not_eq 0x00 and offset_value == _cfg.delimiter_byte ? 0 : offset_value;
+inline void COBSWriteStrategyCore::_write_buffer_with_offset_to_handler(uint8_t offset) {
+    _buffer_ptr[0] = _cfg.delimiter_byte not_eq 0x00 and offset == _cfg.delimiter_byte ? 0 : offset;
     for (int i = 0; i < _buffer_position; ++i) {
         _write_handler(_buffer_ptr[i], _context);
     }
@@ -47,7 +47,7 @@ cobs_config_t COBSWriteStrategyCore::get_config() {
 
 void COBSWriteStrategyCore::finish() {
     _check_buffer_fullness();
-    _write_buffer_to_stream(_buffer_position);
+    _write_buffer_with_offset_to_handler(_buffer_position);
     send_delimiter();
 }
 
@@ -117,7 +117,7 @@ void COBSSRWriteStrategyCore::write(uint8_t byte) {
         _buffer_position <= _position_threshold_of_the_sequence_to_be_replaced) {
         _current_size_of_the_sequence_to_be_replaced++;
         if (_current_size_of_the_sequence_to_be_replaced == _cfg.size_of_the_sequence_to_be_replaced) {
-            _write_buffer_to_stream(_buffer_position + _cfg.depth);
+            _write_buffer_with_offset_to_handler(_buffer_position + _cfg.depth);
             _current_size_of_the_sequence_to_be_replaced = 0;
         }
         return;
