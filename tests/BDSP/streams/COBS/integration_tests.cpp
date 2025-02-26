@@ -69,6 +69,25 @@ TEST(cobs_integration_tests, cobs_zpe_max_offset_test) {
     start_test_reader(reader, correct_encoded, data, true);
 }
 
+TEST(cobs_integration_tests, cobs_zpe_boundary_test) {
+    COBSZPEWriterStream writer;
+    COBSZPEReaderStream reader;
+
+    std::vector<uint8_t> data;
+    for (int i = 1; i < 32; ++i) {
+        data.push_back(0xAA);
+    }
+    data.push_back(0x00);
+    data.push_back(0x00);
+
+    std::vector<uint8_t> correct_encoded = {0x20, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+                                            0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+                                            0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0x01, 0x01, 0x00};
+
+    start_test_writer(writer, data, correct_encoded, true);
+    start_test_reader(reader, correct_encoded, data, true);
+}
+
 TEST(cobs_integration_tests, cobs_with_zpe_full_test) {
     COBSZPEWriterStream writer;
     COBSZPEReaderStream reader;
