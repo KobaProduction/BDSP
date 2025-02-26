@@ -18,6 +18,7 @@ TEST(strategies_strategies_cobs_sr_tests, set_configuration_with_active_process)
 
     COBSSRWriteStrategy write_strategy;
     COBSSRReadStrategy read_strategy;
+    read_strategy.init(nullptr, nullptr, nullptr);
 
     cobs_config_t config = core::COBSSRConfigsMixin().get_default_config();
 
