@@ -3,19 +3,14 @@
 using namespace BDSP::streams::strategies::cobs;
 using namespace BDSP::streams::strategies::cobs::core;
 
-inline void COBSWriteStrategyCore::_check_buffer_fullness() {
-    if (_buffer_position == _cfg.depth) {
-        _write_buffer_with_offset_to_handler(_buffer_position);
-    }
-}
-
 inline void COBSWriteStrategyCore::_encode(uint8_t byte) {
-    _check_buffer_fullness();
     if (byte not_eq _cfg.delimiter_byte) {
         _buffer_ptr[_buffer_position++] = byte;
-    } else {
-        _write_buffer_with_offset_to_handler(_buffer_position);
+        if (_buffer_position < _cfg.depth) {
+            return;
+        }
     }
+    _write_buffer_with_offset_to_handler(_buffer_position);
 }
 
 bool COBSWriteStrategyCore::_get_read_process_state() {
@@ -46,7 +41,6 @@ cobs_config_t COBSWriteStrategyCore::get_config() {
 }
 
 void COBSWriteStrategyCore::finish() {
-    _check_buffer_fullness();
     _write_buffer_with_offset_to_handler(_buffer_position);
     send_delimiter();
 }
