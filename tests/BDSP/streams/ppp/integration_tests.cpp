@@ -5,7 +5,7 @@
 #include "BDSP/streams/PPP/reader.h"
 #include "BDSP/streams/PPP/writer.h"
 
-#include "../../../utils/testing.h"
+#include "testing.h"
 
 using namespace BDSP::streams;
 using namespace BDSP::streams::ppp;

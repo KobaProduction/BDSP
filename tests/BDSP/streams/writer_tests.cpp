@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../../utils/testing.h"
+#include "testing.h"
 
 #include "BDSP/strategies/abstract/write.h"
 #include "BDSP/streams/writer.h"

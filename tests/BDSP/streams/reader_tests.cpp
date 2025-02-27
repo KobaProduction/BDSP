@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
-#include "../../utils/testing.h"
-
 #include "BDSP/strategies/abstract/read.h"
 #include "BDSP/streams/reader.h"
+
+#include "testing.h"
 
 using namespace BDSP::streams;
 using namespace BDSP::strategies;

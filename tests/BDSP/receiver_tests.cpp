@@ -2,8 +2,8 @@
 
 #include "BDSP/receiver.h"
 
-#include "../utils/testing.h"
-#include "../utils/vector_test_streams.h"
+#include "testing.h"
+#include "vector_test_streams.h"
 
 using namespace BDSP;
 using namespace BDSP::streams;

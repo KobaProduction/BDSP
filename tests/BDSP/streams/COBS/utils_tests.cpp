@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "../../../utils/cobs.h"
-#include "../../../utils/testing.h"
+#include "cobs.h"
+#include "testing.h"
 
 TEST(cobs_utils_tests, cobs_reference_encoder_test) {
     std::vector<uint8_t> data = {5, 1, 0, 1};

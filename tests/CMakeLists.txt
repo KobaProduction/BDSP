@@ -88,6 +88,7 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 add_executable(BDSP-tests)
 target_sources(BDSP-tests PRIVATE ${sources})
 
+target_include_directories(BDSP-tests PRIVATE utils)
 
 if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
     target_compile_options(BDSP PUBLIC -fprofile-arcs -ftest-coverage)

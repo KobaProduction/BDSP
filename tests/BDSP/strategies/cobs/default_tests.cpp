@@ -3,7 +3,7 @@
 #include "BDSP/streams/cobs/reader.h"
 #include "BDSP/streams/cobs/writer.h"
 
-#include "../../../utils/testing.h"
+#include "testing.h"
 
 using namespace BDSP::streams::cobs;
 using namespace BDSP::strategies;
