@@ -48,14 +48,14 @@ add_library(BDSP::BDSP ALIAS BDSP)
 # BDSP sources
 #----------------------------------------------------------------------------------------------------------------------
 
-include(GenerateExportHeader)
-set(export_file_name "export_shared.h")
+#include(GenerateExportHeader)
+#set(export_file_name "export_shared.h")
+#
+#if (NOT BUILD_SHARED_LIBS)
+#    set(export_file_name "export_static.h")
+#endif ()
 
-if (NOT BUILD_SHARED_LIBS)
-    set(export_file_name "export_static.h")
-endif ()
-
-generate_export_header(BDSP EXPORT_FILE_NAME include/BDSP/${export_file_name})
+#generate_export_header(BDSP EXPORT_FILE_NAME include/BDSP/${export_file_name})
 
 set(public_headers
         include/BDSP/BDSP.h
@@ -153,9 +153,9 @@ if (BDSP_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
     install(DIRECTORY include/
             TYPE INCLUDE
             COMPONENT BDSP-dev)
-    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/include/BDSP/${export_file_name}"
-            COMPONENT BDSP-dev
-            DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/BDSP")
+#    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/include/BDSP/${export_file_name}"
+#            COMPONENT BDSP-dev
+#            DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/BDSP")
 
     set(targets_file "BDSP-shared-targets.cmake")
 
