@@ -3,12 +3,12 @@
 
 #include <stdint.h>
 
+#include "BDSP/strategies/byte_stuffing/read.h"
 #include "BDSP/streams/reader.h"
-#include "BDSP/streams/strategies/byte_stuffing/read.h"
 
 namespace BDSP::streams::ppp {
 
-class PPPReaderStream final: public StreamReader<streams::strategies::byte_stuffing::PPPReadStrategy> { };
+class PPPReaderStream final: public StreamReader<strategies::byte_stuffing::PPPReadStrategy> { };
 
 } // namespace BDSP::streams::ppp
 

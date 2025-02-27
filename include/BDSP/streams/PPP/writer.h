@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include "BDSP/streams/strategies/byte_stuffing/write.h"
+#include "BDSP/strategies/byte_stuffing/write.h"
 #include "BDSP/streams/writer.h"
 
 namespace BDSP::streams::ppp {

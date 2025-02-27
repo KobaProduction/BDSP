@@ -61,21 +61,21 @@ set(sources ${utils_sources}
         BDSP/receiver_tests.cpp
         BDSP/transmitter_tests.cpp
 
-        BDSP/streams/strategies/cobs/default_tests.cpp
-        BDSP/streams/strategies/cobs/mixins_tests.cpp
-        BDSP/streams/strategies/cobs/sr_tests.cpp
-        BDSP/streams/strategies/cobs/zpe_tests.cpp
+        BDSP/strategies/cobs/default_tests.cpp
+        BDSP/strategies/cobs/mixins_tests.cpp
+        BDSP/strategies/cobs/sr_tests.cpp
+        BDSP/strategies/cobs/zpe_tests.cpp
 
-        BDSP/streams/strategies/byte_stuffing/mixins_tests.cpp
-        BDSP/streams/strategies/byte_stuffing/read_tests.cpp
-        BDSP/streams/strategies/byte_stuffing/write_tests.cpp
+        BDSP/strategies/byte_stuffing/mixins_tests.cpp
+        BDSP/strategies/byte_stuffing/read_tests.cpp
+        BDSP/strategies/byte_stuffing/write_tests.cpp
 
         BDSP/streams/mixins_tests.cpp
         BDSP/streams/reader_tests.cpp
         BDSP/streams/writer_tests.cpp
 
-        BDSP/streams/strategies/abstract/read_tests.cpp
-        BDSP/streams/strategies/abstract/write_tests.cpp
+        BDSP/strategies/abstract/read_tests.cpp
+        BDSP/strategies/abstract/write_tests.cpp
 
         BDSP/checksums/checksums.cpp
 )

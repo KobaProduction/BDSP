@@ -3,13 +3,15 @@
 
 #include <vector>
 
+#include "BDSP/strategies/abstract/read.h"
+#include "BDSP/strategies/abstract/write.h"
+#include "BDSP/strategies/byte_stuffing/types.h"
 #include "BDSP/streams/reader.h"
-#include "BDSP/streams/strategies/abstract/read.h"
-#include "BDSP/streams/strategies/abstract/write.h"
-#include "BDSP/streams/strategies/byte_stuffing/types.h"
 #include "BDSP/streams/writer.h"
 
-class TestVectorWriteStrategy final: public BDSP::streams::strategies::abstract::AbstractWriteStrategy {
+class TestVectorWriteStrategy final: public BDSP::strategies::abstract::AbstractWriteStrategy {
+    void _init() override { };
+
 public:
     std::vector<std::vector<uint8_t>> stream_data;
 
@@ -20,14 +22,13 @@ public:
 
 class VectorTestWriter final: public BDSP::streams::StreamWriter<TestVectorWriteStrategy> { };
 
-class TestVectorReadStrategy final: public BDSP::streams::strategies::abstract::AbstractReadStrategy {
+class TestVectorReadStrategy final: public BDSP::strategies::abstract::AbstractReadStrategy {
 public:
     void _init() override { };
 
-    BDSP::streams::strategies::strategy_read_status_t read(uint8_t byte) override;
-    BDSP::streams::strategies::strategy_read_status_t read_with_status(
-        uint8_t byte,
-        BDSP::streams::strategies::strategy_read_status_t status);
+    BDSP::strategies::strategy_read_status_t read(uint8_t byte) override;
+    BDSP::strategies::strategy_read_status_t read_with_status(uint8_t byte,
+                                                              BDSP::strategies::strategy_read_status_t status);
     void reset_read_state() override;
 };
 

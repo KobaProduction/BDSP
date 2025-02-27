@@ -1,6 +1,6 @@
 #include "vector_test_streams.h"
 
-using namespace BDSP::streams::strategies;
+using namespace BDSP::strategies;
 
 void TestVectorWriteStrategy::write(uint8_t byte) {
     if (stream_data.empty()) {
@@ -28,7 +28,7 @@ strategy_read_status_t TestVectorReadStrategy::read(uint8_t byte) {
 }
 
 strategy_read_status_t TestVectorReadStrategy::read_with_status(uint8_t byte,
-    BDSP::streams::strategies::strategy_read_status_t status) {
+                                                                BDSP::strategies::strategy_read_status_t status) {
     _data_callback(byte, status, _context);
     return status;
 }

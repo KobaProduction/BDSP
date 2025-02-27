@@ -7,7 +7,7 @@
 
 using namespace BDSP;
 using namespace BDSP::streams;
-using namespace BDSP::streams::strategies;
+using namespace BDSP::strategies;
 
 TEST(bdsp_v1_receiver_tests, set_stream_reader_test) {
     VectorTestReader reader;

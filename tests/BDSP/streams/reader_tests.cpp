@@ -2,11 +2,11 @@
 
 #include "../../utils/testing.h"
 
+#include "BDSP/strategies/abstract/read.h"
 #include "BDSP/streams/reader.h"
-#include "BDSP/streams/strategies/abstract/read.h"
 
 using namespace BDSP::streams;
-using namespace BDSP::streams::strategies;
+using namespace BDSP::strategies;
 
 namespace {
 
@@ -17,13 +17,14 @@ public:
     void _init() override { }
 
     strategy_read_status_t read(uint8_t byte) override {
-        strategy_read_status_t status = byte == 0 ? STRATEGY_READ_ERROR : byte == 1 ? STRATEGY_READ_DELIMITER : STRATEGY_READ_OK;
+        strategy_read_status_t status = byte == 0   ? STRATEGY_READ_ERROR
+                                        : byte == 1 ? STRATEGY_READ_DELIMITER
+                                                    : STRATEGY_READ_OK;
         _data_callback(byte, status, _context);
         return status;
     }
 
-    void reset_read_state() override {};
-
+    void reset_read_state() override { };
 };
 
 struct Context {

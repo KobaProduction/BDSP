@@ -1,8 +1,8 @@
 #ifndef BDSP_STREAMS_STREAM_READER_H
 #define BDSP_STREAMS_STREAM_READER_H
 
+#include "BDSP/strategies/types.h"
 #include "BDSP/streams/mixins.h"
-#include "BDSP/streams/strategies/types.h"
 #include "BDSP/streams/types.h"
 
 namespace BDSP::streams {
