@@ -4,3 +4,4 @@
 - use export header
 - conan repo
 - coverage cmake configuration
+- conducting performance studies in terms of inlining methods
