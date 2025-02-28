@@ -84,10 +84,11 @@ set_cobs_config_status COBSReadStrategyCore::set_config(cobs_config_t config) {
 }
 
 void COBSSRReadStrategyCore::_exec_delimiter(uint8_t byte) {
-    if (_is_sequence_replacement_state) {
+    if (_offset_to_service_byte not_eq 0 or _is_sequence_replacement_state) {
         _data_callback(byte, STRATEGY_READ_ERROR, _context);
     }
-    COBSReadStrategyCore::_exec_delimiter(byte);
+    _data_callback(byte, STRATEGY_READ_DELIMITER, _context);
+    reset_read_state();
 }
 
 bool COBSSRReadStrategyCore::_exec_new_offset_and_get_success_status(uint8_t offset) {
