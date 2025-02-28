@@ -12,8 +12,8 @@ namespace core {
 
 class COBSWriteStrategyCore: public abstract::AbstractWriteStrategy, public virtual COBSConfigsMixin {
 protected:
-    uint8_t *_buffer_ptr = nullptr;
-    uint8_t _buffer_position = 1;
+    uint8_t *_buffer_ptr{};
+    uint8_t _buffer_position{};
     cobs_config_t _cfg{};
     void *(*_malloc)(size_t) = malloc;
     void (*_free)(void *) = free;
@@ -34,8 +34,8 @@ public:
 
 class COBSSRWriteStrategyCore: public COBSWriteStrategyCore, public virtual COBSSRConfigsMixin {
 protected:
-    uint8_t _counter_of_the_sequence_to_be_replaced = 0;
-    uint8_t _limit_position_of_the_sequence_to_be_replaced = 0;
+    uint8_t _counter_of_the_sequence_to_be_replaced;
+    uint8_t _limit_position_of_the_sequence_to_be_replaced;
     bool _get_active_write_state_status() override;
     void _reset_counter_of_the_sequence_to_be_replaced();
 

@@ -12,8 +12,8 @@ namespace core {
 class COBSReadStrategyCore: public abstract::AbstractReadStrategy, public virtual COBSConfigsMixin {
 protected:
     cobs_config_t _cfg{};
-    uint8_t _offset_to_service_byte = 0;
-    bool _service_byte_type_is_offset = true;
+    uint8_t _offset_to_service_byte{};
+    bool _service_byte_type_is_offset{};
 
     virtual void _exec_delimiter(uint8_t byte);
     virtual bool _exec_new_offset_and_get_success_status(uint8_t offset);
@@ -30,7 +30,7 @@ public:
 
 class COBSSRReadStrategyCore: public COBSReadStrategyCore, public virtual COBSSRConfigsMixin {
 protected:
-    bool _is_sequence_replacement_state = false;
+    bool _is_sequence_replacement_state{};
 
     void _exec_delimiter(uint8_t byte) override;
     bool _exec_new_offset_and_get_success_status(uint8_t offset) override;

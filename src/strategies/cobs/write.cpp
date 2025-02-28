@@ -21,6 +21,7 @@ bool COBSWriteStrategyCore::_get_active_write_state_status() {
 }
 
 void COBSWriteStrategyCore::_init() {
+    _buffer_position = 1;
     set_config(get_default_config());
 }
 
@@ -102,6 +103,7 @@ set_cobs_config_status COBSSRWriteStrategyCore::set_config(cobs_config_t config)
     set_cobs_config_status status = COBSWriteStrategyCore::set_config(config);
     if (status == SET_OK) {
         _limit_position_of_the_sequence_to_be_replaced = 0xFF - _cfg.depth;
+        _counter_of_the_sequence_to_be_replaced = 0;
     }
     return status;
 }
