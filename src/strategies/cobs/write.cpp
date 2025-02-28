@@ -64,7 +64,7 @@ set_cobs_config_status COBSWriteStrategyCore::set_config(cobs_config_t config) {
         _buffer_ptr = nullptr;
     }
     if (not _buffer_ptr) {
-        _buffer_ptr = reinterpret_cast<uint8_t *>(_malloc(config.depth));
+        _buffer_ptr = reinterpret_cast<uint8_t *>(_malloc(_cfg.depth - 1));
     }
     if (not _buffer_ptr) {
         return ERROR_MEMORY_ALLOCATION;
