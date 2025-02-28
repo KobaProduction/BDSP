@@ -7,7 +7,7 @@
 namespace BDSP::streams::cobs {
 
 class COBSWriterStream: public StreamWriter<strategies::cobs::COBSWriteStrategy> { };
-class COBSSRWriterStream: public StreamWriter<strategies::cobs::COBSSRWriteStrategy> { };
+class COBSGSEWriterStream: public StreamWriter<strategies::cobs::COBSGSEWriteStrategy> { };
 class COBSZPEWriterStream: public StreamWriter<strategies::cobs::COBSZPEWriteStrategy> { };
 
 } // namespace BDSP::streams::cobs

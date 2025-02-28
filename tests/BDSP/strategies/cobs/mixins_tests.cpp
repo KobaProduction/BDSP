@@ -31,14 +31,14 @@ TEST(cobs_mixins_tests, cobs_default_checker_mixin_test) {
 
     config.size_of_the_sequence_to_be_replaced = 2;
 
-    EXPECT_EQ(checker._check_config(config), ERROR_DEFAULT_COBS_SIZE_SR);
+    EXPECT_EQ(checker._check_config(config), ERROR_DEFAULT_COBS_SIZE_GSE);
 
     config.depth = 0;
     EXPECT_EQ(checker._check_min_cobs_depth(config), ERROR_COBS_DEPTH);
 }
 
-TEST(cobs_mixins_tests, cobs_sr_config_test) {
-    cobs_config_t config = COBSSRConfigsMixin().get_default_config();
+TEST(cobs_mixins_tests, cobs_gse_config_test) {
+    cobs_config_t config = COBSGSEConfigsMixin().get_default_config();
 
     EXPECT_EQ(config.delimiter_byte, '\0');
     EXPECT_EQ(config.depth, 127);
@@ -46,10 +46,10 @@ TEST(cobs_mixins_tests, cobs_sr_config_test) {
     EXPECT_EQ(config.byte_of_the_sequence_to_be_replaced, '\0');
 }
 
-TEST(cobs_mixins_tests, cobs_sr_checker_mixin_test) {
-    class TestCOBSSRConfigChecker final: public COBSSRConfigsMixin {
+TEST(cobs_mixins_tests, cobs_gse_checker_mixin_test) {
+    class TestCOBSGSEConfigChecker final: public COBSGSEConfigsMixin {
     public:
-        using COBSSRConfigsMixin::_check_config;
+        using COBSGSEConfigsMixin::_check_config;
     } checker;
 
     cobs_config_t config;
@@ -62,11 +62,11 @@ TEST(cobs_mixins_tests, cobs_sr_checker_mixin_test) {
 
     config.depth = 255;
 
-    EXPECT_EQ(checker._check_config(config), ERROR_DEPTH_SR);
+    EXPECT_EQ(checker._check_config(config), ERROR_DEPTH_GSE);
 
     config.size_of_the_sequence_to_be_replaced = 0;
 
-    EXPECT_EQ(checker._check_config(config), ERROR_SIZE_SR);
+    EXPECT_EQ(checker._check_config(config), ERROR_SIZE_GSE);
 }
 
 TEST(cobs_mixins_tests, cobs_zpe_config_test) {
@@ -98,5 +98,5 @@ TEST(cobs_mixins_tests, cobs_zpe_checker_mixin_test) {
 
     config.size_of_the_sequence_to_be_replaced = 0;
 
-    EXPECT_EQ(checker._check_config(config), ERROR_SIZE_SR);
+    EXPECT_EQ(checker._check_config(config), ERROR_SIZE_GSE);
 }

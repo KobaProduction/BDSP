@@ -13,7 +13,7 @@ and packet delivery methods.
 
 Currently, the protocol implements binary data stream separation strategies based on byte insertion methods, 
 specifically PPP and several modifications of COBS. COBS modification strategies include standard COBS, 
-COBS/ZPE, as well as the author's modification of COBS/SR (information will be provided later). All strategies 
+COBS/ZPE, as well as the author's modification of COBS/GSE (information will be provided later). All strategies 
 perform byte conversion for the communication channel on the fly, most of them do not require RAM buffers. 
 The exception is all COBS strategies that send data to the communication channel, they require buffers that 
 cannot exceed 255 bytes in size. COBS strategies that read a byte stream do not require buffers.
@@ -45,7 +45,7 @@ and use on any platform;
 Parameters 16, 32, 64, 128, 255 are the delimiter byte search depth parameter. Redundancy is indicated in the worst case.
 
 For a better understanding of the causes of redundancy, study the COBS method in detail. 
-For COBS/SR, the search depth is limited to 127 bytes, for COBS/ZPE - 224. Graphs will be added later.
+For COBS/GSE, the search depth is limited to 127 bytes, for COBS/ZPE - 224. Graphs will be added later.
 The redundancy of generated data in PPP strategies is in the range of 0-100%.
 
 The redundancy of the protocol itself is formed due to the constant component of the packet: identifier (1 byte), 

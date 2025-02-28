@@ -40,20 +40,20 @@ enum set_cobs_config_status {
     /**
      * This warning occurs if the length of the sequence being replaced is not 0.
      * The standard cobs implementation does not use this option.
-     * To replace the sequence, you need to use cobs/SR or cobs/ZPE algorithms.
+     * To replace the sequence, you need to use cobs/GSE or cobs/ZPE algorithms.
      */
-    ERROR_DEFAULT_COBS_SIZE_SR,
+    ERROR_DEFAULT_COBS_SIZE_GSE,
     /**
-     * This error occurs when the length of the sequence being replaced is less than 2 in a cobs/SR or cobs/ZPE
+     * This error occurs when the length of the sequence being replaced is less than 2 in a cobs/GSE or cobs/ZPE
      * configuration. Logically, you need 2 or more bytes to replace the sequence.
      */
-    ERROR_SIZE_SR,
+    ERROR_SIZE_GSE,
     /**
-     * This error occurs when a sequence replacement algorithm (only cobs/SR) is used and the length of the separator
+     * This error occurs when a sequence replacement algorithm (only COBS/GSE) is used and the length of the separator
      * byte lookup is greater than 127. One of the eight bits is required to mark the location of the sequence to be
      * replaced, so the total length of the search should not be more than half of the maximum value of 255.
      */
-    ERROR_DEPTH_SR,
+    ERROR_DEPTH_GSE,
     /**
      * This warning occurs when the search length of the delimiter byte in the configuration is not 224 (0xE0).
      * The value cannot be changed at this time, but if testing shows the effectiveness of other values, this part can

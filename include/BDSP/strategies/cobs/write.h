@@ -32,7 +32,7 @@ public:
     void write(uint8_t byte) override;
 };
 
-class COBSSRWriteStrategyCore: public COBSWriteStrategyCore, public virtual COBSSRConfigsMixin {
+class COBSGSEWriteStrategyCore: public COBSWriteStrategyCore, public virtual COBSGSEConfigsMixin {
 protected:
     uint8_t _counter_of_the_sequence_to_be_replaced;
     uint8_t _limit_position_of_the_sequence_to_be_replaced;
@@ -45,12 +45,12 @@ public:
     void write(uint8_t byte) override;
 };
 
-class COBSZPEWriteStrategyCore: public COBSSRWriteStrategyCore, public virtual COBSZPEConfigsMixin { };
+class COBSZPEWriteStrategyCore: public COBSGSEWriteStrategyCore, public virtual COBSZPEConfigsMixin { };
 
 } // namespace core
 
 class COBSWriteStrategy final: public core::COBSWriteStrategyCore { };
-class COBSSRWriteStrategy final: public core::COBSSRWriteStrategyCore { };
+class COBSGSEWriteStrategy final: public core::COBSGSEWriteStrategyCore { };
 class COBSZPEWriteStrategy final: public core::COBSZPEWriteStrategyCore { };
 } // namespace BDSP::strategies::cobs
 

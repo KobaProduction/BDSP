@@ -14,7 +14,7 @@ public:
     virtual cobs_config_t get_default_config();
 };
 
-class COBSSRConfigsMixin: public virtual COBSConfigsMixin {
+class COBSGSEConfigsMixin: public virtual COBSConfigsMixin {
 protected:
     set_cobs_config_status _check_config(cobs_config_t config) override;
 
@@ -22,7 +22,7 @@ public:
     cobs_config_t get_default_config() override;
 };
 
-class COBSZPEConfigsMixin: public virtual COBSSRConfigsMixin {
+class COBSZPEConfigsMixin: public virtual COBSGSEConfigsMixin {
 protected:
     set_cobs_config_status _check_config(cobs_config_t config) override;
 

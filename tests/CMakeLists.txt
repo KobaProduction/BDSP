@@ -63,7 +63,7 @@ set(sources ${utils_sources}
 
         BDSP/strategies/cobs/default_tests.cpp
         BDSP/strategies/cobs/mixins_tests.cpp
-        BDSP/strategies/cobs/sr_tests.cpp
+        BDSP/strategies/cobs/gse_tests.cpp
         BDSP/strategies/cobs/zpe_tests.cpp
 
         BDSP/strategies/byte_stuffing/mixins_tests.cpp

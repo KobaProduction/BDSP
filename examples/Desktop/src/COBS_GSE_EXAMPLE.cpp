@@ -19,8 +19,8 @@ int main() {
         data.push_back(0);
     }
 
-    BDSP::streams::cobs::COBSSREWriterStream writer;
-    BDSP::streams::cobs::COBSSRReaderStream reader;
+    BDSP::streams::cobs::COBSGSEWriterStream writer;
+    BDSP::streams::cobs::COBSGSEReaderStream reader;
 
     writer.set_stream_writer(
         [](uint8_t byte, void *ctx_ptr) {

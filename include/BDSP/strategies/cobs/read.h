@@ -28,7 +28,7 @@ public:
     set_cobs_config_status set_config(cobs_config_t config);
 };
 
-class COBSSRReadStrategyCore: public COBSReadStrategyCore, public virtual COBSSRConfigsMixin {
+class COBSGSEReadStrategyCore: public COBSReadStrategyCore, public virtual COBSGSEConfigsMixin {
 protected:
     bool _is_sequence_replacement_state{};
 
@@ -40,12 +40,12 @@ public:
     void reset_read_state() override;
 };
 
-class COBSZPEReadStrategyCore: public COBSSRReadStrategyCore, public virtual COBSZPEConfigsMixin { };
+class COBSZPEReadStrategyCore: public COBSGSEReadStrategyCore, public virtual COBSZPEConfigsMixin { };
 
 } // namespace core
 
 class COBSReadStrategy final: public core::COBSReadStrategyCore { };
-class COBSSRReadStrategy final: public core::COBSSRReadStrategyCore { };
+class COBSGSEReadStrategy final: public core::COBSGSEReadStrategyCore { };
 class COBSZPEReadStrategy final: public core::COBSZPEReadStrategyCore { };
 
 } // namespace BDSP::strategies::cobs

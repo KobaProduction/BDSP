@@ -47,8 +47,8 @@ TEST(strategies_cobs_default_tests, set_configuration_with_incorrect_config) {
     cobs_config_t config = core::COBSConfigsMixin().get_default_config();
 
     config.size_of_the_sequence_to_be_replaced = 2;
-    EXPECT_EQ(read_strategy.set_config(config), ERROR_DEFAULT_COBS_SIZE_SR);
-    EXPECT_EQ(write_strategy.set_config(config), ERROR_DEFAULT_COBS_SIZE_SR);
+    EXPECT_EQ(read_strategy.set_config(config), ERROR_DEFAULT_COBS_SIZE_GSE);
+    EXPECT_EQ(write_strategy.set_config(config), ERROR_DEFAULT_COBS_SIZE_GSE);
 
     ASSERT_FALSE(read_strategy_ready);
     ASSERT_FALSE(write_strategy_ready);

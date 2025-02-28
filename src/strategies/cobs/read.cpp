@@ -83,7 +83,7 @@ set_cobs_config_status COBSReadStrategyCore::set_config(cobs_config_t config) {
     return status;
 }
 
-void COBSSRReadStrategyCore::_exec_delimiter(uint8_t byte) {
+void COBSGSEReadStrategyCore::_exec_delimiter(uint8_t byte) {
     if (_offset_to_service_byte not_eq 0 or _is_sequence_replacement_state) {
         _data_callback(byte, STRATEGY_READ_ERROR, _context);
     }
@@ -91,7 +91,7 @@ void COBSSRReadStrategyCore::_exec_delimiter(uint8_t byte) {
     reset_read_state();
 }
 
-bool COBSSRReadStrategyCore::_exec_new_offset_and_get_success_status(uint8_t offset) {
+bool COBSGSEReadStrategyCore::_exec_new_offset_and_get_success_status(uint8_t offset) {
     bool is_need_activate_sequence_replacement_state = offset > _cfg.depth;
     if (is_need_activate_sequence_replacement_state) {
         offset -= _cfg.depth;
@@ -112,12 +112,12 @@ bool COBSSRReadStrategyCore::_exec_new_offset_and_get_success_status(uint8_t off
     return true;
 }
 
-void COBSSRReadStrategyCore::reset_read_state() {
+void COBSGSEReadStrategyCore::reset_read_state() {
     _is_sequence_replacement_state = false;
     COBSReadStrategyCore::reset_read_state();
 }
 
-bool COBSSRReadStrategyCore::_get_read_process_state() {
+bool COBSGSEReadStrategyCore::_get_read_process_state() {
     if (_is_sequence_replacement_state) {
         return true;
     }

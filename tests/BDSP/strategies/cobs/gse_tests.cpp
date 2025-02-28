@@ -9,18 +9,18 @@ using namespace BDSP::streams::cobs;
 using namespace BDSP::strategies;
 using namespace BDSP::strategies::cobs;
 
-TEST(strategies_strategies_cobs_sr_tests, set_configuration_with_active_process) {
+TEST(strategies_cobs_gse_tests, set_configuration_with_active_process) {
 
-    class AccessFieldClass: public core::COBSSRWriteStrategyCore {
+    class AccessFieldClass: public core::COBSGSEWriteStrategyCore {
     public:
-        using core::COBSSRWriteStrategyCore::_counter_of_the_sequence_to_be_replaced;
+        using core::COBSGSEWriteStrategyCore::_counter_of_the_sequence_to_be_replaced;
     };
 
-    COBSSRWriteStrategy write_strategy;
-    COBSSRReadStrategy read_strategy;
+    COBSGSEWriteStrategy write_strategy;
+    COBSGSEReadStrategy read_strategy;
     read_strategy.init(nullptr, nullptr, nullptr);
 
-    cobs_config_t config = core::COBSSRConfigsMixin().get_default_config();
+    cobs_config_t config = core::COBSGSEConfigsMixin().get_default_config();
 
     reinterpret_cast<AccessFieldClass *>(&write_strategy)->_counter_of_the_sequence_to_be_replaced = 1;
 
@@ -31,10 +31,10 @@ TEST(strategies_strategies_cobs_sr_tests, set_configuration_with_active_process)
     EXPECT_EQ(read_strategy.set_config(config), ERROR_PROCESS_NOT_FINISHED);
 }
 
-TEST(strategies_cobs_sr_tests, reader_errors_test) {
-    cobs_config_t config = core::COBSSRConfigsMixin().get_default_config();
+TEST(strategies_cobs_gse_tests, reader_errors_test) {
+    cobs_config_t config = core::COBSGSEConfigsMixin().get_default_config();
 
-    COBSSRReadStrategy read_strategy;
+    COBSGSEReadStrategy read_strategy;
     std::vector<strategy_read_status_t> statuses;
 
     read_strategy.init(
@@ -62,11 +62,11 @@ TEST(strategies_cobs_sr_tests, reader_errors_test) {
     ASSERT_TRUE(statuses == std::vector<strategy_read_status_t>({STRATEGY_READ_ERROR}));
 }
 
-TEST(strategies_cobs_sr_tests, writer_reset_elimination_sequence_test) {
-    COBSSRReaderStream reader;
-    COBSSRWriterStream writer;
+TEST(strategies_cobs_gse_tests, writer_reset_elimination_sequence_test) {
+    COBSGSEReaderStream reader;
+    COBSGSEWriterStream writer;
 
-    cobs_config_t config = core::COBSSRConfigsMixin().get_default_config();
+    cobs_config_t config = core::COBSGSEConfigsMixin().get_default_config();
     config.delimiter_byte = 255;
     writer.get_strategy().set_config(config);
     reader.get_strategy().set_config(config);
@@ -87,9 +87,9 @@ TEST(strategies_cobs_sr_tests, writer_reset_elimination_sequence_test) {
     start_test_reader(reader, correct_encoded, data);
 }
 
-TEST(strategies_cobs_sr_tests, sequence_replacement_test) {
-    COBSSRReaderStream reader;
-    COBSSRWriterStream writer;
+TEST(strategies_cobs_gse_tests, sequence_elimination_test) {
+    COBSGSEReaderStream reader;
+    COBSGSEWriterStream writer;
 
     std::vector<uint8_t> data = {0x01, 0x00, 0x00, 0x00, 0x01};
     std::vector<uint8_t> correct_encoded = {129, 0x01, 0x01, 0x02, 0x01, 0x00};
@@ -97,8 +97,8 @@ TEST(strategies_cobs_sr_tests, sequence_replacement_test) {
     start_test_reader(reader, correct_encoded, data);
 }
 
-TEST(strategies_cobs_sr_tests, reset_sequence_replacement_state) {
-    COBSSRReadStrategy cobs_reader;
+TEST(strategies_cobs_gse_tests, reset_sequence_elimination_state) {
+    COBSGSEReadStrategy cobs_reader;
 
     std::vector<uint8_t> encoded = {128, 0x00, 0x00, 128, 0x01, 0x00};
     std::vector<uint8_t> correct_decoded = {0x00, 0x00};

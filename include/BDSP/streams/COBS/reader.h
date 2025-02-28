@@ -7,7 +7,7 @@
 namespace BDSP::streams::cobs {
 
 class COBSReaderStream final: public StreamReader<strategies::cobs::COBSReadStrategy> { };
-class COBSSRReaderStream final: public StreamReader<strategies::cobs::COBSSRReadStrategy> { };
+class COBSGSEReaderStream final: public StreamReader<strategies::cobs::COBSGSEReadStrategy> { };
 class COBSZPEReaderStream final: public StreamReader<strategies::cobs::COBSZPEReadStrategy> { };
 
 } // namespace BDSP::streams::cobs
