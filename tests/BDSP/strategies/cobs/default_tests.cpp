@@ -137,6 +137,33 @@ TEST(strategies_cobs_default_tests, reader_errors_test) {
     ASSERT_TRUE(statuses == std::vector<strategy_read_status_t>({STRATEGY_READ_ERROR}));
 }
 
+TEST(strategies_cobs_default_tests, encoding_max_depth_test) {
+    COBSReaderStream reader;
+    COBSWriterStream writer;
+
+    cobs_config_t config = core::COBSConfigsMixin().get_default_config();
+    config.depth = 255;
+    EXPECT_EQ(reader.get_strategy().set_config(config), SET_OK);
+    EXPECT_EQ(writer.get_strategy().set_config(config), SET_OK);
+
+    std::vector<uint8_t> data;
+    std::vector<uint8_t> correct_encoded;
+
+    correct_encoded.push_back(255);
+    for (int i = 0; i < 255; ++i) {
+        data.push_back(77);
+        correct_encoded.push_back(77);
+    }
+    correct_encoded.back() = 2;
+    correct_encoded.push_back(77);
+    correct_encoded.push_back(0);
+
+    start_test_writer(writer, data, correct_encoded);
+    start_test_reader(reader, correct_encoded, data);
+
+    data.push_back(255);
+}
+
 TEST(strategies_cobs_default_tests, encoding_depth_test) {
     COBSReaderStream reader;
     COBSWriterStream writer;
