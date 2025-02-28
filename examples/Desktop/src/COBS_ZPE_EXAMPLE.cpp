@@ -7,7 +7,7 @@
 #include "utils.h"
 
 using namespace BDSP::streams;
-using namespace BDSP::streams::strategies::cobs;
+using namespace BDSP::streams::cobs;
 
 struct Context {
     std::vector<uint8_t> write_buffer;
@@ -24,12 +24,8 @@ int main() {
     }
     data.insert(data.end(), test.begin(), test.end());
 
-    cobs_config_t config = BDSP::streams::strategies::cobs::core::COBSZPEConfigsMixin().get_default_config();
-
-    cobs::COBSZPEWriterStream writer;
-    writer.get_strategy().set_config(config);
-    cobs::COBSZPEReaderStream reader;
-    reader.get_strategy().set_config(config);
+    COBSZPEWriterStream writer;
+    COBSZPEReaderStream reader;
 
     writer.set_stream_writer(
         [](uint8_t byte, void *ctx_ptr) {
