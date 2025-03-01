@@ -53,6 +53,8 @@ set(utils_sources
 
 set(sources ${utils_sources}
         BDSP/integration_tests.cpp
+        BDSP/strategies/cobs/redundancy_test.cpp
+
         BDSP/streams/cobs/integration_tests.cpp
         BDSP/streams/cobs/utils_tests.cpp
         BDSP/streams/ppp/integration_tests.cpp
