@@ -27,7 +27,7 @@ class PPPWriteStrategyCore: public ByteStuffingWriteStrategyCore, public virtual
 } // namespace core
 
 class ByteStuffingWriteStrategy final: public core::ByteStuffingWriteStrategyCore { };
-class PPPStreamWriteStrategy final: public core::PPPWriteStrategyCore { };
+class PPPWriteStrategy final: public core::PPPWriteStrategyCore { };
 
 } // namespace BDSP::strategies::byte_stuffing
 
