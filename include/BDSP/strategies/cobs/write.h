@@ -34,8 +34,8 @@ public:
 
 class COBSGSEWriteStrategyCore: public COBSWriteStrategyCore, public virtual COBSGSEConfigsMixin {
 protected:
-    uint8_t _counter_of_the_sequence_to_be_replaced;
-    uint8_t _limit_position_of_the_sequence_to_be_replaced;
+    uint8_t _counter_of_the_sequence_to_be_replaced{};
+    uint8_t _limit_position_of_the_sequence_to_be_replaced{};
     bool _get_active_write_state_status() override;
     void _reset_counter_of_the_sequence_to_be_replaced();
 
