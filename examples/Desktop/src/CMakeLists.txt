@@ -8,6 +8,7 @@ foreach (item
         COBS_GSE_EXAMPLE
         COBS_ZPE_EXAMPLE
         BDSP_EXAMPLE
+        REDUNDANCY_TESTER
 )
     add_executable(${EXAMPLES_PREFIX}${item} ${item}.cpp)
     target_sources(${EXAMPLES_PREFIX}${item} PRIVATE ${shared_sources})
