@@ -8,7 +8,7 @@
 
 namespace BDSP::streams::ppp {
 
-class PPPWriterStream final: public StreamWriter<strategies::byte_stuffing::PPPStreamWriteStrategy> { };
+class PPPWriterStream final: public StreamWriter<strategies::byte_stuffing::PPPWriteStrategy> { };
 
 } // namespace BDSP::streams::ppp
 
