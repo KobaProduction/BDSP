@@ -30,7 +30,7 @@ public:
 } // namespace core
 
 template<typename TWriteStream>
-class BDSPTransmitter final: public core::BDSPV1TransmitterCore {
+class BDSPTransmitter: public core::BDSPV1TransmitterCore {
 private:
     using core::BDSPV1TransmitterCore::set_stream_writer;
 public:

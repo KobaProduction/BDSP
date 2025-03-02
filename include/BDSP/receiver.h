@@ -5,7 +5,6 @@
 #include "BDSP/streams/types.h"
 #include "BDSP/types.h"
 
-#include <iostream>
 #include <stdlib.h>
 
 namespace BDSP {
@@ -60,7 +59,7 @@ public:
 } // namespace core
 
 template<typename TReadStream>
-class BDSPReceiver final: public core::BDSPV1ReceiverCore {
+class BDSPReceiver: public core::BDSPV1ReceiverCore {
 private:
     using core::BDSPV1ReceiverCore::set_stream_reader;
 public:

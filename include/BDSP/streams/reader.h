@@ -18,7 +18,7 @@ protected:
     void _handler(uint8_t byte, stream_read_status_t state);
 
 public:
-    bool get_ready_status() override;
+    bool get_ready_status() final;
     stream_read_status_t read(uint8_t byte) final;
     stream_read_status_t read(uint8_t *buffer_ptr, size_t size) final;
     void reset_read_state(bool is_need_wait_delimiter) final;
@@ -38,7 +38,7 @@ public:
         set_strategy(*_strategy);
     }
 
-    ~StreamReader() override { delete _strategy; }
+    ~StreamReader() final { delete _strategy; }
 
     TStrategy &get_strategy() { return *reinterpret_cast<TStrategy *>(_strategy); };
 };

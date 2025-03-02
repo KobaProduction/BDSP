@@ -7,7 +7,7 @@
 namespace BDSP {
 
 template<typename TReadStream, typename TWriteStream>
-class BDSPTransceiver final: public core::BDSPV1ReceiverCore, public core::BDSPV1TransmitterCore {
+class BDSPTransceiver: public core::BDSPV1ReceiverCore, public core::BDSPV1TransmitterCore {
 private:
     using core::BDSPV1ReceiverCore::set_stream_reader;
     using core::BDSPV1TransmitterCore::set_stream_writer;

@@ -62,8 +62,11 @@ set(public_headers
         include/BDSP/export.h
         include/BDSP/mixins.h
         include/BDSP/receiver.h
+        include/BDSP/receivers.h
         include/BDSP/transceiver.h
+        include/BDSP/transceivers.h
         include/BDSP/transmitter.h
+        include/BDSP/transmitters.h
         include/BDSP/types.h
 
         include/BDSP/checksums/crc8.h
