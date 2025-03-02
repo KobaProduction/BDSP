@@ -29,7 +29,23 @@ public:
 };
 } // namespace core
 
-class BDSPTransmitter final: public core::BDSPV1TransmitterCore { };
+template<typename TWriteStream>
+class BDSPTransmitter final: public core::BDSPV1TransmitterCore {
+private:
+    using core::BDSPV1TransmitterCore::set_stream_writer;
+public:
+    BDSPTransmitter() {
+        _writer = static_cast<streams::IStreamWriter *>(new TWriteStream());
+        set_stream_writer(_writer);
+    }
+
+    ~BDSPTransmitter() {
+        delete reinterpret_cast<TWriteStream *>(_writer);
+        _writer = nullptr;
+    }
+
+    TWriteStream &get_write_stream() { return *reinterpret_cast<TWriteStream *>(_writer); };
+};
 
 } // namespace BDSP
 

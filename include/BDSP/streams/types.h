@@ -24,6 +24,7 @@ public:
     virtual void reset_read_state(bool need_wait_delimiter) = 0;
     virtual void set_stream_data_handler(stream_data_callback_t handler, void *context_ptr) = 0;
     virtual bool get_ready_status() = 0;
+    virtual ~IStreamReader() = default;
 };
 
 class IStreamWriter {
@@ -33,6 +34,7 @@ public:
     virtual stream_write_status_t write(uint8_t byte) = 0;
     virtual stream_write_status_t write(uint8_t *buffer_ptr, size_t size) = 0;
     virtual bool get_ready_status() = 0;
+    virtual ~IStreamWriter() = default;
 };
 
 } // namespace BDSP::streams

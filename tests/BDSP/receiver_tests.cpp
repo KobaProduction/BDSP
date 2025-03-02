@@ -6,12 +6,13 @@
 #include "vector_test_streams.h"
 
 using namespace BDSP;
+using namespace BDSP::core;
 using namespace BDSP::streams;
 using namespace BDSP::strategies;
 
 TEST(bdsp_v1_receiver_tests, set_stream_reader_test) {
     VectorTestReader reader;
-    BDSPReceiver receiver;
+    BDSPV1ReceiverCore receiver;
 
     reader.set_stream_data_handler([](uint8_t byte, stream_read_status_t status, void *ctx) { }, nullptr);
 
@@ -31,7 +32,7 @@ TEST(bdsp_v1_receiver_tests, reset_destructor_test) {
     VectorTestReader reader;
     ASSERT_FALSE(reader.get_ready_status());
     {
-        BDSPReceiver receiver;
+        BDSPV1ReceiverCore receiver;
         EXPECT_EQ(receiver.set_stream_reader(&reader), SET_STREAM_READER_OK);
         ASSERT_TRUE(reader.get_ready_status());
     };
@@ -39,7 +40,7 @@ TEST(bdsp_v1_receiver_tests, reset_destructor_test) {
 }
 
 TEST(bdsp_v1_receiver_tests, parsing_statuses_test) {
-    BDSPReceiver receiver;
+    BDSPV1ReceiverCore receiver;
 
     EXPECT_EQ(receiver.parse_packet_byte(0x00, STREAM_READ_ERROR), STREAM_READING_ERROR);
     EXPECT_EQ(receiver.parse_packet_byte(0x00, STREAM_READER_NOT_READY_ERROR), STREAM_READING_ERROR);
@@ -47,7 +48,7 @@ TEST(bdsp_v1_receiver_tests, parsing_statuses_test) {
 }
 
 TEST(bdsp_v1_receiver_tests, error_parsing_test) {
-    BDSPReceiver receiver;
+    BDSPV1ReceiverCore receiver;
 
     EXPECT_EQ(receiver.parse_packet_byte(0x00, STREAM_READ_ERROR), STREAM_READING_ERROR);
 
@@ -114,7 +115,7 @@ TEST(bdsp_v1_receiver_tests, checksum_error_test) {
         }
     };
 
-    BDSPReceiver receiver;
+    BDSPV1ReceiverCore receiver;
     ChecksumTester checksum_tester;
 
     receiver.set_checksum_function(checksums::crc8_nrsc5);
@@ -137,7 +138,7 @@ TEST(bdsp_v1_receiver_tests, checksum_error_test) {
 
 TEST(bdsp_v1_receiver_tests, normal_using_test) {
     VectorTestReader reader;
-    BDSPReceiver receiver;
+    BDSPV1ReceiverCore receiver;
     EXPECT_EQ(receiver.set_stream_reader(&reader), SET_STREAM_READER_OK);
 
     auto read_strategy = reader.get_strategy();
@@ -177,7 +178,7 @@ TEST(bdsp_v1_receiver_tests, normal_using_test) {
 
 TEST(bdsp_v1_receiver_tests, normal_using_with_big_packet_and_no_clear_test) {
     VectorTestReader reader;
-    BDSPReceiver receiver;
+    BDSPV1ReceiverCore receiver;
     EXPECT_EQ(receiver.set_stream_reader(&reader), SET_STREAM_READER_OK);
 
     receiver.set_error_handler(
@@ -234,7 +235,7 @@ TEST(bdsp_v1_receiver_tests, correct_checksum_test) {
     };
 
     ChecksumTester tester;
-    BDSPReceiver receiver;
+    BDSPV1ReceiverCore receiver;
     receiver.set_checksum_function(checksums::crc8_nrsc5);
     tester.set_checksum_function(checksums::crc8_nrsc5);
 

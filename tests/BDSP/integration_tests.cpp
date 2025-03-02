@@ -1,45 +1,59 @@
 #include <gtest/gtest.h>
 
-#include "BDSP/transceiver.h"
+#include "BDSP/receiver.h"
 #include "BDSP/streams/cobs/reader.h"
 #include "BDSP/streams/cobs/writer.h"
+#include "BDSP/transceiver.h"
+#include "BDSP/transmitter.h"
+
+#include "testing.h"
 
 using namespace BDSP;
 using namespace BDSP::streams;
 
-TEST(bdsp_full_tests, bdsp_v1_full_test) {
-    COBSReaderStream reader;
-    COBSWriterStream writer;
+TEST(bdsp_full_tests, transceiver_test) {
     bool is_packet_got = false;
-
-    writer.set_stream_writer([] (uint8_t byte, void *ctx) {
-        reinterpret_cast<COBSReaderStream*>(ctx)->read(byte);
-    }, &reader);
-
-    BDSPTransceiver transceiver1;
-    transceiver1.set_stream_writer(&writer);
-    transceiver1.set_stream_reader(&reader);
-
-    transceiver1.set_packet_handler([] (packet_context_t &packet_context, void *ctx){
-        *reinterpret_cast<bool*>(ctx) = true;
-    }, &is_packet_got);
-
-    transceiver1.set_error_handler([] (parse_packet_status_t error, void *ctx){
-        std::cout << "Error: " << error << std::endl;
-        FAIL();
-    }, nullptr);
-
-
+    BDSPTransceiver<COBSReaderStream, COBSWriterStream> transceiver;
+    transceiver.get_write_stream().set_stream_writer(
+        [](uint8_t byte, void *ctx) { reinterpret_cast<IStreamReader *>(ctx)->read(byte); },
+        &transceiver.get_read_stream());
+    transceiver.set_packet_handler(
+        [](packet_context_t &packet_context, void *ctx) { *reinterpret_cast<bool *>(ctx) = true; }, &is_packet_got);
+    transceiver.set_error_handler(
+        [](parse_packet_status_t error, void *ctx) {
+            std::cout << "Error: " << error << std::endl;
+            FAIL();
+        },
+        nullptr);
     uint16_t size = 65535;
-    auto *data = new uint8_t[size];
+    std::vector<uint8_t> data;
+    data.resize(size, 0xAA);
+    transceiver.send_data(0, data.data(), data.size());
+    ASSERT_TRUE(is_packet_got);
+}
 
-    for (int i = 0; i < size; ++i) {
-        data[i] = 0xAA;
-    }
+TEST(bdsp_full_tests, transmitter_test) {
+    bool is_got_bytes = false;
+    BDSPTransmitter<COBSWriterStream> transmitter;
+    std::vector<uint8_t> raw_data;
+    transmitter.get_write_stream().set_stream_writer(
+        [](uint8_t byte, void *ctx) { reinterpret_cast<std::vector<uint8_t> *>(ctx)->push_back(byte); }, &raw_data);
+    transmitter.send_data(0, reinterpret_cast<uint8_t *>(&is_got_bytes), 1);
+    ASSERT_TRUE(is_equals(raw_data, {3, 64, 1, 2, 77, 0}));
+}
 
-    transceiver1.send_data(0, data, size);
-
-    delete [] data;
-
+TEST(bdsp_full_tests, receiver_test) {
+    bool is_packet_got = false;
+    BDSPReceiver<COBSReaderStream> receiver;
+    receiver.set_packet_handler(
+        [](packet_context_t &packet_context, void *ctx) { *reinterpret_cast<bool *>(ctx) = true; }, &is_packet_got);
+    receiver.set_error_handler(
+        [](parse_packet_status_t error, void *ctx) {
+            std::cout << "Error: " << error << std::endl;
+            FAIL();
+        },
+        nullptr);
+    std::vector<uint8_t> raw_data = {3, 64, 1, 2, 77, 0};
+    receiver.get_read_stream().read(raw_data.data(), raw_data.size());
     ASSERT_TRUE(is_packet_got);
 }

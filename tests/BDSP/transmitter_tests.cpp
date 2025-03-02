@@ -6,11 +6,12 @@
 #include "vector_test_streams.h"
 
 using namespace BDSP;
+using namespace BDSP::core;
 using namespace BDSP::streams;
 
 TEST(bdsp_v1_transmitter_tests, set_stream_writer_test) {
     VectorTestWriter writer;
-    BDSPTransmitter transmitter;
+    BDSPV1TransmitterCore transmitter;
 
     writer.set_stream_writer(nullptr, nullptr);
     ASSERT_FALSE(writer.get_ready_status());
@@ -26,24 +27,27 @@ TEST(bdsp_v1_transmitter_tests, set_stream_writer_test) {
 TEST(bdsp_v1_transmitter_tests, error_send_data_test) {
     struct Context {
         VectorTestWriter writer;
-        BDSPTransmitter transmitter;
+        BDSPV1TransmitterCore transmitter;
     } ctx;
 
     uint8_t packet_id = 31;
 
     std::vector<uint8_t> data;
 
-    ctx.writer.set_stream_writer([] (uint8_t byte, void *ctx){}, nullptr);
+    ctx.writer.set_stream_writer([](uint8_t byte, void *ctx) { }, nullptr);
 
-    EXPECT_EQ(ctx.transmitter.send_data(packet_id, data.data(), data.size(), WITHOUT_CHECKSUM), STREAM_WRITER_NOT_SET_ERROR);
+    EXPECT_EQ(ctx.transmitter.send_data(packet_id, data.data(), data.size(), WITHOUT_CHECKSUM),
+              STREAM_WRITER_NOT_SET_ERROR);
     EXPECT_EQ(ctx.transmitter.set_stream_writer(&ctx.writer), SET_STREAM_WRITER_OK);
-    EXPECT_EQ(ctx.transmitter.send_data(packet_id, data.data(), data.size(), WITHOUT_CHECKSUM), MAXIMUM_PACKET_SIZE_EXCEEDING_ERROR);
+    EXPECT_EQ(ctx.transmitter.send_data(packet_id, data.data(), data.size(), WITHOUT_CHECKSUM),
+              MAXIMUM_PACKET_SIZE_EXCEEDING_ERROR);
 
     ctx.transmitter.set_max_packet_size(127);
     for (int i = 0; i < 255; ++i) {
         data.push_back(i);
     }
-    EXPECT_EQ(ctx.transmitter.send_data(packet_id, data.data(), data.size(), WITHOUT_CHECKSUM), MAXIMUM_PACKET_SIZE_EXCEEDING_ERROR);
+    EXPECT_EQ(ctx.transmitter.send_data(packet_id, data.data(), data.size(), WITHOUT_CHECKSUM),
+              MAXIMUM_PACKET_SIZE_EXCEEDING_ERROR);
 
     ctx.transmitter.set_max_packet_size(65535);
     EXPECT_EQ(ctx.transmitter.send_data(255, data.data(), data.size(), WITHOUT_CHECKSUM), PACKET_ID_ERROR);
@@ -52,10 +56,10 @@ TEST(bdsp_v1_transmitter_tests, error_send_data_test) {
 TEST(bdsp_v1_transmitter_tests, send_data_test) {
     struct Context {
         VectorTestWriter writer;
-        BDSPTransmitter transmitter;
+        BDSPV1TransmitterCore transmitter;
     } ctx;
 
-    ctx.writer.set_stream_writer([] (uint8_t byte, void *ctx){}, nullptr);
+    ctx.writer.set_stream_writer([](uint8_t byte, void *ctx) { }, nullptr);
 
     EXPECT_EQ(ctx.transmitter.set_stream_writer(&ctx.writer), SET_STREAM_WRITER_OK);
 
@@ -95,10 +99,10 @@ TEST(bdsp_v1_transmitter_tests, send_data_test) {
 TEST(bdsp_v1_transmitter_tests, checksums_test) {
     struct Context {
         VectorTestWriter writer;
-        BDSPTransmitter transmitter;
+        BDSPV1TransmitterCore transmitter;
     } ctx;
 
-    ctx.writer.set_stream_writer([] (uint8_t byte, void *ctx){}, nullptr);
+    ctx.writer.set_stream_writer([](uint8_t byte, void *ctx) { }, nullptr);
 
     EXPECT_EQ(ctx.transmitter.set_stream_writer(&ctx.writer), SET_STREAM_WRITER_OK);
     EXPECT_EQ(ctx.transmitter.set_checksum_function(checksums::crc8_nrsc5), SET_CHECKSUM_FUNCTION_OK);

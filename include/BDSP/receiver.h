@@ -5,6 +5,7 @@
 #include "BDSP/streams/types.h"
 #include "BDSP/types.h"
 
+#include <iostream>
 #include <stdlib.h>
 
 namespace BDSP {
@@ -58,7 +59,24 @@ public:
 
 } // namespace core
 
-class BDSPReceiver final: public core::BDSPV1ReceiverCore { };
+template<typename TReadStream>
+class BDSPReceiver final: public core::BDSPV1ReceiverCore {
+private:
+    using core::BDSPV1ReceiverCore::set_stream_reader;
+public:
+    BDSPReceiver() {
+        _reader = static_cast<streams::IStreamReader *>(new TReadStream());
+        set_stream_reader(_reader);
+    }
+
+    ~BDSPReceiver() {
+        delete reinterpret_cast<TReadStream *>(_reader);
+        _reader = nullptr;
+    }
+
+    TReadStream &get_read_stream() { return *reinterpret_cast<TReadStream *>(_reader); };
+};
+
 } // namespace BDSP
 
 #endif // BDSP_RECEIVER_H
