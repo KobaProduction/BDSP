@@ -70,11 +70,11 @@ void COBSReadStrategyCore::reset_read_state() {
 set_cobs_config_status COBSReadStrategyCore::set_config(cobs_config_t config) {
     _ready_state_callback(false, _context);
     set_cobs_config_status status = _check_config(config);
-    if (status not_eq SET_OK) {
+    if (status not_eq SET_COBS_CONFIG_OK) {
         return status;
     }
     if (_get_read_process_state()) {
-        return ERROR_PROCESS_NOT_FINISHED;
+        return ERROR_COBS_PROCESS_NOT_FINISHED;
     }
     _cfg = config;
     reset_read_state();

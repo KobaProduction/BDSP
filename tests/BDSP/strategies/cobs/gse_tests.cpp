@@ -23,11 +23,11 @@ TEST(strategies_cobs_gse_tests, set_configuration_with_active_process) {
 
     reinterpret_cast<AccessFieldClass *>(&write_strategy)->_counter_of_the_sequence_to_be_replaced = 1;
 
-    EXPECT_EQ(write_strategy.set_config(config), ERROR_PROCESS_NOT_FINISHED);
+    EXPECT_EQ(write_strategy.set_config(config), ERROR_COBS_PROCESS_NOT_FINISHED);
     reinterpret_cast<AccessFieldClass *>(&write_strategy)->_counter_of_the_sequence_to_be_replaced = 0;
 
     read_strategy.read(config.depth + 1);
-    EXPECT_EQ(read_strategy.set_config(config), ERROR_PROCESS_NOT_FINISHED);
+    EXPECT_EQ(read_strategy.set_config(config), ERROR_COBS_PROCESS_NOT_FINISHED);
 }
 
 TEST(strategies_cobs_gse_tests, reader_errors_test) {

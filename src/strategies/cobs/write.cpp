@@ -53,11 +53,11 @@ void COBSWriteStrategyCore::send_delimiter() {
 set_cobs_config_status COBSWriteStrategyCore::set_config(cobs_config_t config) {
     _ready_state_callback(false, _context);
     set_cobs_config_status status = _check_config(config);
-    if (status not_eq SET_OK) {
+    if (status not_eq SET_COBS_CONFIG_OK) {
         return status;
     }
     if (_get_active_write_state_status()) {
-        return ERROR_PROCESS_NOT_FINISHED;
+        return ERROR_COBS_PROCESS_NOT_FINISHED;
     }
     if (_buffer_ptr and _cfg.depth not_eq config.depth) {
         _free(_buffer_ptr);
@@ -80,7 +80,7 @@ void COBSWriteStrategyCore::write(uint8_t byte) {
 
 bool COBSGSEWriteStrategyCore::_get_active_write_state_status() {
     if (_counter_of_the_sequence_to_be_replaced not_eq 0) {
-        return ERROR_PROCESS_NOT_FINISHED;
+        return ERROR_COBS_PROCESS_NOT_FINISHED;
     }
     return COBSWriteStrategyCore::_get_active_write_state_status();
 }
@@ -101,7 +101,7 @@ void COBSGSEWriteStrategyCore::finish() {
 
 set_cobs_config_status COBSGSEWriteStrategyCore::set_config(cobs_config_t config) {
     set_cobs_config_status status = COBSWriteStrategyCore::set_config(config);
-    if (status == SET_OK) {
+    if (status == SET_COBS_CONFIG_OK) {
         _limit_position_of_the_sequence_to_be_replaced = 0xFF - _cfg.depth;
         _counter_of_the_sequence_to_be_replaced = 0;
     }

@@ -21,7 +21,7 @@ TEST(strategies_strategies_cobs_zpe_tests, writer_elimination_sequence_after_off
     COBSZPEWriterStream writer;
     cobs_config_t config = writer.get_strategy().get_config();
     config.delimiter_byte = 255;
-    EXPECT_EQ(writer.get_strategy().set_config(config), SET_OK);
+    EXPECT_EQ(writer.get_strategy().set_config(config), SET_COBS_CONFIG_OK);
 
     writer.set_stream_writer([](uint8_t byte, void *ctx_ptr) { }, nullptr);
 

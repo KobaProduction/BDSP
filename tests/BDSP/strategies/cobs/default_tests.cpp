@@ -26,8 +26,8 @@ TEST(strategies_cobs_default_tests, set_configuration_test) {
 
     cobs_config_t config = BDSP::strategies::core::COBSConfigsMixin().get_default_config();
 
-    EXPECT_EQ(read_strategy.set_config(config), SET_OK);
-    EXPECT_EQ(write_strategy.set_config(config), SET_OK);
+    EXPECT_EQ(read_strategy.set_config(config), SET_COBS_CONFIG_OK);
+    EXPECT_EQ(write_strategy.set_config(config), SET_COBS_CONFIG_OK);
 
     ASSERT_TRUE(read_strategy_ready);
     ASSERT_TRUE(write_strategy_ready);
@@ -68,8 +68,8 @@ TEST(strategies_cobs_default_tests, set_configuration_with_active_process) {
     write_strategy.write(0xAA);
     read_strategy.read(0x01);
 
-    EXPECT_EQ(read_strategy.set_config(config), ERROR_PROCESS_NOT_FINISHED);
-    EXPECT_EQ(write_strategy.set_config(config), ERROR_PROCESS_NOT_FINISHED);
+    EXPECT_EQ(read_strategy.set_config(config), ERROR_COBS_PROCESS_NOT_FINISHED);
+    EXPECT_EQ(write_strategy.set_config(config), ERROR_COBS_PROCESS_NOT_FINISHED);
 
     ASSERT_FALSE(read_strategy_ready);
     ASSERT_FALSE(write_strategy_ready);
@@ -81,7 +81,7 @@ TEST(strategies_cobs_default_tests, set_configuration_with_active_process) {
     };
     reinterpret_cast<AccessFieldClass *>(&read_strategy)->_offset_to_service_byte = 1;
 
-    EXPECT_EQ(read_strategy.set_config(config), ERROR_PROCESS_NOT_FINISHED);
+    EXPECT_EQ(read_strategy.set_config(config), ERROR_COBS_PROCESS_NOT_FINISHED);
     ASSERT_FALSE(read_strategy_ready);
 }
 
@@ -128,7 +128,7 @@ TEST(strategies_cobs_default_tests, reader_errors_test) {
     config.delimiter_byte = 1;
     config.depth = 16;
 
-    EXPECT_EQ(read_strategy.set_config(config), SET_OK);
+    EXPECT_EQ(read_strategy.set_config(config), SET_COBS_CONFIG_OK);
     statuses.clear();
     EXPECT_EQ(read_strategy.read(0x00), STRATEGY_READ_OK);
     EXPECT_EQ(read_strategy.read(config.depth + 1), STRATEGY_READ_ERROR);
@@ -142,8 +142,8 @@ TEST(strategies_cobs_default_tests, encoding_max_depth_test) {
 
     cobs_config_t config = BDSP::strategies::core::COBSConfigsMixin().get_default_config();
     config.depth = 255;
-    EXPECT_EQ(reader.get_strategy().set_config(config), SET_OK);
-    EXPECT_EQ(writer.get_strategy().set_config(config), SET_OK);
+    EXPECT_EQ(reader.get_strategy().set_config(config), SET_COBS_CONFIG_OK);
+    EXPECT_EQ(writer.get_strategy().set_config(config), SET_COBS_CONFIG_OK);
 
     std::vector<uint8_t> data;
     std::vector<uint8_t> correct_encoded;
@@ -169,8 +169,8 @@ TEST(strategies_cobs_default_tests, encoding_depth_test) {
 
     cobs_config_t config = BDSP::strategies::core::COBSConfigsMixin().get_default_config();
     config.depth = 16;
-    EXPECT_EQ(reader.get_strategy().set_config(config), SET_OK);
-    EXPECT_EQ(writer.get_strategy().set_config(config), SET_OK);
+    EXPECT_EQ(reader.get_strategy().set_config(config), SET_COBS_CONFIG_OK);
+    EXPECT_EQ(writer.get_strategy().set_config(config), SET_COBS_CONFIG_OK);
 
     std::vector<uint8_t> data;
     std::vector<uint8_t> correct_encoded = {config.depth,
@@ -232,8 +232,8 @@ TEST(strategies_cobs_default_tests, encoding_custom_delimiter_test) {
 
     cobs_config_t config = BDSP::strategies::core::COBSConfigsMixin().get_default_config();
     config.delimiter_byte = 2;
-    EXPECT_EQ(reader.get_strategy().set_config(config), SET_OK);
-    EXPECT_EQ(writer.get_strategy().set_config(config), SET_OK);
+    EXPECT_EQ(reader.get_strategy().set_config(config), SET_COBS_CONFIG_OK);
+    EXPECT_EQ(writer.get_strategy().set_config(config), SET_COBS_CONFIG_OK);
 
     std::vector<uint8_t> data = {0, 2, 0, 0};
     std::vector<uint8_t> correct_encoded = {0, 0, 3, 0, 0, 2};

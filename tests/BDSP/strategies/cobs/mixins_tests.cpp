@@ -27,7 +27,7 @@ TEST(cobs_mixins_tests, cobs_default_checker_mixin_test) {
     config.size_of_the_sequence_to_be_replaced = 0;
     config.byte_of_the_sequence_to_be_replaced = '\0';
 
-    EXPECT_EQ(checker._check_config(config), SET_OK);
+    EXPECT_EQ(checker._check_config(config), SET_COBS_CONFIG_OK);
 
     config.size_of_the_sequence_to_be_replaced = 2;
 
@@ -58,7 +58,7 @@ TEST(cobs_mixins_tests, cobs_gse_checker_mixin_test) {
     config.size_of_the_sequence_to_be_replaced = 2;
     config.byte_of_the_sequence_to_be_replaced = '\0';
 
-    EXPECT_EQ(checker._check_config(config), SET_OK);
+    EXPECT_EQ(checker._check_config(config), SET_COBS_CONFIG_OK);
 
     config.depth = 255;
 
@@ -90,7 +90,7 @@ TEST(cobs_mixins_tests, cobs_zpe_checker_mixin_test) {
     config.size_of_the_sequence_to_be_replaced = 2;
     config.byte_of_the_sequence_to_be_replaced = '\0';
 
-    EXPECT_EQ(checker._check_config(config), SET_OK);
+    EXPECT_EQ(checker._check_config(config), SET_COBS_CONFIG_OK);
 
     config.depth = 255;
 

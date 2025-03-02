@@ -26,7 +26,7 @@ TEST(ppp_mixins_tests, set_config_checker_test) {
     } checker;
 
     byte_stuffing_config_t config = checker.get_default_config();
-    EXPECT_EQ(checker._check_config(config), SET_OK);
+    EXPECT_EQ(checker._check_config(config), SET_BYTE_STUFFING_CONFIG_OK);
 
     config = {0x7E, 0x7D, 0x00};
     EXPECT_EQ(checker._check_config(config), ERROR_ESCAPE_MASK_IS_NULL);

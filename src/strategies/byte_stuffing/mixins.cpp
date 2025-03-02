@@ -13,7 +13,7 @@ set_byte_stuffing_config_status ByteStuffingConfigsMixin::_check_config(byte_stu
     if (config.escape_mask == 0x00) {
         return ERROR_ESCAPE_MASK_IS_NULL;
     }
-    return SET_OK;
+    return SET_BYTE_STUFFING_CONFIG_OK;
 }
 
 byte_stuffing_config_t ByteStuffingConfigsMixin::get_default_config() {

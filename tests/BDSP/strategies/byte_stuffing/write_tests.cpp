@@ -15,7 +15,7 @@ TEST(byte_stuffing_write_strategy_tests, set_config) {
     bool ready_state = false;
     write_strategy.init(nullptr, [](bool state, void *ctx) { *reinterpret_cast<bool *>(ctx) = state; }, &ready_state);
 
-    EXPECT_EQ(write_strategy.set_config(config), SET_OK);
+    EXPECT_EQ(write_strategy.set_config(config), SET_BYTE_STUFFING_CONFIG_OK);
     ASSERT_TRUE(ready_state);
 
     config.delimiter_byte = config.escape_byte;

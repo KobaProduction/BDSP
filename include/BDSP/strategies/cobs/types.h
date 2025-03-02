@@ -20,14 +20,14 @@ enum set_cobs_config_status {
     /**
      * Returned in case of successful configuration installation.
      */
-    SET_OK = 0,
+    SET_COBS_CONFIG_OK = 0,
     /**
      * This error occurs when you change the configuration with an uncompleted data  transmission.
      * Will not be guaranteed to work because it is code not checked whether delimiter was sent earlier.
      * In order to avoid errors, it is better to change the configuration only after creating an object and before
      * sending data.
      */
-    ERROR_PROCESS_NOT_FINISHED,
+    ERROR_COBS_PROCESS_NOT_FINISHED,
     /**
      * This error occurs when memory to encoding buffer has not been acquired (got nullptr).
      */

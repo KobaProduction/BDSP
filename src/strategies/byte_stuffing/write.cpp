@@ -17,10 +17,10 @@ void ByteStuffingWriteStrategyCore::send_delimiter() {
 
 set_byte_stuffing_config_status ByteStuffingWriteStrategyCore::set_config(byte_stuffing_config_t config) {
     set_byte_stuffing_config_status status = _check_config(config);
-    if (status == SET_OK) {
+    if (status == SET_BYTE_STUFFING_CONFIG_OK) {
         _cfg = config;
     }
-    _ready_state_callback(status == SET_OK, _context);
+    _ready_state_callback(status == SET_BYTE_STUFFING_CONFIG_OK, _context);
     return status;
 }
 

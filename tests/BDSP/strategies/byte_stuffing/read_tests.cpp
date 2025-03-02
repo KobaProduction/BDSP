@@ -33,11 +33,11 @@ TEST(byte_stuffing_read_strategy_tests, set_config) {
     bool ready_state = false;
     read_strategy.init(nullptr, [](bool state, void *ctx) { *reinterpret_cast<bool *>(ctx) = state; }, &ready_state);
 
-    EXPECT_EQ(read_strategy.set_config(config), SET_OK);
+    EXPECT_EQ(read_strategy.set_config(config), SET_BYTE_STUFFING_CONFIG_OK);
     ASSERT_TRUE(ready_state);
 
     read_strategy.read(config.escape_byte);
-    EXPECT_EQ(read_strategy.set_config(config), ERROR_PROCESS_NOT_FINISHED);
+    EXPECT_EQ(read_strategy.set_config(config), ERROR_BYTE_STUFFING_PROCESS_NOT_FINISHED);
     ASSERT_FALSE(ready_state);
 }
 
@@ -49,7 +49,7 @@ TEST(byte_stuffing_read_strategy_tests, error_read_tests) {
     read_strategy.init(read_handler, nullptr, &context);
 
     EXPECT_EQ(read_strategy.read(config.escape_byte), STRATEGY_READ_OK);
-    EXPECT_EQ(read_strategy.set_config(config), ERROR_PROCESS_NOT_FINISHED);
+    EXPECT_EQ(read_strategy.set_config(config), ERROR_BYTE_STUFFING_PROCESS_NOT_FINISHED);
     ASSERT_TRUE(context.data.empty() and context.statuses.empty());
 
     reset(context, read_strategy);

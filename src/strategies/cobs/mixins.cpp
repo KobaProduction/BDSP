@@ -14,7 +14,7 @@ set_cobs_config_status COBSConfigsMixin::_check_min_cobs_depth(cobs_config_t con
     if (config.depth < MIN_BDSP_COBS_DEPTH) {
         return ERROR_COBS_DEPTH;
     }
-    return SET_OK;
+    return SET_COBS_CONFIG_OK;
 }
 
 cobs_config_t COBSConfigsMixin::get_default_config() {
