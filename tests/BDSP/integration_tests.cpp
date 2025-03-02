@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
 #include "BDSP/receiver.h"
-#include "BDSP/streams/cobs/reader.h"
-#include "BDSP/streams/cobs/writer.h"
+#include "BDSP/streams/readers.h"
+#include "BDSP/streams/writers.h"
 #include "BDSP/transceiver.h"
 #include "BDSP/transmitter.h"
 

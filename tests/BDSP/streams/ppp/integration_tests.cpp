@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 #include <vector>
 
-#include "BDSP/streams/PPP/reader.h"
-#include "BDSP/streams/PPP/writer.h"
+#include "BDSP/streams/readers.h"
 #include "BDSP/streams/types.h"
+#include "BDSP/streams/writers.h"
 
 #include "testing.h"
 

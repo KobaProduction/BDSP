@@ -70,14 +70,10 @@ set(public_headers
 
         include/BDSP/streams/mixins.h
         include/BDSP/streams/reader.h
+        include/BDSP/streams/readers.h
         include/BDSP/streams/writer.h
+        include/BDSP/streams/writers.h
         include/BDSP/streams/types.h
-
-        include/BDSP/streams/cobs/reader.h
-        include/BDSP/streams/cobs/writer.h
-
-        include/BDSP/streams/ppp/reader.h
-        include/BDSP/streams/ppp/writer.h
 
         include/BDSP/strategies/types.h
 
