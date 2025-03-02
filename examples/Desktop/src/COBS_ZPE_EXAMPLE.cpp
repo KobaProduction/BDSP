@@ -1,18 +1,17 @@
 #include <iostream>
 #include <vector>
 
-#include <BDSP/streams/cobs/reader.h>
-#include <BDSP/streams/cobs/writer.h>
+#include <BDSP/streams/readers.h>
+#include <BDSP/streams/writers.h>
 
 #include "utils.h"
-
-using namespace BDSP::streams;
-using namespace BDSP::streams::cobs;
 
 struct Context {
     std::vector<uint8_t> write_buffer;
     std::vector<uint8_t> read_buffer;
 };
+
+using namespace BDSP::streams;
 
 int main() {
     Context context;

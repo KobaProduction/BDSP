@@ -1,32 +1,20 @@
 #include <iostream>
 #include <vector>
 
-#include <BDSP/streams/cobs/reader.h>
-#include <BDSP/streams/cobs/writer.h>
-#include <BDSP/transceiver.h>
+#include <BDSP/transceivers.h>
 
 #include "utils.h"
 
 using namespace BDSP;
-using namespace BDSP::streams::cobs;
 
 int main() {
 
+    BDSPTransceiverCOBSZPE transceiver;
 
-    BDSPTransceiver transceiver;
+    transceiver.get_write_stream().set_stream_writer(
+        [](uint8_t byte, void *ctx) { reinterpret_cast<streams::IStreamReader *>(ctx)->read(byte); },
+        &transceiver.get_read_stream());
 
-    COBSZPEWriterStream writer;
-    COBSZPEReaderStream reader;
-
-    writer.set_stream_writer(
-        [](uint8_t byte, void *ctx) {
-            reinterpret_cast<COBSZPEReaderStream *>(ctx)->read(byte);
-        },
-        &reader);
-
-
-    transceiver.set_stream_writer(&writer);
-    transceiver.set_stream_reader(&reader);
     transceiver.set_packet_handler(
         [](packet_context_t &packet_ctx, void *ctx) {
             std::cout << "Got packet! Id: " << static_cast<uint32_t>(packet_ctx.packet_id);

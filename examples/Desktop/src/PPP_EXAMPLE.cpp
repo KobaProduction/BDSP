@@ -1,13 +1,12 @@
 #include <iostream>
 #include <vector>
 
-#include <BDSP/streams/ppp/reader.h>
-#include <BDSP/streams/ppp/writer.h>
+#include <BDSP/streams/readers.h>
+#include <BDSP/streams/writers.h>
 
 #include "utils.h"
 
 using namespace BDSP::streams;
-using namespace BDSP::streams::ppp;
 
 struct Context {
     std::vector<uint8_t> write_buffer;

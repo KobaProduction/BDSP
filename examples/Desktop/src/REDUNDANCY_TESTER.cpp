@@ -8,8 +8,6 @@
 #include <BDSP/strategies/cobs/write.h>
 
 using namespace BDSP::strategies;
-using namespace BDSP::strategies::cobs;
-using namespace BDSP::strategies::byte_stuffing;
 
 double calc_redundancy(size_t data_size, size_t encoded_data_size, size_t decimal_places = 3) {
     double factor = std::pow(10.0f, decimal_places);
