@@ -38,7 +38,7 @@ public:
         set_strategy(*_strategy);
     }
 
-    ~StreamReader() final { delete _strategy; }
+    ~StreamReader() override { delete _strategy; }
 
     TStrategy &get_strategy() { return *reinterpret_cast<TStrategy *>(_strategy); };
 };

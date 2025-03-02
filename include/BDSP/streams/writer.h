@@ -36,7 +36,7 @@ public:
         set_strategy(*_strategy);
     }
 
-    ~StreamWriter() final { delete _strategy; }
+    ~StreamWriter() override { delete _strategy; }
 
     TStrategy &get_strategy() { return *reinterpret_cast<TStrategy *>(_strategy); };
 };
