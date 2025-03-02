@@ -1,8 +1,7 @@
 #include "BDSP/strategies/cobs/read.h"
 
 using namespace BDSP::strategies;
-using namespace BDSP::strategies::cobs;
-using namespace BDSP::strategies::cobs::core;
+using namespace BDSP::strategies::core;
 
 void COBSReadStrategyCore::_exec_delimiter(uint8_t byte) {
     if (_offset_to_service_byte not_eq 0) {

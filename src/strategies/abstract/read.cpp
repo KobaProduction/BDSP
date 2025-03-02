@@ -1,7 +1,7 @@
 #include "BDSP/strategies/abstract/read.h"
 
 using namespace BDSP::strategies;
-using namespace BDSP::strategies::abstract;
+using namespace BDSP::strategies::core;
 
 void AbstractReadStrategy::init(strategy_data_callback_t read_callback,
                                 strategy_ready_state_callback_t ready_callback,

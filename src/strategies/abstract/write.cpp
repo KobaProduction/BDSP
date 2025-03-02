@@ -1,7 +1,7 @@
 #include "BDSP/strategies/abstract/write.h"
 
 using namespace BDSP::strategies;
-using namespace BDSP::strategies::abstract;
+using namespace BDSP::strategies::core;
 
 void AbstractWriteStrategy::init(strategy_write_handler_t write_handler,
                                  strategy_ready_state_callback_t ready_state_callback,

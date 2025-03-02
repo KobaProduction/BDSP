@@ -6,10 +6,10 @@
 #include "BDSP/strategies/byte_stuffing/read.h"
 #include "BDSP/streams/reader.h"
 
-namespace BDSP::streams::ppp {
+namespace BDSP::streams {
 
-class PPPReaderStream final: public StreamReader<strategies::byte_stuffing::PPPReadStrategy> { };
+class PPPReaderStream final: public StreamReader<strategies::PPPReadStrategy> { };
 
-} // namespace BDSP::streams::ppp
+} // namespace BDSP::streams
 
 #endif // BDSP_STREAMS_PPP_READER_H

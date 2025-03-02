@@ -6,9 +6,7 @@
 #include "cobs.h"
 #include "testing.h"
 
-using namespace BDSP::streams::cobs;
-using namespace BDSP::strategies;
-using namespace BDSP::strategies::cobs;
+using namespace BDSP::streams;
 
 TEST(cobs_integration_tests, cobs_default_stream_with_cobs_correct_test) {
     return;

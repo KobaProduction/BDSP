@@ -4,12 +4,12 @@
 #include "BDSP/strategies/cobs/read.h"
 #include "BDSP/streams/reader.h"
 
-namespace BDSP::streams::cobs {
+namespace BDSP::streams {
 
-class COBSReaderStream final: public StreamReader<strategies::cobs::COBSReadStrategy> { };
-class COBSGSEReaderStream final: public StreamReader<strategies::cobs::COBSGSEReadStrategy> { };
-class COBSZPEReaderStream final: public StreamReader<strategies::cobs::COBSZPEReadStrategy> { };
+class COBSReaderStream final: public StreamReader<strategies::COBSReadStrategy> { };
+class COBSGSEReaderStream final: public StreamReader<strategies::COBSGSEReadStrategy> { };
+class COBSZPEReaderStream final: public StreamReader<strategies::COBSZPEReadStrategy> { };
 
-} // namespace BDSP::streams::cobs
+} // namespace BDSP::streams
 
 #endif // BDSP_STREAMS_COBS_READER_H

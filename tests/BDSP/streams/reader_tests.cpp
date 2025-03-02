@@ -12,7 +12,7 @@ namespace {
 
 std::vector<uint8_t> finish_bytes = {0xFF, 0xFF};
 
-class EmptyStrategy final: public abstract::AbstractReadStrategy {
+class EmptyStrategy final: public BDSP::strategies::core::AbstractReadStrategy {
 public:
     void _init() override { }
 
@@ -39,7 +39,7 @@ void read_handler(uint8_t byte, stream_read_status_t status, void *ctx) {
 } // namespace
 
 TEST(stream_reader_tests, ready_test) {
-    class TestStreamReader final: public core::StreamReaderCore { };
+    class TestStreamReader final: public BDSP::streams::core::StreamReaderCore { };
     auto reader = TestStreamReader();
 
     ASSERT_FALSE(reader.get_ready_status());

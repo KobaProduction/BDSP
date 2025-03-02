@@ -3,8 +3,7 @@
 #include "BDSP/strategies/byte_stuffing/read.h"
 
 using namespace BDSP::strategies;
-using namespace BDSP::strategies::byte_stuffing;
-using namespace BDSP::strategies::byte_stuffing::core;
+using namespace BDSP::strategies::core;
 
 namespace {
 struct Context {

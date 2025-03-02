@@ -1,7 +1,7 @@
 #include "BDSP/strategies/cobs/mixins.h"
 
-using namespace BDSP::strategies::cobs;
-using namespace BDSP::strategies::cobs::core;
+using namespace BDSP::strategies;
+using namespace BDSP::strategies::core;
 
 set_cobs_config_status COBSConfigsMixin::_check_config(cobs_config_t config) {
     if (config.size_of_the_sequence_to_be_replaced not_eq 0) {

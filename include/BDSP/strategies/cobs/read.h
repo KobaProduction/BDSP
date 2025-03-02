@@ -6,10 +6,10 @@
 #include "BDSP/strategies/cobs/types.h"
 #include "BDSP/strategies/types.h"
 
-namespace BDSP::strategies::cobs {
+namespace BDSP::strategies {
 
 namespace core {
-class COBSReadStrategyCore: public abstract::AbstractReadStrategy, public virtual COBSConfigsMixin {
+class COBSReadStrategyCore: public core::AbstractReadStrategy, public virtual COBSConfigsMixin {
 protected:
     cobs_config_t _cfg{};
     uint8_t _offset_to_service_byte{};
@@ -48,6 +48,6 @@ class COBSReadStrategy final: public core::COBSReadStrategyCore { };
 class COBSGSEReadStrategy final: public core::COBSGSEReadStrategyCore { };
 class COBSZPEReadStrategy final: public core::COBSZPEReadStrategyCore { };
 
-} // namespace BDSP::strategies::cobs
+} // namespace BDSP::strategies
 
 #endif // BDSP_STREAMS_STRATEGIES_COBS_READ_STRATEGIES_H

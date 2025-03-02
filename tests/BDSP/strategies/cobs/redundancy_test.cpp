@@ -4,7 +4,7 @@
 
 #include "testing.h"
 
-using namespace BDSP::strategies::cobs;
+using namespace BDSP::strategies;
 
 namespace {
     const size_t constant_overhead = 2;

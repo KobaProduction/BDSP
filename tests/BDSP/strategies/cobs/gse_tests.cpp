@@ -5,22 +5,21 @@
 
 #include "testing.h"
 
-using namespace BDSP::streams::cobs;
+using namespace BDSP::streams;
 using namespace BDSP::strategies;
-using namespace BDSP::strategies::cobs;
 
 TEST(strategies_cobs_gse_tests, set_configuration_with_active_process) {
 
-    class AccessFieldClass: public core::COBSGSEWriteStrategyCore {
+    class AccessFieldClass: public BDSP::strategies::core::COBSGSEWriteStrategyCore {
     public:
-        using core::COBSGSEWriteStrategyCore::_counter_of_the_sequence_to_be_replaced;
+        using BDSP::strategies::core::COBSGSEWriteStrategyCore::_counter_of_the_sequence_to_be_replaced;
     };
 
     COBSGSEWriteStrategy write_strategy;
     COBSGSEReadStrategy read_strategy;
     read_strategy.init(nullptr, nullptr, nullptr);
 
-    cobs_config_t config = core::COBSGSEConfigsMixin().get_default_config();
+    cobs_config_t config = BDSP::strategies::core::COBSGSEConfigsMixin().get_default_config();
 
     reinterpret_cast<AccessFieldClass *>(&write_strategy)->_counter_of_the_sequence_to_be_replaced = 1;
 
@@ -32,7 +31,7 @@ TEST(strategies_cobs_gse_tests, set_configuration_with_active_process) {
 }
 
 TEST(strategies_cobs_gse_tests, reader_errors_test) {
-    cobs_config_t config = core::COBSGSEConfigsMixin().get_default_config();
+    cobs_config_t config = BDSP::strategies::core::COBSGSEConfigsMixin().get_default_config();
 
     COBSGSEReadStrategy read_strategy;
     std::vector<strategy_read_status_t> statuses;
@@ -66,7 +65,7 @@ TEST(strategies_cobs_gse_tests, writer_reset_elimination_sequence_test) {
     COBSGSEReaderStream reader;
     COBSGSEWriterStream writer;
 
-    cobs_config_t config = core::COBSGSEConfigsMixin().get_default_config();
+    cobs_config_t config = BDSP::strategies::core::COBSGSEConfigsMixin().get_default_config();
     config.delimiter_byte = 255;
     writer.get_strategy().set_config(config);
     reader.get_strategy().set_config(config);

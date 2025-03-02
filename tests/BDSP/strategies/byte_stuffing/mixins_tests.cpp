@@ -2,8 +2,8 @@
 
 #include "BDSP/strategies/byte_stuffing/mixins.h"
 
-using namespace BDSP::strategies::byte_stuffing;
-using namespace BDSP::strategies::byte_stuffing::core;
+using namespace BDSP::strategies;
+using namespace BDSP::strategies::core;
 
 TEST(byte_stuffing_mixins_tests, get_default_config_test) {
     byte_stuffing_config_t config = ByteStuffingConfigsMixin().get_default_config();

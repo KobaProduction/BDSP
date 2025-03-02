@@ -9,7 +9,7 @@
 #include "BDSP/streams/reader.h"
 #include "BDSP/streams/writer.h"
 
-class TestVectorWriteStrategy final: public BDSP::strategies::abstract::AbstractWriteStrategy {
+class TestVectorWriteStrategy final: public BDSP::strategies::core::AbstractWriteStrategy {
     void _init() override { };
 
 public:
@@ -22,7 +22,7 @@ public:
 
 class VectorTestWriter final: public BDSP::streams::StreamWriter<TestVectorWriteStrategy> { };
 
-class TestVectorReadStrategy final: public BDSP::strategies::abstract::AbstractReadStrategy {
+class TestVectorReadStrategy final: public BDSP::strategies::core::AbstractReadStrategy {
 public:
     void _init() override { };
 

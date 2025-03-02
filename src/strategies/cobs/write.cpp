@@ -1,7 +1,7 @@
 #include "BDSP/strategies/cobs/write.h"
 
-using namespace BDSP::strategies::cobs;
-using namespace BDSP::strategies::cobs::core;
+using namespace BDSP::strategies;
+using namespace BDSP::strategies::core;
 
 inline void COBSWriteStrategyCore::_encode(uint8_t byte) {
     if (byte not_eq _cfg.delimiter_byte) {

@@ -3,8 +3,7 @@
 #include "BDSP/strategies/byte_stuffing/write.h"
 
 using namespace BDSP::strategies;
-using namespace BDSP::strategies::byte_stuffing;
-using namespace BDSP::strategies::byte_stuffing::core;
+using namespace BDSP::strategies::core;
 
 TEST(byte_stuffing_write_strategy_tests, set_config) {
     ByteStuffingWriteStrategyCore write_strategy;

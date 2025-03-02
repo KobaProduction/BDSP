@@ -5,9 +5,8 @@
 
 #include "testing.h"
 
-using namespace BDSP::streams::cobs;
+using namespace BDSP::streams;
 using namespace BDSP::strategies;
-using namespace BDSP::strategies::cobs;
 
 namespace {
 void is_ready_callback(bool is_ready, void *ctx) {
@@ -25,7 +24,7 @@ TEST(strategies_cobs_default_tests, set_configuration_test) {
     read_strategy.init(nullptr, is_ready_callback, &read_strategy_ready);
     write_strategy.init(nullptr, is_ready_callback, &write_strategy_ready);
 
-    cobs_config_t config = core::COBSConfigsMixin().get_default_config();
+    cobs_config_t config = BDSP::strategies::core::COBSConfigsMixin().get_default_config();
 
     EXPECT_EQ(read_strategy.set_config(config), SET_OK);
     EXPECT_EQ(write_strategy.set_config(config), SET_OK);
@@ -44,7 +43,7 @@ TEST(strategies_cobs_default_tests, set_configuration_with_incorrect_config) {
     read_strategy.init(nullptr, is_ready_callback, &read_strategy_ready);
     write_strategy.init(nullptr, is_ready_callback, &write_strategy_ready);
 
-    cobs_config_t config = core::COBSConfigsMixin().get_default_config();
+    cobs_config_t config = BDSP::strategies::core::COBSConfigsMixin().get_default_config();
 
     config.size_of_the_sequence_to_be_replaced = 2;
     EXPECT_EQ(read_strategy.set_config(config), ERROR_DEFAULT_COBS_SIZE_GSE);
@@ -64,7 +63,7 @@ TEST(strategies_cobs_default_tests, set_configuration_with_active_process) {
     read_strategy.init(nullptr, is_ready_callback, &read_strategy_ready);
     write_strategy.init(nullptr, is_ready_callback, &write_strategy_ready);
 
-    cobs_config_t config = core::COBSConfigsMixin().get_default_config();
+    cobs_config_t config = BDSP::strategies::core::COBSConfigsMixin().get_default_config();
 
     write_strategy.write(0xAA);
     read_strategy.read(0x01);
@@ -76,9 +75,9 @@ TEST(strategies_cobs_default_tests, set_configuration_with_active_process) {
     ASSERT_FALSE(write_strategy_ready);
 
     read_strategy.reset_read_state();
-    class AccessFieldClass: public core::COBSReadStrategyCore {
+    class AccessFieldClass: public BDSP::strategies::core::COBSReadStrategyCore {
     public:
-        using core::COBSReadStrategyCore::_offset_to_service_byte;
+        using BDSP::strategies::core::COBSReadStrategyCore::_offset_to_service_byte;
     };
     reinterpret_cast<AccessFieldClass *>(&read_strategy)->_offset_to_service_byte = 1;
 
@@ -93,9 +92,9 @@ TEST(strategies_cobs_default_tests, set_configuration_to_write_strategy_when_no_
 
     write_strategy.init(nullptr, is_ready_callback, &write_strategy_ready);
 
-    class AccessFieldClass: public core::COBSWriteStrategyCore {
+    class AccessFieldClass: public BDSP::strategies::core::COBSWriteStrategyCore {
     public:
-        using core::COBSWriteStrategyCore::_malloc;
+        using BDSP::strategies::core::COBSWriteStrategyCore::_malloc;
     };
     reinterpret_cast<AccessFieldClass *>(&write_strategy)->_malloc = [](size_t size) -> void * { return nullptr; };
 
@@ -141,7 +140,7 @@ TEST(strategies_cobs_default_tests, encoding_max_depth_test) {
     COBSReaderStream reader;
     COBSWriterStream writer;
 
-    cobs_config_t config = core::COBSConfigsMixin().get_default_config();
+    cobs_config_t config = BDSP::strategies::core::COBSConfigsMixin().get_default_config();
     config.depth = 255;
     EXPECT_EQ(reader.get_strategy().set_config(config), SET_OK);
     EXPECT_EQ(writer.get_strategy().set_config(config), SET_OK);
@@ -168,7 +167,7 @@ TEST(strategies_cobs_default_tests, encoding_depth_test) {
     COBSReaderStream reader;
     COBSWriterStream writer;
 
-    cobs_config_t config = core::COBSConfigsMixin().get_default_config();
+    cobs_config_t config = BDSP::strategies::core::COBSConfigsMixin().get_default_config();
     config.depth = 16;
     EXPECT_EQ(reader.get_strategy().set_config(config), SET_OK);
     EXPECT_EQ(writer.get_strategy().set_config(config), SET_OK);
@@ -231,7 +230,7 @@ TEST(strategies_cobs_default_tests, encoding_custom_delimiter_test) {
     COBSReaderStream reader;
     COBSWriterStream writer;
 
-    cobs_config_t config = core::COBSConfigsMixin().get_default_config();
+    cobs_config_t config = BDSP::strategies::core::COBSConfigsMixin().get_default_config();
     config.delimiter_byte = 2;
     EXPECT_EQ(reader.get_strategy().set_config(config), SET_OK);
     EXPECT_EQ(writer.get_strategy().set_config(config), SET_OK);

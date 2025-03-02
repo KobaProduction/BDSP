@@ -4,12 +4,12 @@
 #include "BDSP/strategies/cobs/write.h"
 #include "BDSP/streams/writer.h"
 
-namespace BDSP::streams::cobs {
+namespace BDSP::streams {
 
-class COBSWriterStream: public StreamWriter<strategies::cobs::COBSWriteStrategy> { };
-class COBSGSEWriterStream: public StreamWriter<strategies::cobs::COBSGSEWriteStrategy> { };
-class COBSZPEWriterStream: public StreamWriter<strategies::cobs::COBSZPEWriteStrategy> { };
+class COBSWriterStream: public StreamWriter<strategies::COBSWriteStrategy> { };
+class COBSGSEWriterStream: public StreamWriter<strategies::COBSGSEWriteStrategy> { };
+class COBSZPEWriterStream: public StreamWriter<strategies::COBSZPEWriteStrategy> { };
 
-} // namespace BDSP::streams::cobs
+} // namespace BDSP::streams
 
 #endif // BDSP_STREAMS_COBS_WRITER_H

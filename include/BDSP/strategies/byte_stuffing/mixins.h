@@ -3,7 +3,7 @@
 
 #include "BDSP/strategies/byte_stuffing/types.h"
 
-namespace BDSP::strategies::byte_stuffing::core {
+namespace BDSP::strategies::core {
 
 class ByteStuffingConfigsMixin {
 protected:
@@ -18,6 +18,6 @@ public:
     byte_stuffing_config_t get_default_config() override;
 };
 
-} // namespace BDSP::strategies::byte_stuffing::core
+} // namespace BDSP::strategies::core
 
 #endif // BDSP_STREAMS_STRATEGIES_BYTE_STUFFING_MIXINS_H

@@ -5,7 +5,7 @@
 
 #include "BDSP/strategies/types.h"
 
-namespace BDSP::strategies::abstract {
+namespace BDSP::strategies::core {
 
 class AbstractReadStrategy: public strategies::IStreamReadStrategy {
 private:
@@ -24,6 +24,6 @@ public:
               strategies::strategy_ready_state_callback_t ready_callback,
               void *ctx) final;
 };
-} // namespace BDSP::strategies::abstract
+} // namespace BDSP::strategies::core
 
 #endif // BDSP_STREAMS_STRATEGIES_ABSTRACT_READ_STRATEGY_H

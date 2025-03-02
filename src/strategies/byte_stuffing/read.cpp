@@ -1,8 +1,7 @@
 #include "BDSP/streams/PPP/reader.h"
 
 using namespace BDSP::strategies;
-using namespace BDSP::strategies::byte_stuffing;
-using namespace BDSP::strategies::byte_stuffing::core;
+using namespace BDSP::strategies::core;
 
 void ByteStuffingReadStrategyCore::_init() {
     _cfg = get_default_config();

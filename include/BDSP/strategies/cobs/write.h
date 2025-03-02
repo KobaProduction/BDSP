@@ -7,10 +7,10 @@
 #include "BDSP/strategies/cobs/mixins.h"
 #include "BDSP/strategies/cobs/types.h"
 
-namespace BDSP::strategies::cobs {
+namespace BDSP::strategies {
 namespace core {
 
-class COBSWriteStrategyCore: public abstract::AbstractWriteStrategy, public virtual COBSConfigsMixin {
+class COBSWriteStrategyCore: public core::AbstractWriteStrategy, public virtual COBSConfigsMixin {
 protected:
     uint8_t *_buffer_ptr{};
     uint8_t _buffer_position{};
@@ -52,6 +52,6 @@ class COBSZPEWriteStrategyCore: public COBSGSEWriteStrategyCore, public virtual 
 class COBSWriteStrategy final: public core::COBSWriteStrategyCore { };
 class COBSGSEWriteStrategy final: public core::COBSGSEWriteStrategyCore { };
 class COBSZPEWriteStrategy final: public core::COBSZPEWriteStrategyCore { };
-} // namespace BDSP::strategies::cobs
+} // namespace BDSP::strategies
 
 #endif // BDSP_STREAMS_STRATEGIES_COBS_WRITE_STRATEGIES_H

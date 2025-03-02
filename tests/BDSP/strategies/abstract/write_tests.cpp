@@ -3,7 +3,7 @@
 
 #include "BDSP/strategies/abstract/write.h"
 
-using namespace BDSP::strategies::abstract;
+using namespace BDSP::strategies::core;
 
 namespace {
 class TestAbstractStreamWriteStrategy final: public AbstractWriteStrategy {

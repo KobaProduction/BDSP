@@ -6,7 +6,7 @@
 using namespace BDSP::strategies;
 
 namespace {
-class TestAbstractStreamReadStrategy final: public abstract::AbstractReadStrategy {
+class TestAbstractStreamReadStrategy final: public core::AbstractReadStrategy {
 public:
     bool init_used = false;
 

@@ -3,7 +3,7 @@
 
 #include "BDSP/strategies/cobs/types.h"
 
-namespace BDSP::strategies::cobs::core {
+namespace BDSP::strategies::core {
 
 class COBSConfigsMixin {
 protected:
@@ -30,6 +30,6 @@ public:
     cobs_config_t get_default_config() override;
 };
 
-} // namespace BDSP::strategies::cobs::core
+} // namespace BDSP::strategies::core
 
 #endif // BDSP_STREAMS_STRATEGIES_COBS_MIXINS_H

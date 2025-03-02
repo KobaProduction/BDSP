@@ -6,10 +6,10 @@
 #include "BDSP/strategies/byte_stuffing/write.h"
 #include "BDSP/streams/writer.h"
 
-namespace BDSP::streams::ppp {
+namespace BDSP::streams {
 
-class PPPWriterStream final: public StreamWriter<strategies::byte_stuffing::PPPWriteStrategy> { };
+class PPPWriterStream final: public StreamWriter<strategies::PPPWriteStrategy> { };
 
-} // namespace BDSP::streams::ppp
+} // namespace BDSP::streams
 
 #endif // BDSP_STREAMS_PPP_WRITER_H

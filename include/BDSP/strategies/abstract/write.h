@@ -5,7 +5,7 @@
 
 #include "BDSP/strategies/types.h"
 
-namespace BDSP::strategies::abstract {
+namespace BDSP::strategies::core {
 
 class AbstractWriteStrategy: public strategies::IStreamWriteStrategy {
 private:
@@ -26,6 +26,6 @@ public:
     void finish() override;
 };
 
-} // namespace BDSP::strategies::abstract
+} // namespace BDSP::strategies::core
 
 #endif // BDSP_STREAMS_STRATEGIES_ABSTRACT_WRITE_STRATEGY_H

@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 
-namespace BDSP::strategies::cobs {
+namespace BDSP::strategies {
 
 struct cobs_config_t {
     uint8_t delimiter_byte = '\0';
@@ -62,6 +62,6 @@ enum set_cobs_config_status {
     ERROR_DEPTH_ZPE,
 };
 
-} // namespace BDSP::strategies::cobs
+} // namespace BDSP::strategies
 
 #endif // BDSP_STREAMS_STRATEGIES_COBS_TYPES_H

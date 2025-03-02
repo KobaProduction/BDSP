@@ -7,10 +7,10 @@
 #include "BDSP/strategies/byte_stuffing/mixins.h"
 #include "BDSP/strategies/byte_stuffing/types.h"
 
-namespace BDSP::strategies::byte_stuffing {
+namespace BDSP::strategies {
 
 namespace core {
-class ByteStuffingWriteStrategyCore: public abstract::AbstractWriteStrategy, public virtual ByteStuffingConfigsMixin {
+class ByteStuffingWriteStrategyCore: public core::AbstractWriteStrategy, public virtual ByteStuffingConfigsMixin {
 protected:
     byte_stuffing_config_t _cfg;
     void _init() override;
@@ -29,6 +29,6 @@ class PPPWriteStrategyCore: public ByteStuffingWriteStrategyCore, public virtual
 class ByteStuffingWriteStrategy final: public core::ByteStuffingWriteStrategyCore { };
 class PPPWriteStrategy final: public core::PPPWriteStrategyCore { };
 
-} // namespace BDSP::strategies::byte_stuffing
+} // namespace BDSP::strategies
 
 #endif // BDSP_STREAMS_STRATEGIES_BYTE_STUFFING_WRITE_STRATEGY_H

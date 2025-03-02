@@ -5,9 +5,8 @@
 
 #include "testing.h"
 
-using namespace BDSP::streams::cobs;
+using namespace BDSP::streams;
 using namespace BDSP::strategies;
-using namespace BDSP::strategies::cobs;
 
 TEST(strategies_strategies_cobs_zpe_tests, writer_reset_elimination_sequence_test) {
     COBSZPEWriterStream writer;

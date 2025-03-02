@@ -6,7 +6,6 @@
 
 using namespace BDSP;
 using namespace BDSP::streams;
-using namespace BDSP::streams::cobs;
 
 TEST(bdsp_full_tests, bdsp_v1_full_test) {
     COBSReaderStream reader;

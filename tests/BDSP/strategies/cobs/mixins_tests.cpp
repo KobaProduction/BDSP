@@ -2,8 +2,8 @@
 
 #include "BDSP/strategies/cobs/mixins.h"
 
-using namespace BDSP::strategies::cobs;
-using namespace BDSP::strategies::cobs::core;
+using namespace BDSP::strategies;
+using namespace BDSP::strategies::core;
 
 TEST(cobs_mixins_tests, cobs_default_config_test) {
     cobs_config_t config = COBSConfigsMixin().get_default_config();

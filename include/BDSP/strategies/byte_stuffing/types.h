@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-namespace BDSP::strategies::byte_stuffing {
+namespace BDSP::strategies {
 
 struct byte_stuffing_config_t {
     uint8_t delimiter_byte = 0xFE;
@@ -19,6 +19,6 @@ enum set_byte_stuffing_config_status {
     ERROR_ESCAPE_MASK_IS_NULL,
 };
 
-} // namespace BDSP::strategies::byte_stuffing
+} // namespace BDSP::strategies
 
 #endif // BDSP_STREAMS_STRATEGIES_BYTE_STUFFING_TYPES_H

@@ -1,7 +1,7 @@
 #include "BDSP/strategies/byte_stuffing/mixins.h"
 
-using namespace BDSP::strategies::byte_stuffing;
-using namespace BDSP::strategies::byte_stuffing::core;
+using namespace BDSP::strategies;
+using namespace BDSP::strategies::core;
 
 set_byte_stuffing_config_status ByteStuffingConfigsMixin::_check_config(byte_stuffing_config_t config) {
     if (config.escape_byte == config.delimiter_byte) {

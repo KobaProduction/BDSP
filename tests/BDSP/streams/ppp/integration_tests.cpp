@@ -1,14 +1,13 @@
 #include <gtest/gtest.h>
 #include <vector>
 
-#include "BDSP/streams/types.h"
 #include "BDSP/streams/PPP/reader.h"
 #include "BDSP/streams/PPP/writer.h"
+#include "BDSP/streams/types.h"
 
 #include "testing.h"
 
 using namespace BDSP::streams;
-using namespace BDSP::streams::ppp;
 
 TEST(ppp_integration_tests, read_test) {
     PPPWriterStream writer;
@@ -30,7 +29,6 @@ TEST(ppp_integration_tests, read_with_errors_test) {
             reinterpret_cast<std::vector<stream_read_status_t> *>(ctx)->push_back(status);
         },
         &statuses);
-
 
     EXPECT_EQ(reader.read(0x7D), STREAM_READ_OK);
     ASSERT_TRUE(statuses.empty());

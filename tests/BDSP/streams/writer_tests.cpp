@@ -11,7 +11,7 @@ using namespace BDSP::strategies;
 namespace {
 std::vector<uint8_t> finish_bytes = {0xFF, 0xFF};
 
-class TestAbstractStreamWriteStrategy final: public abstract::AbstractWriteStrategy {
+class TestAbstractStreamWriteStrategy final: public BDSP::strategies::core::AbstractWriteStrategy {
     void _init() override { };
 
 public:
@@ -30,7 +30,7 @@ void write_handler(uint8_t byte, void *ctx) {
 } // namespace
 
 TEST(stream_writer_tests, ready_test) {
-    class TestStreamWriter final: public core::StreamWriterCore { };
+    class TestStreamWriter final: public BDSP::streams::core::StreamWriterCore { };
     auto writer = TestStreamWriter();
     writer.set_stream_writer(nullptr, nullptr);
 

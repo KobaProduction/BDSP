@@ -7,10 +7,10 @@
 #include "BDSP/strategies/byte_stuffing/mixins.h"
 #include "BDSP/strategies/byte_stuffing/types.h"
 
-namespace BDSP::strategies::byte_stuffing {
+namespace BDSP::strategies {
 
 namespace core {
-class ByteStuffingReadStrategyCore: public abstract::AbstractReadStrategy, public virtual ByteStuffingConfigsMixin {
+class ByteStuffingReadStrategyCore: public core::AbstractReadStrategy, public virtual ByteStuffingConfigsMixin {
 protected:
     byte_stuffing_config_t _cfg;
     bool _is_escape_state = false;
@@ -32,6 +32,6 @@ class PPPReadStrategyCore: public ByteStuffingReadStrategyCore, public virtual P
 class ByteStuffingReadStrategy final: public core::ByteStuffingReadStrategyCore { };
 class PPPReadStrategy final: public core::PPPReadStrategyCore { };
 
-} // namespace BDSP::strategies::byte_stuffing
+} // namespace BDSP::strategies
 
 #endif // BDSP_STREAMS_STRATEGIES_BYTE_STUFFING_READ_STRATEGY_H
