@@ -20,7 +20,7 @@ public:
         set_stream_writer(_writer);
     }
 
-    ~BDSPTransceiver() {
+    ~BDSPTransceiver() override {
         delete reinterpret_cast<TReadStream*>(_reader);
         _reader = nullptr;
         delete reinterpret_cast<TWriteStream*>(_writer);

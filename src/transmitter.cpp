@@ -6,19 +6,27 @@ using namespace BDSP::core;
 using namespace BDSP::streams;
 using namespace BDSP::checksums;
 
+send_packet_status_t BDSPV1TransmitterCore::send_data(uint8_t packet_id, uint8_t *buffer_ptr, size_t size) {
+    return send_data(packet_id, buffer_ptr, size, _checksum_usage_default_state);
+}
+
 send_packet_status_t BDSPV1TransmitterCore::send_data(uint8_t packet_id,
                                                       uint8_t *buffer_ptr,
                                                       size_t size,
-                                                      checksum_usage_state_t checksum_state) {
+                                                      bool checksum_enforcement) {
     packet_context_t packet_context;
     packet_context.packet_id = packet_id;
     packet_context.data_ptr = buffer_ptr;
     packet_context.size = static_cast<uint16_t>(size);
-    return send_packet(packet_context, checksum_state);
+    return send_packet(packet_context, checksum_enforcement);
+}
+
+send_packet_status_t BDSPV1TransmitterCore::send_packet(packet_context_t &packet_context) noexcept {
+    return send_packet(packet_context, _checksum_usage_default_state);
 }
 
 send_packet_status_t BDSPV1TransmitterCore::send_packet(packet_context_t &packet_context,
-                                                        checksum_usage_state_t checksum_state) noexcept {
+                                                        bool checksum_enforcement) noexcept {
     if (not _writer) {
         return STREAM_WRITER_NOT_SET_ERROR;
     }
@@ -28,12 +36,10 @@ send_packet_status_t BDSPV1TransmitterCore::send_packet(packet_context_t &packet
     if (packet_context.packet_id > 31) {
         return PACKET_ID_ERROR;
     }
-    bool is_need_use_checksum =
-        checksum_state == DEFAULT_CHECKSUM ? _checksum_usage_default_state : checksum_state == WITH_CHECKSUM;
     core::packet_v1_header header = {
         .packet_id = packet_context.packet_id,
         .is_two_bytes_for_packet_size = packet_context.size > 255,
-        .is_checksum_used = is_need_use_checksum,
+        .is_checksum_used = checksum_enforcement,
         .is_unsupported_protocol_version = false,
     };
     uint8_t checksum = _calc_checksum(header, packet_context.data_ptr, packet_context.size);
