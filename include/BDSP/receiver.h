@@ -11,7 +11,7 @@ namespace BDSP {
 
 namespace core {
 
-class BDSPV1ReceiverCore: public IReceiver, public core::MaxPacketSizeMixin, public core::BDSPV1ChecksumMixin {
+class ReceiverV1Core: public IReceiver, public core::MaxPacketSizeMixin, public core::BDSPV1ChecksumMixin {
 protected:
     typedef enum {
         PACKET_HEADER,
@@ -40,7 +40,7 @@ protected:
     parse_packet_status_t _cause_error(parse_packet_status_t status);
 
 public:
-    ~BDSPV1ReceiverCore() override;
+    ~ReceiverV1Core() override;
     parse_packet_status_t parse_packet_byte(uint8_t byte, streams::stream_read_status_t stream_status) override;
     void reset(bool need_wait_delimiter) override;
     void set_error_handler(receiver_error_handler_t error_handler, void *context) override;
@@ -51,17 +51,17 @@ public:
 } // namespace core
 
 template<typename TReadStream>
-class BDSPReceiver: public core::BDSPV1ReceiverCore {
+class Receiver: public core::ReceiverV1Core {
 private:
-    using core::BDSPV1ReceiverCore::set_stream_reader;
+    using core::ReceiverV1Core::set_stream_reader;
 
 public:
-    BDSPReceiver() {
+    Receiver() {
         _reader = static_cast<streams::IStreamReader *>(new TReadStream());
         set_stream_reader(_reader);
     }
 
-    ~BDSPReceiver() override {
+    ~Receiver() override {
         delete reinterpret_cast<TReadStream *>(_reader);
         _reader = nullptr;
     }

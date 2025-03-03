@@ -7,20 +7,20 @@
 namespace BDSP {
 
 template<typename TReadStream, typename TWriteStream>
-class BDSPTransceiver: public core::BDSPV1ReceiverCore, public core::BDSPV1TransmitterCore {
+class Transceiver: public core::ReceiverV1Core, public core::TransmitterV1Core {
 private:
-    using core::BDSPV1ReceiverCore::set_stream_reader;
-    using core::BDSPV1TransmitterCore::set_stream_writer;
+    using core::ReceiverV1Core::set_stream_reader;
+    using core::TransmitterV1Core::set_stream_writer;
 
 public:
-    BDSPTransceiver() {
+    Transceiver() {
         _reader = static_cast<streams::IStreamReader *>(new TReadStream());
         set_stream_reader(_reader);
         _writer = static_cast<streams::IStreamWriter *>(new TWriteStream());
         set_stream_writer(_writer);
     }
 
-    ~BDSPTransceiver() override {
+    ~Transceiver() override {
         delete reinterpret_cast<TReadStream*>(_reader);
         _reader = nullptr;
         delete reinterpret_cast<TWriteStream*>(_writer);

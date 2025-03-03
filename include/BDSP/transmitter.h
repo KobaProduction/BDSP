@@ -8,7 +8,7 @@
 namespace BDSP {
 
 namespace core {
-class BDSPV1TransmitterCore: public ITransmitter, public core::MaxPacketSizeMixin, public core::BDSPV1ChecksumMixin {
+class TransmitterV1Core: public ITransmitter, public core::MaxPacketSizeMixin, public core::BDSPV1ChecksumMixin {
 protected:
     bool _checksum_usage_default_state = true;
     streams::IStreamWriter *_writer = nullptr;
@@ -28,17 +28,17 @@ public:
 } // namespace core
 
 template<typename TWriteStream>
-class BDSPTransmitter: public core::BDSPV1TransmitterCore {
+class Transmitter: public core::TransmitterV1Core {
 private:
-    using core::BDSPV1TransmitterCore::set_stream_writer;
+    using core::TransmitterV1Core::set_stream_writer;
 
 public:
-    BDSPTransmitter() {
+    Transmitter() {
         _writer = static_cast<streams::IStreamWriter *>(new TWriteStream());
         set_stream_writer(_writer);
     }
 
-    ~BDSPTransmitter() override {
+    ~Transmitter() override {
         delete reinterpret_cast<TWriteStream *>(_writer);
         _writer = nullptr;
     }

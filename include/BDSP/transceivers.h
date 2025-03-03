@@ -7,11 +7,11 @@
 
 namespace BDSP {
 
-class BDSPTransceiverCOBS final: public BDSPTransceiver<streams::COBSReaderStream, streams::COBSWriterStream> { };
-class BDSPTransceiverCOBSGSE final: public BDSPTransceiver<streams::COBSGSEReaderStream, streams::COBSGSEWriterStream> { };
-class BDSPTransceiverCOBSZPE final: public BDSPTransceiver<streams::COBSZPEReaderStream, streams::COBSZPEWriterStream> { };
+class COBSTransceiver final: public Transceiver<streams::COBSReaderStream, streams::COBSWriterStream> { };
+class COBSGSETransceiver final: public Transceiver<streams::COBSGSEReaderStream, streams::COBSGSEWriterStream> { };
+class COBSZPETransceiver final: public Transceiver<streams::COBSZPEReaderStream, streams::COBSZPEWriterStream> { };
 
-class BDSPTransceiverPPP final: public BDSPTransceiver<streams::PPPReaderStream, streams::PPPWriterStream> { };
+class PPPTransceiver final: public Transceiver<streams::PPPReaderStream, streams::PPPWriterStream> { };
 
 } // namespace BDSP
 

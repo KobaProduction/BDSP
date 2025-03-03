@@ -6,11 +6,11 @@
 
 namespace BDSP {
 
-class BDSPReceiverCOBS final: public BDSPReceiver<streams::COBSReaderStream> {};
-class BDSPReceiverCOBSGSE final: public BDSPReceiver<streams::COBSGSEReaderStream> {};
-class BDSPReceiverCOBSZPE final: public BDSPReceiver<streams::COBSZPEReaderStream> {};
+class COBSReceiver final: public Receiver<streams::COBSReaderStream> {};
+class COBSGSEReceiver final: public Receiver<streams::COBSGSEReaderStream> {};
+class COBSZPEReceiver final: public Receiver<streams::COBSZPEReaderStream> {};
 
-class BDSPReceiverPPP final: public BDSPReceiver<streams::PPPReaderStream> {};
+class PPPReceiver final: public Receiver<streams::PPPReaderStream> {};
 
 } // namespace BDSP
 

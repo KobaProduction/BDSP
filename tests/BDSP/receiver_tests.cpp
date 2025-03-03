@@ -12,7 +12,7 @@ using namespace BDSP::strategies;
 
 TEST(bdsp_v1_receiver_tests, set_stream_reader_test) {
     VectorTestReader reader;
-    BDSPV1ReceiverCore receiver;
+    ReceiverV1Core receiver;
 
     reader.set_stream_data_handler([](uint8_t byte, stream_read_status_t status, void *ctx) { }, nullptr);
 
@@ -32,7 +32,7 @@ TEST(bdsp_v1_receiver_tests, reset_destructor_test) {
     VectorTestReader reader;
     ASSERT_FALSE(reader.get_ready_status());
     {
-        BDSPV1ReceiverCore receiver;
+        ReceiverV1Core receiver;
         EXPECT_EQ(receiver.set_stream_reader(&reader), SET_STREAM_READER_OK);
         ASSERT_TRUE(reader.get_ready_status());
     };
@@ -40,7 +40,7 @@ TEST(bdsp_v1_receiver_tests, reset_destructor_test) {
 }
 
 TEST(bdsp_v1_receiver_tests, parsing_statuses_test) {
-    BDSPV1ReceiverCore receiver;
+    ReceiverV1Core receiver;
 
     EXPECT_EQ(receiver.parse_packet_byte(0x00, STREAM_READ_ERROR), STREAM_READING_ERROR);
     EXPECT_EQ(receiver.parse_packet_byte(0x00, STREAM_READER_NOT_READY_ERROR), STREAM_READING_ERROR);
@@ -48,7 +48,7 @@ TEST(bdsp_v1_receiver_tests, parsing_statuses_test) {
 }
 
 TEST(bdsp_v1_receiver_tests, error_parsing_test) {
-    BDSPV1ReceiverCore receiver;
+    ReceiverV1Core receiver;
 
     EXPECT_EQ(receiver.parse_packet_byte(0x00, STREAM_READ_ERROR), STREAM_READING_ERROR);
 
@@ -74,12 +74,12 @@ TEST(bdsp_v1_receiver_tests, error_parsing_test) {
     header.is_unsupported_protocol_version = false;
     header.is_two_bytes_for_packet_size = false;
 
-    class AccessFieldsClass: public BDSP::core::BDSPV1ReceiverCore {
+    class AccessFieldsClass: public BDSP::core::ReceiverV1Core {
     public:
-        using BDSP::core::BDSPV1ReceiverCore::receiver_fsm_state_t;
-        using BDSP::core::BDSPV1ReceiverCore::_fsm_state;
-        using BDSP::core::BDSPV1ReceiverCore::_packet_header;
-        using BDSP::core::BDSPV1ReceiverCore::_malloc;
+        using BDSP::core::ReceiverV1Core::receiver_fsm_state_t;
+        using BDSP::core::ReceiverV1Core::_fsm_state;
+        using BDSP::core::ReceiverV1Core::_packet_header;
+        using BDSP::core::ReceiverV1Core::_malloc;
     };
     reinterpret_cast<AccessFieldsClass *>(&receiver)->_fsm_state =
         AccessFieldsClass::receiver_fsm_state_t::PACKET_SIZE_A;
@@ -115,7 +115,7 @@ TEST(bdsp_v1_receiver_tests, checksum_error_test) {
         }
     };
 
-    BDSPV1ReceiverCore receiver;
+    ReceiverV1Core receiver;
     ChecksumTester checksum_tester;
 
     receiver.set_checksum_function(checksums::crc8_nrsc5);
@@ -138,7 +138,7 @@ TEST(bdsp_v1_receiver_tests, checksum_error_test) {
 
 TEST(bdsp_v1_receiver_tests, normal_using_test) {
     VectorTestReader reader;
-    BDSPV1ReceiverCore receiver;
+    ReceiverV1Core receiver;
     EXPECT_EQ(receiver.set_stream_reader(&reader), SET_STREAM_READER_OK);
 
     auto read_strategy = reader.get_strategy();
@@ -178,7 +178,7 @@ TEST(bdsp_v1_receiver_tests, normal_using_test) {
 
 TEST(bdsp_v1_receiver_tests, normal_using_with_big_packet_and_no_clear_test) {
     VectorTestReader reader;
-    BDSPV1ReceiverCore receiver;
+    ReceiverV1Core receiver;
     EXPECT_EQ(receiver.set_stream_reader(&reader), SET_STREAM_READER_OK);
 
     receiver.set_error_handler(
@@ -235,7 +235,7 @@ TEST(bdsp_v1_receiver_tests, correct_checksum_test) {
     };
 
     ChecksumTester tester;
-    BDSPV1ReceiverCore receiver;
+    ReceiverV1Core receiver;
     receiver.set_checksum_function(checksums::crc8_nrsc5);
     tester.set_checksum_function(checksums::crc8_nrsc5);
 

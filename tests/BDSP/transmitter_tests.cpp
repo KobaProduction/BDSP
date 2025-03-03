@@ -11,7 +11,7 @@ using namespace BDSP::streams;
 
 TEST(bdsp_v1_transmitter_tests, set_stream_writer_test) {
     VectorTestWriter writer;
-    BDSPV1TransmitterCore transmitter;
+    TransmitterV1Core transmitter;
 
     writer.set_stream_writer(nullptr, nullptr);
     ASSERT_FALSE(writer.get_ready_status());
@@ -27,7 +27,7 @@ TEST(bdsp_v1_transmitter_tests, set_stream_writer_test) {
 TEST(bdsp_v1_transmitter_tests, error_send_data_test) {
     struct Context {
         VectorTestWriter writer;
-        BDSPV1TransmitterCore transmitter;
+        TransmitterV1Core transmitter;
     } ctx;
 
     uint8_t packet_id = 31;
@@ -53,7 +53,7 @@ TEST(bdsp_v1_transmitter_tests, error_send_data_test) {
 }
 
 TEST(bdsp_v1_transmitter_tests, send_data_test) {
-    BDSPTransmitter<VectorTestWriter> transmitter;
+    Transmitter<VectorTestWriter> transmitter;
     transmitter.get_write_stream().set_stream_writer([](uint8_t byte, void *ctx) { }, nullptr);
 
     uint8_t packet_id = 0;
@@ -90,7 +90,7 @@ TEST(bdsp_v1_transmitter_tests, send_data_test) {
 }
 
 TEST(bdsp_v1_transmitter_tests, checksums_test) {
-    BDSPTransmitter<VectorTestWriter> transmitter;
+    Transmitter<VectorTestWriter> transmitter;
     transmitter.get_write_stream().set_stream_writer([](uint8_t byte, void *ctx) { }, nullptr);
 
     EXPECT_EQ(transmitter.set_checksum_function(checksums::crc8_nrsc5), SET_CHECKSUM_FUNCTION_OK);
@@ -124,7 +124,7 @@ TEST(bdsp_v1_transmitter_tests, checksums_test) {
 }
 
 TEST(bdsp_v1_transmitter_tests, dealocate_memory_after_send) {
-    BDSPTransmitter<VectorTestWriter> transmitter;
+    Transmitter<VectorTestWriter> transmitter;
     transmitter.get_write_stream().set_stream_writer([](uint8_t byte, void *ctx) { }, nullptr);
 
     auto data = reinterpret_cast<uint8_t *>(malloc(1));

@@ -9,7 +9,7 @@ using namespace BDSP;
 
 int main() {
 
-    BDSPTransceiverCOBSZPE transceiver;
+    COBSZPETransceiver transceiver;
 
     transceiver.get_write_stream().set_stream_writer(
         [](uint8_t byte, void *ctx) { reinterpret_cast<streams::IStreamReader *>(ctx)->read(byte); },

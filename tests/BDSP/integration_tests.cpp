@@ -11,7 +11,7 @@ using namespace BDSP::streams;
 
 TEST(bdsp_full_tests, transceiver_test) {
     bool is_packet_got = false;
-    BDSPTransceiverCOBS transceiver;
+    COBSTransceiver transceiver;
     transceiver.get_write_stream().set_stream_writer(
         [](uint8_t byte, void *ctx) { reinterpret_cast<IStreamReader *>(ctx)->read(byte); },
         &transceiver.get_read_stream());
@@ -32,7 +32,7 @@ TEST(bdsp_full_tests, transceiver_test) {
 
 TEST(bdsp_full_tests, transmitter_test) {
     bool is_got_bytes = false;
-    BDSPTransmitterCOBS transmitter;
+    COBSTransmitter transmitter;
     std::vector<uint8_t> raw_data;
     transmitter.get_write_stream().set_stream_writer(
         [](uint8_t byte, void *ctx) { reinterpret_cast<std::vector<uint8_t> *>(ctx)->push_back(byte); }, &raw_data);
@@ -42,7 +42,7 @@ TEST(bdsp_full_tests, transmitter_test) {
 
 TEST(bdsp_full_tests, receiver_test) {
     bool is_packet_got = false;
-    BDSPReceiverCOBS receiver;
+    COBSReceiver receiver;
     receiver.set_packet_handler(
         [](packet_context_t &packet_context, void *ctx) { *reinterpret_cast<bool *>(ctx) = true; }, &is_packet_got);
     receiver.set_error_handler(

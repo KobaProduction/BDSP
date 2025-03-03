@@ -6,11 +6,11 @@ using namespace BDSP::core;
 using namespace BDSP::streams;
 using namespace BDSP::checksums;
 
-send_packet_status_t BDSPV1TransmitterCore::send_data(uint8_t packet_id, uint8_t *buffer_ptr, size_t size) {
+send_packet_status_t TransmitterV1Core::send_data(uint8_t packet_id, uint8_t *buffer_ptr, size_t size) {
     return send_data(packet_id, buffer_ptr, size, _checksum_usage_default_state);
 }
 
-send_packet_status_t BDSPV1TransmitterCore::send_data(uint8_t packet_id,
+send_packet_status_t TransmitterV1Core::send_data(uint8_t packet_id,
                                                       uint8_t *buffer_ptr,
                                                       size_t size,
                                                       bool checksum_enforcement) {
@@ -21,11 +21,11 @@ send_packet_status_t BDSPV1TransmitterCore::send_data(uint8_t packet_id,
     return send_packet(packet_context, checksum_enforcement);
 }
 
-send_packet_status_t BDSPV1TransmitterCore::send_packet(packet_context_t &packet_context) noexcept {
+send_packet_status_t TransmitterV1Core::send_packet(packet_context_t &packet_context) noexcept {
     return send_packet(packet_context, _checksum_usage_default_state);
 }
 
-send_packet_status_t BDSPV1TransmitterCore::send_packet(packet_context_t &packet_context,
+send_packet_status_t TransmitterV1Core::send_packet(packet_context_t &packet_context,
                                                         bool checksum_enforcement) noexcept {
     if (not _writer) {
         return STREAM_WRITER_NOT_SET_ERROR;
@@ -63,11 +63,11 @@ send_packet_status_t BDSPV1TransmitterCore::send_packet(packet_context_t &packet
     return SEND_PACKET_OK;
 }
 
-void BDSPV1TransmitterCore::set_checksum_usage_default_state(bool using_checksum) {
+void TransmitterV1Core::set_checksum_usage_default_state(bool using_checksum) {
     _checksum_usage_default_state = using_checksum;
 }
 
-set_stream_writer_status_t BDSPV1TransmitterCore::set_stream_writer(streams::IStreamWriter *writer_ptr) {
+set_stream_writer_status_t TransmitterV1Core::set_stream_writer(streams::IStreamWriter *writer_ptr) {
     if (writer_ptr and not writer_ptr->get_ready_status()) {
         return STREAM_WRITER_NOT_READY;
     }

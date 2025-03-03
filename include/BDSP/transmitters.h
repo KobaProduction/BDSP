@@ -6,11 +6,11 @@
 
 namespace BDSP {
 
-class BDSPTransmitterCOBS final: public BDSPTransmitter<streams::COBSWriterStream> { };
-class BDSPTransmitterCOBSGSE final: public BDSPTransmitter<streams::COBSGSEWriterStream> { };
-class BDSPTransmitterCOBSZPE final: public BDSPTransmitter<streams::COBSZPEWriterStream> { };
+class COBSTransmitter final: public Transmitter<streams::COBSWriterStream> { };
+class COBSGSETransmitter final: public Transmitter<streams::COBSGSEWriterStream> { };
+class COBSZPETransmitter final: public Transmitter<streams::COBSZPEWriterStream> { };
 
-class BDSPTransmitterPPP final: public BDSPTransmitter<streams::PPPWriterStream> { };
+class PPPTransmitter final: public Transmitter<streams::PPPWriterStream> { };
 
 } // namespace BDSP
 

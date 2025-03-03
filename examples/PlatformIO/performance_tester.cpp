@@ -11,8 +11,8 @@
 
 using namespace BDSP::strategies;
 
-cobs::COBSZPEWriteStrategy write_strategy;
-cobs::COBSZPEReadStrategy read_strategy;
+COBSZPEWriteStrategy write_strategy;
+COBSZPEReadStrategy read_strategy;
 
 //byte_stuffing::PPPWriteStrategy write_strategy;
 //byte_stuffing::PPPReadStrategy read_strategy;
