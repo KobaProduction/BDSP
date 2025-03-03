@@ -12,6 +12,7 @@ class BDSPV1TransmitterCore: public ITransmitter, public core::MaxPacketSizeMixi
 protected:
     bool _checksum_usage_default_state = true;
     streams::IStreamWriter *_writer = nullptr;
+    void (*_free)(void *) = free;
 
 public:
     send_packet_status_t send_data(uint8_t packet_id, uint8_t *buffer_ptr, size_t size) override;

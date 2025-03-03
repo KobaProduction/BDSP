@@ -122,3 +122,18 @@ TEST(bdsp_v1_transmitter_tests, checksums_test) {
               SEND_PACKET_OK);
     check_data_for_correctness( transmitter.get_write_stream().get_strategy().stream_data[5], correct_with_checksum);
 }
+
+TEST(bdsp_v1_transmitter_tests, dealocate_memory_after_send) {
+    BDSPTransmitter<VectorTestWriter> transmitter;
+    transmitter.get_write_stream().set_stream_writer([](uint8_t byte, void *ctx) { }, nullptr);
+
+    auto data = reinterpret_cast<uint8_t *>(malloc(1));
+    *data = 99;
+    std::vector<uint8_t> correct_with_checksum = {0, 1, 99};
+
+    packet_context_t packet_context = {0, data, 1, true};
+
+    EXPECT_EQ(transmitter.send_packet(packet_context, false), SEND_PACKET_OK);
+    check_data_for_correctness(transmitter.get_write_stream().get_strategy().stream_data[0], correct_with_checksum);
+    EXPECT_EQ(packet_context.data_ptr, nullptr);
+}

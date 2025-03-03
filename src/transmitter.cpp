@@ -56,6 +56,10 @@ send_packet_status_t BDSPV1TransmitterCore::send_packet(packet_context_t &packet
         _writer->write(checksum);
     }
     _writer->finish();
+    if (packet_context.need_clear) {
+        _free(packet_context.data_ptr);
+        packet_context.data_ptr = nullptr;
+    }
     return SEND_PACKET_OK;
 }
 
