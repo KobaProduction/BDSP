@@ -36,8 +36,7 @@ void check_data_for_correctness(std::vector<uint8_t> &current, std::vector<uint8
 void start_test_writer(
         BDSP::streams::IStreamWriter &writer,
         std::vector<uint8_t> &current,
-        std::vector<uint8_t> &correct,
-        bool use_hex_when_show
+        std::vector<uint8_t> &correct
 ) {
     std::vector<uint8_t> write_buffer;
 
@@ -57,8 +56,7 @@ void start_test_writer(
 void start_test_reader(
         BDSP::streams::IStreamReader &reader,
         std::vector<uint8_t> &current,
-        std::vector<uint8_t> &correct,
-        bool use_hex_when_show
+        std::vector<uint8_t> &correct
 ) {
     struct Context {
         std::vector<uint8_t> read_buffer;

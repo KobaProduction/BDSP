@@ -44,8 +44,8 @@ TEST(cobs_integration_tests, cobs_zpe_article_test) {
 
     std::vector<uint8_t> data = {0x45, 0x00, 0x00, 0x2C, 0x4C, 0x79, 0x00, 0x00, 0x40, 0x06, 0x4F, 0x37};
     std::vector<uint8_t> correct_encoded = {0xE2, 0x45, 0xE4, 0x2C, 0x4C, 0x79, 0x05, 0x40, 0x06, 0x4F, 0x37, 0x00};
-    start_test_writer(writer, data, correct_encoded, true);
-    start_test_reader(reader, correct_encoded, data, true);
+    start_test_writer(writer, data, correct_encoded);
+    start_test_reader(reader, correct_encoded, data);
 }
 
 TEST(cobs_integration_tests, cobs_zpe_max_offset_test) {
@@ -63,8 +63,8 @@ TEST(cobs_integration_tests, cobs_zpe_max_offset_test) {
                                             0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
                                             0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0x01, 0x00};
 
-    start_test_writer(writer, data, correct_encoded, true);
-    start_test_reader(reader, correct_encoded, data, true);
+    start_test_writer(writer, data, correct_encoded);
+    start_test_reader(reader, correct_encoded, data);
 }
 
 TEST(cobs_integration_tests, cobs_zpe_boundary_test) {
@@ -82,8 +82,8 @@ TEST(cobs_integration_tests, cobs_zpe_boundary_test) {
                                             0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
                                             0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0x01, 0x01, 0x00};
 
-    start_test_writer(writer, data, correct_encoded, true);
-    start_test_reader(reader, correct_encoded, data, true);
+    start_test_writer(writer, data, correct_encoded);
+    start_test_reader(reader, correct_encoded, data);
 }
 
 TEST(cobs_integration_tests, cobs_with_zpe_full_test) {
@@ -122,6 +122,6 @@ TEST(cobs_integration_tests, cobs_with_zpe_full_test) {
         0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
         0xAA, 0xAA, 0xAA, 0xE2, 0x45, 0xE4, 0x2C, 0x4C, 0x79, 0x05, 0x40, 0x06, 0x4F, 0x37, 0x00};
 
-    start_test_writer(writer, data, correct_encoded, true);
-    start_test_reader(reader, correct_encoded, data, true);
+    start_test_writer(writer, data, correct_encoded);
+    start_test_reader(reader, correct_encoded, data);
 }

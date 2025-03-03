@@ -16,8 +16,8 @@ TEST(ppp_integration_tests, read_test) {
     std::vector<uint8_t> data = {0x7E, 0x7D, 0x00};
     std::vector<uint8_t> correct_encoded = {0x7D, 0x5E, 0x7D, 0x5D, 0x00, 0x7E};
 
-    start_test_writer(writer, data, correct_encoded, true);
-    start_test_reader(reader, correct_encoded, data, true);
+    start_test_writer(writer, data, correct_encoded);
+    start_test_reader(reader, correct_encoded, data);
 }
 
 TEST(ppp_integration_tests, read_with_errors_test) {
