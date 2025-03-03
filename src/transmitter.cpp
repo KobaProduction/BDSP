@@ -1,5 +1,6 @@
 #include "BDSP/transmitter.h"
 #include "BDSP/checksums/crc8.h"
+#include "BDSP/memory_manager.h"
 
 using namespace BDSP;
 using namespace BDSP::core;
@@ -11,9 +12,9 @@ send_packet_status_t TransmitterV1Core::send_data(uint8_t packet_id, uint8_t *bu
 }
 
 send_packet_status_t TransmitterV1Core::send_data(uint8_t packet_id,
-                                                      uint8_t *buffer_ptr,
-                                                      size_t size,
-                                                      bool checksum_enforcement) {
+                                                  uint8_t *buffer_ptr,
+                                                  size_t size,
+                                                  bool checksum_enforcement) {
     packet_context_t packet_context;
     packet_context.packet_id = packet_id;
     packet_context.data_ptr = buffer_ptr;
@@ -26,7 +27,7 @@ send_packet_status_t TransmitterV1Core::send_packet(packet_context_t &packet_con
 }
 
 send_packet_status_t TransmitterV1Core::send_packet(packet_context_t &packet_context,
-                                                        bool checksum_enforcement) noexcept {
+                                                    bool checksum_enforcement) noexcept {
     if (not _writer) {
         return STREAM_WRITER_NOT_SET_ERROR;
     }
@@ -57,7 +58,7 @@ send_packet_status_t TransmitterV1Core::send_packet(packet_context_t &packet_con
     }
     _writer->finish();
     if (packet_context.need_clear) {
-        _free(packet_context.data_ptr);
+        MemoryManager::get_current_manager()->free_memory(packet_context.data_ptr);
         packet_context.data_ptr = nullptr;
     }
     return SEND_PACKET_OK;

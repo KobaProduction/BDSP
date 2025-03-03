@@ -86,3 +86,13 @@ void start_test_reader(
     reader.read(current.data(), current.size());
     check_data_for_correctness(ctx.read_buffer, correct);
 }
+
+static EmptyMemManager empty_mem_manager;
+
+void disable_memory_allocation() {
+    BDSP::core::MemoryManager::set_new_manager(&empty_mem_manager);
+}
+
+void enable_memory_allocation() {
+    BDSP::core::MemoryManager::set_new_manager(nullptr);
+}

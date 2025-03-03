@@ -1,8 +1,6 @@
 #ifndef BDSP_STREAMS_STRATEGIES_COBS_WRITE_STRATEGIES_H
 #define BDSP_STREAMS_STRATEGIES_COBS_WRITE_STRATEGIES_H
 
-#include <stdlib.h>
-
 #include "BDSP/strategies/abstract/write.h"
 #include "BDSP/strategies/cobs/mixins.h"
 #include "BDSP/strategies/cobs/types.h"
@@ -15,8 +13,6 @@ protected:
     uint8_t *_buffer_ptr{};
     uint8_t _buffer_position{};
     cobs_config_t _cfg{};
-    void *(*_malloc)(size_t) = malloc;
-    void (*_free)(void *) = free;
 
     void _encode(uint8_t byte);
     virtual bool _get_active_write_state_status();

@@ -1,5 +1,7 @@
 #include "BDSP/strategies/cobs/write.h"
+#include "BDSP/memory_manager.h"
 
+using namespace BDSP::core;
 using namespace BDSP::strategies;
 using namespace BDSP::strategies::core;
 
@@ -34,7 +36,7 @@ inline void COBSWriteStrategyCore::_write_buffer_with_offset_to_handler(uint8_t 
 }
 
 COBSWriteStrategyCore::~COBSWriteStrategyCore() {
-    _free(_buffer_ptr);
+    MemoryManager::get_current_manager()->free_memory(_buffer_ptr);
 }
 
 cobs_config_t COBSWriteStrategyCore::get_config() {
@@ -60,11 +62,12 @@ set_cobs_config_status COBSWriteStrategyCore::set_config(cobs_config_t config) {
         return ERROR_COBS_PROCESS_NOT_FINISHED;
     }
     if (_buffer_ptr and _cfg.depth not_eq config.depth) {
-        _free(_buffer_ptr);
+        MemoryManager::get_current_manager()->free_memory(_buffer_ptr);
         _buffer_ptr = nullptr;
     }
     if (not _buffer_ptr) {
-        _buffer_ptr = reinterpret_cast<uint8_t *>(_malloc(_cfg.depth - 1));
+        _buffer_ptr =
+            reinterpret_cast<uint8_t *>(MemoryManager::get_current_manager()->allocate_memory(_cfg.depth - 1));
     }
     if (not _buffer_ptr) {
         return ERROR_MEMORY_ALLOCATION;

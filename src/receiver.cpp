@@ -1,5 +1,6 @@
 #include "BDSP/receiver.h"
 #include "BDSP/checksums/crc8.h"
+#include "BDSP/memory_manager.h"
 
 using namespace BDSP;
 using namespace BDSP::core;
@@ -7,7 +8,7 @@ using namespace BDSP::streams;
 using namespace BDSP::checksums;
 
 void ReceiverV1Core::_deallocate_packet_memory() {
-    _free(_packet_context.data_ptr);
+    MemoryManager::get_current_manager()->free_memory(_packet_context.data_ptr);
     _packet_context.data_ptr = nullptr;
 }
 
@@ -85,7 +86,8 @@ parse_packet_status_t ReceiverV1Core::parse_packet_byte(uint8_t byte, streams::s
     if (not _packet_context.size or _packet_context.size > _max_packet_size) {
         return _cause_error(EXCEEDING_THE_MAXIMUM_PACKET_SIZE_ERROR);
     }
-    _packet_context.data_ptr = static_cast<uint8_t *>(_malloc(_packet_context.size));
+    _packet_context.data_ptr =
+        static_cast<uint8_t *>(MemoryManager::get_current_manager()->allocate_memory(_packet_context.size));
     if (not _packet_context.data_ptr) {
         return _cause_error(NOT_ENOUGH_RAM_FOR_PACKET_ERROR);
     }

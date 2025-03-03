@@ -86,17 +86,13 @@ TEST(strategies_cobs_default_tests, set_configuration_with_active_process) {
 }
 
 TEST(strategies_cobs_default_tests, set_configuration_to_write_strategy_when_no_free_memory) {
+    disable_memory_allocation();
+
     COBSWriteStrategy write_strategy;
 
     bool write_strategy_ready = true;
 
     write_strategy.init(nullptr, is_ready_callback, &write_strategy_ready);
-
-    class AccessFieldClass: public BDSP::strategies::core::COBSWriteStrategyCore {
-    public:
-        using BDSP::strategies::core::COBSWriteStrategyCore::_malloc;
-    };
-    reinterpret_cast<AccessFieldClass *>(&write_strategy)->_malloc = [](size_t size) -> void * { return nullptr; };
 
     cobs_config_t config = write_strategy.get_config();
     config.depth--;
@@ -104,6 +100,7 @@ TEST(strategies_cobs_default_tests, set_configuration_to_write_strategy_when_no_
     EXPECT_EQ(write_strategy.set_config(config), ERROR_MEMORY_ALLOCATION);
 
     ASSERT_FALSE(write_strategy_ready);
+    enable_memory_allocation();
 }
 
 TEST(strategies_cobs_default_tests, reader_errors_test) {

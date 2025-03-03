@@ -79,7 +79,6 @@ TEST(bdsp_v1_receiver_tests, error_parsing_test) {
         using BDSP::core::ReceiverV1Core::receiver_fsm_state_t;
         using BDSP::core::ReceiverV1Core::_fsm_state;
         using BDSP::core::ReceiverV1Core::_packet_header;
-        using BDSP::core::ReceiverV1Core::_malloc;
     };
     reinterpret_cast<AccessFieldsClass *>(&receiver)->_fsm_state =
         AccessFieldsClass::receiver_fsm_state_t::PACKET_SIZE_A;
@@ -93,8 +92,9 @@ TEST(bdsp_v1_receiver_tests, error_parsing_test) {
 
     reinterpret_cast<AccessFieldsClass *>(&receiver)->_fsm_state =
         AccessFieldsClass::receiver_fsm_state_t::PACKET_SIZE_A;
-    reinterpret_cast<AccessFieldsClass *>(&receiver)->_malloc = [](size_t size) -> void * { return nullptr; };
+    disable_memory_allocation();
     EXPECT_EQ(receiver.parse_packet_byte(10, STREAM_READ_OK), NOT_ENOUGH_RAM_FOR_PACKET_ERROR);
+    enable_memory_allocation();
 
     reinterpret_cast<AccessFieldsClass *>(&receiver)->_fsm_state = AccessFieldsClass::receiver_fsm_state_t::WAIT_END;
     EXPECT_EQ(receiver.parse_packet_byte(0x00, STREAM_READ_OK), STREAM_READING_ERROR);

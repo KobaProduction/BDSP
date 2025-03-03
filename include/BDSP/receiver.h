@@ -5,8 +5,6 @@
 #include "BDSP/streams/types.h"
 #include "BDSP/types.h"
 
-#include <stdlib.h>
-
 namespace BDSP {
 
 namespace core {
@@ -32,9 +30,6 @@ protected:
     void *_packet_handler_context = nullptr;
     streams::IStreamReader *_reader = nullptr;
     uint16_t _received_packet_data_bytes = 0;
-
-    void *(*_malloc)(size_t) = malloc;
-    void (*_free)(void *) = free;
 
     void _deallocate_packet_memory();
     parse_packet_status_t _cause_error(parse_packet_status_t status);

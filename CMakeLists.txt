@@ -69,6 +69,7 @@ set(public_headers
         include/BDSP/transmitters.h
         include/BDSP/types.h
 
+        include/BDSP/memory_manager.h
         include/BDSP/checksums/crc8.h
 
         include/BDSP/streams/mixins.h
@@ -99,6 +100,7 @@ set(sources
         src/mixins.cpp
         src/receiver.cpp
         src/transmitter.cpp
+        src/memory_manager.cpp
 
         src/checksums/crc8.cpp
 
