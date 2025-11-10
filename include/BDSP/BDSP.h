@@ -11,9 +11,5 @@
 #include "BDSP/streams/PPP/reader.h"
 #include "BDSP/streams/PPP/writer.h"
 #else
-#include "BDSP/export.h"
-namespace BDSP {
-
-//BDSP_EXPORT int add(int a, int b);
-} // namespace BDSP
+// TODO: Implement the correct assembly of library headers
 #endif

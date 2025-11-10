@@ -48,6 +48,7 @@ add_library(BDSP::BDSP ALIAS BDSP)
 # BDSP sources
 #----------------------------------------------------------------------------------------------------------------------
 
+# TODO: implement the correct assembly of library headers
 #include(GenerateExportHeader)
 #set(export_file_name "export_shared.h")
 #
@@ -59,7 +60,6 @@ add_library(BDSP::BDSP ALIAS BDSP)
 
 set(public_headers
         include/BDSP/BDSP.h
-        include/BDSP/export.h
         include/BDSP/mixins.h
         include/BDSP/receiver.h
         include/BDSP/receivers.h
@@ -100,8 +100,8 @@ set(sources
         src/mixins.cpp
         src/receiver.cpp
         src/transmitter.cpp
-        src/memory_manager.cpp
 
+        src/memory_manager.cpp
         src/checksums/crc8.cpp
 
         src/streams/mixins.cpp
