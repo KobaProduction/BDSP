@@ -2,6 +2,7 @@
 #define BDSP_CHECKSUMS_CRC8_H
 
 #include <stdint.h>
+#include <stddef.h>
 
 namespace BDSP::checksums {
 
