@@ -7,7 +7,10 @@ using namespace BDSP::strategies::core;
 
 inline void COBSWriteStrategyCore::_encode(uint8_t byte) {
     if (byte not_eq _cfg.delimiter_byte) {
-        _buffer_ptr[_buffer_position++] = byte;
+        // Store only payload bytes. The COBS service byte is emitted separately,
+        // so a depth of d requires exactly d - 1 buffered payload bytes.
+        _buffer_ptr[_buffer_position - 1] = byte;
+        ++_buffer_position;
         if (_buffer_position < _cfg.depth) {
             return;
         }
@@ -28,8 +31,10 @@ void COBSWriteStrategyCore::_init() {
 }
 
 inline void COBSWriteStrategyCore::_write_buffer_with_offset_to_handler(uint8_t offset) {
-    _buffer_ptr[0] = _cfg.delimiter_byte not_eq 0x00 and offset == _cfg.delimiter_byte ? 0 : offset;
-    for (int i = 0; i < _buffer_position; ++i) {
+    const uint8_t service_byte =
+        _cfg.delimiter_byte not_eq 0x00 and offset == _cfg.delimiter_byte ? 0 : offset;
+    _write_handler(service_byte, _context);
+    for (int i = 0; i < _buffer_position - 1; ++i) {
         _write_handler(_buffer_ptr[i], _context);
     }
     _buffer_position = 1;
@@ -67,7 +72,7 @@ set_cobs_config_status COBSWriteStrategyCore::set_config(cobs_config_t config) {
     }
     if (not _buffer_ptr) {
         _buffer_ptr =
-            reinterpret_cast<uint8_t *>(MemoryManager::get_current_manager()->allocate_memory(_cfg.depth - 1));
+            reinterpret_cast<uint8_t *>(MemoryManager::get_current_manager()->allocate_memory(config.depth - 1));
     }
     if (not _buffer_ptr) {
         return ERROR_MEMORY_ALLOCATION;

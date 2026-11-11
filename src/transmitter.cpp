@@ -15,6 +15,10 @@ send_packet_status_t TransmitterV1Core::send_data(uint8_t packet_id,
                                                   uint8_t *buffer_ptr,
                                                   size_t size,
                                                   bool checksum_enforcement) {
+    // Validate before narrowing size_t to the 16-bit wire-length field.
+    if (size > UINT16_MAX) {
+        return MAXIMUM_PACKET_SIZE_EXCEEDING_ERROR;
+    }
     packet_context_t packet_context;
     packet_context.packet_id = packet_id;
     packet_context.data_ptr = buffer_ptr;
@@ -31,11 +35,17 @@ send_packet_status_t TransmitterV1Core::send_packet(packet_context_t &packet_con
     if (not _writer) {
         return STREAM_WRITER_NOT_SET_ERROR;
     }
+    if (not _writer->get_ready_status()) {
+        return STREAM_WRITER_NOT_READY_SEND_ERROR;
+    }
     if (packet_context.size < 1 or packet_context.size > _max_packet_size) {
         return MAXIMUM_PACKET_SIZE_EXCEEDING_ERROR;
     }
     if (packet_context.packet_id > 31) {
         return PACKET_ID_ERROR;
+    }
+    if (not packet_context.data_ptr) {
+        return PACKET_DATA_NULL_POINTER_ERROR;
     }
     core::packet_v1_header header = {
         .packet_id = packet_context.packet_id,
@@ -44,19 +54,27 @@ send_packet_status_t TransmitterV1Core::send_packet(packet_context_t &packet_con
         .is_unsupported_protocol_version = false,
     };
     uint8_t checksum = _calc_checksum(header, packet_context.data_ptr, packet_context.size);
-    _writer->write(reinterpret_cast<uint8_t *>(&header), 1);
+    if (_writer->write(reinterpret_cast<uint8_t *>(&header), 1) not_eq STREAM_WRITE_OK) {
+        return STREAM_WRITER_NOT_READY_SEND_ERROR;
+    }
     uint8_t size_byte = packet_context.size;
     if (header.is_two_bytes_for_packet_size) {
         size_byte = packet_context.size >> 8;
-        _writer->write(&size_byte, 1);
+        if (_writer->write(&size_byte, 1) not_eq STREAM_WRITE_OK) {
+            return STREAM_WRITER_NOT_READY_SEND_ERROR;
+        }
     }
     size_byte = packet_context.size;
-    _writer->write(&size_byte, 1);
-    _writer->write(packet_context.data_ptr, packet_context.size);
-    if (header.is_checksum_used) {
-        _writer->write(checksum);
+    if (_writer->write(&size_byte, 1) not_eq STREAM_WRITE_OK or
+        _writer->write(packet_context.data_ptr, packet_context.size) not_eq STREAM_WRITE_OK) {
+        return STREAM_WRITER_NOT_READY_SEND_ERROR;
     }
-    _writer->finish();
+    if (header.is_checksum_used and _writer->write(checksum) not_eq STREAM_WRITE_OK) {
+        return STREAM_WRITER_NOT_READY_SEND_ERROR;
+    }
+    if (_writer->finish() not_eq STREAM_WRITE_DELIMITER) {
+        return STREAM_WRITER_NOT_READY_SEND_ERROR;
+    }
     if (packet_context.need_clear) {
         MemoryManager::get_current_manager()->free_memory(packet_context.data_ptr);
         packet_context.data_ptr = nullptr;

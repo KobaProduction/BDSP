@@ -238,3 +238,44 @@ TEST(strategies_cobs_default_tests, encoding_custom_delimiter_test) {
     start_test_reader(reader, correct_encoded, data);
     start_test_writer(writer, data, correct_encoded);
 }
+
+TEST(strategies_cobs_default_tests, full_payload_blocks_survive_depth_changes) {
+    COBSWriterStream writer;
+    COBSReaderStream reader;
+    std::vector<uint8_t> encoded;
+    writer.set_stream_writer(
+        [](uint8_t byte, void *ctx) { static_cast<std::vector<uint8_t> *>(ctx)->push_back(byte); }, &encoded);
+
+    for (uint8_t depth : {uint8_t{16}, uint8_t{32}, uint8_t{127}, uint8_t{255}, uint8_t{16}}) {
+        auto config = writer.get_strategy().get_config();
+        config.depth = depth;
+        ASSERT_EQ(writer.get_strategy().set_config(config), SET_COBS_CONFIG_OK);
+        ASSERT_EQ(reader.get_strategy().set_config(config), SET_COBS_CONFIG_OK);
+
+        encoded.clear();
+        std::vector<uint8_t> payload(size_t(depth - 1) * 3 + 2, 0x42);
+        ASSERT_EQ(writer.write(payload.data(), payload.size()), STREAM_WRITE_OK);
+        ASSERT_EQ(writer.finish(), STREAM_WRITE_DELIMITER);
+
+        std::vector<uint8_t> decoded;
+        bool ended = false;
+        struct ReceiverContext {
+            std::vector<uint8_t> *output;
+            bool *ended;
+        } ctx{&decoded, &ended};
+        reader.set_stream_data_handler(
+            [](uint8_t byte, stream_read_status_t status, void *ptr) {
+                auto &ctx = *static_cast<ReceiverContext *>(ptr);
+                if (status == STREAM_READ_OK) ctx.output->push_back(byte);
+                else if (status == STREAM_READ_DELIMITER) *ctx.ended = true;
+                else ADD_FAILURE() << "Unexpected decoding error";
+            }, &ctx);
+        for (uint8_t byte : encoded) {
+            const auto status = reader.read(byte);
+            ASSERT_TRUE(status == STREAM_READ_OK or status == STREAM_READ_DELIMITER) << "depth=" << unsigned(depth);
+        }
+        ASSERT_TRUE(ended);
+        EXPECT_EQ(decoded, payload) << "depth=" << unsigned(depth);
+        reader.set_stream_data_handler(nullptr, nullptr);
+    }
+}

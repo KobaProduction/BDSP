@@ -137,3 +137,61 @@ TEST(bdsp_v1_transmitter_tests, dealocate_memory_after_send) {
     check_data_for_correctness(transmitter.get_write_stream().get_strategy().stream_data[0], correct_with_checksum);
     EXPECT_EQ(packet_context.data_ptr, nullptr);
 }
+
+TEST(bdsp_v1_transmitter_tests, reject_oversized_and_null_payloads) {
+    Transmitter<VectorTestWriter> transmitter;
+    transmitter.get_write_stream().set_stream_writer([](uint8_t, void *) {}, nullptr);
+
+    uint8_t payload = 0x42;
+    EXPECT_EQ(transmitter.send_data(1, &payload, size_t{65536}, false),
+              MAXIMUM_PACKET_SIZE_EXCEEDING_ERROR);
+    EXPECT_EQ(transmitter.send_data(1, &payload, size_t{65537}, false),
+              MAXIMUM_PACKET_SIZE_EXCEEDING_ERROR);
+    EXPECT_EQ(transmitter.send_data(1, nullptr, size_t{1}, false),
+              PACKET_DATA_NULL_POINTER_ERROR);
+    EXPECT_EQ(transmitter.send_data(1, nullptr, size_t{0}, false),
+              MAXIMUM_PACKET_SIZE_EXCEEDING_ERROR);
+}
+
+TEST(bdsp_v1_transmitter_tests, reject_stream_writer_after_it_becomes_unready) {
+    Transmitter<VectorTestWriter> transmitter;
+    uint8_t payload = 0x42;
+    auto &writer = transmitter.get_write_stream();
+    writer.set_stream_writer([](uint8_t, void *) {}, nullptr);
+    ASSERT_TRUE(writer.get_ready_status());
+    writer.set_stream_writer(nullptr, nullptr);
+    ASSERT_FALSE(writer.get_ready_status());
+    EXPECT_EQ(transmitter.send_data(0, &payload, 1, false),
+              STREAM_WRITER_NOT_READY_SEND_ERROR);
+}
+
+
+TEST(bdsp_v1_transmitter_tests, report_writer_failure_during_packet) {
+    // The writer may lose readiness after the first output operation. A partial
+    // frame must not be reported as a successful packet transmission.
+    class FailingWriter final: public IStreamWriter {
+    public:
+        int attempts = 0;
+        bool ready = true;
+        stream_write_status_t finish() override {
+            return ready ? STREAM_WRITE_DELIMITER : STREAM_WRITER_NOT_READY_ERROR;
+        }
+        void set_stream_writer(stream_write_handler_t, void *) override {}
+        stream_write_status_t write(uint8_t) override {
+            return write(static_cast<uint8_t *>(nullptr), 0);
+        }
+        stream_write_status_t write(uint8_t *, size_t) override {
+            ++attempts;
+            if (not ready) return STREAM_WRITER_NOT_READY_ERROR;
+            ready = false;
+            return STREAM_WRITE_OK;
+        }
+        bool get_ready_status() override { return ready; }
+    } writer;
+
+    TransmitterV1Core transmitter;
+    ASSERT_EQ(transmitter.set_stream_writer(&writer), SET_STREAM_WRITER_OK);
+    uint8_t byte = 42;
+    EXPECT_EQ(transmitter.send_data(3, &byte, 1, false), STREAM_WRITER_NOT_READY_SEND_ERROR);
+    EXPECT_EQ(writer.attempts, 2);
+}
